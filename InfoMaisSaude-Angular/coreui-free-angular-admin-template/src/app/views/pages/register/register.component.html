@@ -1,0 +1,35 @@
+<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col lg="7" md="9" xl="6">
+        <c-card class="mx-4">
+          <c-card-body class="p-4">
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()"cForm>
+              <h1>Registre-se</h1>
+              <p class="text-body-secondary">Crie sua conta</p>
+              <c-input-group class="mb-3">
+                <span cInputGroupText>&#64;</span>
+                <input autoComplete="email" formControlName="login" cFormControl placeholder="Email" />
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilLockLocked"></svg>
+                </span>
+                <input autoComplete="new-password" formControlName="senha" cFormControl placeholder="Senha" type="password" />
+              </c-input-group>
+              <c-input-group class="mb-4">
+                <span cInputGroupText>
+                  <svg cIcon name="cilLockLocked"></svg>
+                </span>
+                <input autoComplete="new-password" formControlName="confirmarSenha" cFormControl placeholder="Repetir Senha" type="password" />
+              </c-input-group>
+              <div class="d-grid">
+                <button type="submit" [disabled]="!registerForm.valid" cButton color="dark">Criar conta</button>
+              </div>
+            </form>
+          </c-card-body>
+        </c-card>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>

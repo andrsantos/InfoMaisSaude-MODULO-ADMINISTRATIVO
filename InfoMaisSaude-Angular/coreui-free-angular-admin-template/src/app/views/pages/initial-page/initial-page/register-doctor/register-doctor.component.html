@@ -1,0 +1,103 @@
+<c-row class="justify-content-center">
+  <c-col xs="12" lg="10" xl="8"> 
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Cadastrar Novo Médico</strong>
+      </c-card-header>
+      <c-card-body>
+        <form cForm [formGroup]="medicoForm">
+          <c-row class="mb-3">
+            <c-col md="6">
+              <label cLabel for="nome">Nome do Médico</label>
+              <input cFormControl id="nome" formControlName="nome" placeholder="Nome completo" />
+            </c-col>
+            <c-col md="6">
+              <label cLabel for="especializacao">Especialização Principal</label>
+              <input cFormControl id="especializacao" formControlName="especializacao" placeholder="Ex: Cardiologia, Dentista" />
+            </c-col>
+          </c-row>
+        </form> 
+         <h5 class="mt-4">Agenda Semanal</h5>
+         <div class="d-flex" style="flex-flow:column;">
+         <div class="d-flex">
+         <p class="text-body-secondary small d-flex">Adicione os blocos de horário de atendimento do médico.</p>
+         </div>
+         <div class="d-flex">
+        <button cButton class="px-4" color="dark" (click)="openHorarioModal()" style="margin-bottom:10px;">
+        Cadastrar novo horário
+        </button>  
+         </div>
+         </div>
+        <div class="table-responsive mb-3">
+          <table cTable bordered>
+            <thead>
+              <tr>
+                <th *ngFor="let dia of diasDaSemana" class="text-center">{{ dia }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rowIndex of rowsArray">
+                <td *ngFor="let dia of diasDaSemana" class="text-center">
+                  {{ getHorarioParaCelula(rowIndex, dia) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="successMessage" class="alert alert-success mt-3">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+          {{ errorMessage }}
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+          <button cButton type="button" color="success" [disabled]="!medicoForm.valid" (click)="cadastrarMedico()">
+            Cadastrar Médico
+          </button>
+        </div>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+<c-modal id="horarioModal" [visible]="isHorarioModalVisible" (visibleChange)="isHorarioModalVisible = $event">
+  <c-modal-header>
+    <h5 cModalTitle>Adicionar Bloco de Horário</h5>
+    <button (click)="closeHorarioModal()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <form [formGroup]="horarioForm">
+      <div class="mb-3">
+        <label cLabel for="diaDaSemana">Dia da Semana</label>
+        <select cSelect id="diaDaSemana" formControlName="diaDaSemana">
+          <option value="" disabled selected>Selecione o dia</option>
+          <option *ngFor="let dia of diasDaSemana" [value]="dia">{{ dia }}</option>
+        </select>
+      </div>
+      <c-row>
+        <c-col>
+          <div class="mb-3">
+            <label cLabel for="horarioInicio">Horário Inicial</label>
+            <input cFormControl id="horarioInicio" type="time" formControlName="horarioInicio" />
+          </div>
+        </c-col>
+        <c-col>
+          <div class="mb-3">
+            <label cLabel for="horarioFinal">Horário Final</label>
+            <input cFormControl id="horarioFinal" type="time" formControlName="horarioFim" />
+          </div>
+        </c-col>
+      </c-row>
+      <c-row>
+        <small>Digite um horário inicial e final. Por exemplo: 08:00 e 09:00.</small>
+      </c-row>
+    </form>
+  </c-modal-body>
+  <c-modal-footer>
+    <button (click)="closeHorarioModal()" cButton color="danger">
+      Cancelar
+    </button>
+    <button cButton color="dark" [disabled]="!horarioForm.valid" (click)="adicionarHorario()">
+      Adicionar Horário
+    </button>
+  </c-modal-footer>
+</c-modal>

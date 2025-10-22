@@ -1,0 +1,6 @@
+
+export enum Especializacao {
+  MEDICA = 'MEDICA', 
+  ODONTOLOGICA = 'ODONTOLOGICA' ,
+  AMBAS = 'ODONTOLOGICA/MEDICA'
+}

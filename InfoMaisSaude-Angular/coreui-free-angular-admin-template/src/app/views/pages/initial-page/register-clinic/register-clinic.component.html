@@ -1,0 +1,77 @@
+<c-row class="justify-content-center">
+  <c-col xs="12" md="8" lg="6">
+  <c-card class="mb-4">
+  <c-card-header>
+    <strong>Cadastre sua Clínica</strong>
+  </c-card-header>
+  <c-card-body>
+    
+    <form cForm [formGroup]="clinicaForm">
+
+      <div class="mb-3">
+        <label cLabel for="nome">Nome da Clínica</label>
+        <input cFormControl id="nome" formControlName="nome" placeholder="Ex: Clínica Saúde Bem-Estar" />
+      </div>
+      <div class="mb-3">
+        <label cLabel for="cnpj">CNPJ</label>
+        <input cFormControl id="cnpj" formControlName="cnpj" placeholder="00.000.000/0000-00" />
+      </div>
+
+      <div class="mb-3" formGroupName="especializacoes">
+        <label cLabel>Especializações</label>
+        <c-row>
+          <c-col>
+            <c-form-check>
+              <input cFormCheckInput id="medica" type="checkbox" formControlName="MEDICA" />
+              <label cFormCheckLabel for="medica">Médica</label>
+            </c-form-check>
+          </c-col>
+          <c-col>
+            <c-form-check>
+              <input cFormCheckInput id="odontologica" type="checkbox" formControlName="ODONTOLOGICA" />
+              <label cFormCheckLabel for="odontologica">Odontológica</label>
+            </c-form-check>
+          </c-col>
+        </c-row>
+      </div>
+
+      <div class="mb-3">
+        <label cLabel>Horário de Funcionamento</label>
+        <c-row class="align-items-center">
+          <c-col>
+            <label cLabel for="horarioInicio" class="small">Início</label>
+            <input cFormControl id="horarioInicio" type="time" formControlName="horarioFuncionamentoInicio" />
+          </c-col>
+          <c-col>
+            <label cLabel for="horarioFinal" class="small">Fim</label>
+            <input cFormControl id="horarioFinal" type="time" formControlName="horarioFuncionamentoFinal" />
+          </c-col>
+        </c-row>
+      </div>
+
+      <div class="mb-3">
+        <label cLabel for="email">E-mail</label>
+        <input cFormControl id="email" type="email" formControlName="email" placeholder="contato@suaclinica.com" />
+      </div>
+
+      <div class="mb-3">
+        <label cLabel for="site">Site (Opcional)</label>
+        <input cFormControl id="site" formControlName="site" placeholder="www.suaclinica.com.br" />
+      </div>
+
+      <div class="mb-3">
+        <label cLabel for="endereco">Endereço Completo</label>
+        <input cFormControl id="endereco" formControlName="endereco" placeholder="Rua, Número, Bairro, Cidade - Estado" />
+      </div>
+      <div class="mb-3">
+        <label cLabel for="telefone">Telefone</label>
+        <input cFormControl id="telefone" formControlName="telefone" placeholder="(00) 00000-0000" />
+      </div>
+      <button cButton color="dark">Salvar informações</button>
+
+      </form>
+
+  </c-card-body>
+  </c-card>
+  </c-col>
+</c-row>

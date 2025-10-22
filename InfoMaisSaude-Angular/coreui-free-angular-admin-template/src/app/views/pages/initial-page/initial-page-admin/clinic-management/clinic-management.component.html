@@ -1,0 +1,57 @@
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Gerenciar Clínicas</strong><br><small>Lista de clínicas cadastradas</small>
+        </div>
+        <div>
+        </div>
+      </c-card-header>
+      <c-card-body>
+        
+        <div class="table-responsive"> <table cTable [striped]="true" [hover]="true">
+            
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Endereço</th>
+                <th scope="col">Email</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">Especialização</th>
+                <th scope="col">Funcionamento</th>
+                <th scope="col">Site</th>
+                <th scope="col">Médicos</th>
+              </tr>
+            </thead>
+            
+            <tbody>
+              <tr *ngFor="let clinica of clinicas; let i = index">
+                <th scope="row">{{ i + 1 }}</th>
+                <td>{{ clinica.nome }}</td>
+                <td>{{ clinica.endereco }}</td>
+                <td>{{ clinica.email }}</td>
+                <td>{{ clinica.telefone }}</td>
+                <td>{{ formatEspecializacoes(clinica.especializacoes) }}</td> 
+                <td>{{ formatHorario(clinica.horarioFuncionamentoInicio, clinica.horarioFuncionamentoFinal) }}</td>
+                <td>{{ clinica.site || '-' }}</td> 
+                <td>
+                <button cButton class="px-2" color="dark">
+                Ver médicos
+                </button>
+                </td>
+              </tr>
+
+              <tr *ngIf="clinicas.length === 0">
+                <td colspan="8" class="text-center">Nenhuma clínica encontrada.</td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+        
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
