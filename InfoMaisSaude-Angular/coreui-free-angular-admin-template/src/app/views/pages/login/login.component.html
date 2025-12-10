@@ -3,7 +3,6 @@
     <c-row class="justify-content-center">
       <c-col lg="10" xl="8">
         <c-card-group>
-
           <c-card class="p-4">
             <c-card-body>
               <form [formGroup]="loginForm" cForm (ngSubmit)="fazerLogin()">
@@ -19,47 +18,29 @@
                   <span cInputGroupText>
                     <svg cIcon name="cilLockLocked"></svg>
                   </span>
-                  <input
-                    autoComplete="current-password"
-                    cFormControl
-                    placeholder="Senha"
-                    type="password"
-                    formControlName="senha"
-                  />
+                  <input autoComplete="current-password" cFormControl placeholder="Senha" type="password" formControlName="senha" />
                 </c-input-group>
-
                 <div *ngIf="errorMessage" class="alert alert-danger">
                   {{ errorMessage }}
                 </div>
-
-                
                 <c-row>
                   <c-col xs="6">
-                    <button cButton type="submit" [disabled]="!loginForm.valid" class="px-4" color="dark">
-                      Login
-                    </button>
+                    <button cButton type="submit" [disabled]="!loginForm.valid" class="px-4" color="dark"> Login </button>
                   </c-col>
                   <c-col class="text-end" xs="6">
-                    <button cButton class="px-0" color="link">
-                      Esqueceu sua senha?
-                    </button>
+                    <button cButton class="px-0" color="link"> Esqueceu sua senha? </button>
                   </c-col>
                 </c-row>
               </form>
             </c-card-body>
           </c-card>
-
-          <c-card [ngStyle]="{'minWidth.%': 44}" 
-          class="text-white bg-dark py-5"
-          style="
+          <c-card [ngStyle]="{'minWidth.%': 44}" class="text-white bg-dark py-5" style="
               background-image: url('assets/images/logo.png'); 
               background-repeat: no-repeat; 
               background-position: center;
               min-width: 44%;
               background-color: #202020 !important; 
-              ">
-          </c-card>
-
+              "></c-card>
         </c-card-group>
       </c-col>
     </c-row>

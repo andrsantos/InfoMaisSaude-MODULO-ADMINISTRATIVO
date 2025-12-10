@@ -1,20 +1,4 @@
 import {
-  animate,
-  animateChild,
-  animation,
-  group,
-  query,
-  sequence,
-  state,
-  style,
-  transition,
-  trigger,
-  useAnimation
-} from "./chunk-VCKPHXYQ.js";
-import {
-  IconDirective
-} from "./chunk-Q3NGTMKJ.js";
-import {
   Platform,
   _getEventTarget,
   _getFocusedElementPierceShadowDom,
@@ -23,12 +7,7 @@ import {
   coerceElement,
   coerceNumberProperty,
   normalizePassiveListenerOptions
-} from "./chunk-J4FTYNJZ.js";
-import {
-  takeUntilDestroyed,
-  toObservable,
-  toSignal
-} from "./chunk-GUL66LFL.js";
+} from "./chunk-DJGTFZWN.js";
 import {
   ActivatedRoute,
   NavigationEnd,
@@ -36,20 +15,42 @@ import {
   RouterLink,
   RouterLinkActive,
   RouterModule
-} from "./chunk-4O57TCFS.js";
-import "./chunk-6AGMWJ6U.js";
-import "./chunk-YSP5FMJT.js";
-import "./chunk-WHRNDB3G.js";
+} from "./chunk-XE4532ZI.js";
+import {
+  IconDirective
+} from "./chunk-2EA6MLRL.js";
+import {
+  AnimationBuilder
+} from "./chunk-ZIF76BVI.js";
+import {
+  animate,
+  animateChild,
+  animation,
+  group,
+  query,
+  state,
+  style,
+  transition,
+  trigger,
+  useAnimation
+} from "./chunk-MCQ2PUUF.js";
+import "./chunk-XACVY2LH.js";
+import "./chunk-OS53IP3Q.js";
+import {
+  takeUntilDestroyed,
+  toObservable,
+  toSignal
+} from "./chunk-WOBG7UUT.js";
+import "./chunk-XXG5S333.js";
 import {
   NgClass,
   NgStyle,
   NgTemplateOutlet,
   isPlatformBrowser,
   isPlatformServer
-} from "./chunk-XQRCP5OX.js";
-import "./chunk-YLHXK2KV.js";
+} from "./chunk-YA24XCVA.js";
+import "./chunk-4C6T4BSG.js";
 import {
-  ANIMATION_MODULE_TYPE,
   APP_ID,
   ApplicationRef,
   CSP_NONCE,
@@ -62,7 +63,6 @@ import {
   EventEmitter,
   HostBinding,
   HostListener,
-  Inject,
   Injectable,
   Input,
   NgModule,
@@ -159,14 +159,13 @@ import {
   ɵɵtextInterpolate1,
   ɵɵviewQuery,
   ɵɵviewQuerySignal
-} from "./chunk-KEC4INE7.js";
+} from "./chunk-XO2W54BT.js";
 import {
   DOCUMENT,
   DestroyRef,
   EnvironmentInjector,
   InjectionToken,
   Injector,
-  RuntimeError,
   computed,
   effect,
   forwardRef,
@@ -181,11 +180,10 @@ import {
   untracked,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
-  ɵɵinject,
   ɵɵnamespaceSVG,
   ɵɵresetView,
   ɵɵrestoreView
-} from "./chunk-XLMPOKV5.js";
+} from "./chunk-KNPJCVBX.js";
 import {
   BehaviorSubject,
   Observable,
@@ -207,178 +205,13 @@ import {
   tap,
   withLatestFrom,
   zipWith
-} from "./chunk-ITCO55KN.js";
+} from "./chunk-OOWKJ67I.js";
 import {
   __spreadProps,
   __spreadValues
 } from "./chunk-XWLXMCJQ.js";
 
-// node_modules/@angular/animations/fesm2022/animations.mjs
-var AnimationBuilder = class _AnimationBuilder {
-  static ɵfac = function AnimationBuilder_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _AnimationBuilder)();
-  };
-  static ɵprov = ɵɵdefineInjectable({
-    token: _AnimationBuilder,
-    factory: () => (() => inject(BrowserAnimationBuilder))(),
-    providedIn: "root"
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(AnimationBuilder, [{
-    type: Injectable,
-    args: [{
-      providedIn: "root",
-      useFactory: () => inject(BrowserAnimationBuilder)
-    }]
-  }], null, null);
-})();
-var AnimationFactory = class {
-};
-var BrowserAnimationBuilder = class _BrowserAnimationBuilder extends AnimationBuilder {
-  animationModuleType = inject(ANIMATION_MODULE_TYPE, {
-    optional: true
-  });
-  _nextAnimationId = 0;
-  _renderer;
-  constructor(rootRenderer, doc) {
-    super();
-    const typeData = {
-      id: "0",
-      encapsulation: ViewEncapsulation.None,
-      styles: [],
-      data: {
-        animation: []
-      }
-    };
-    this._renderer = rootRenderer.createRenderer(doc.body, typeData);
-    if (this.animationModuleType === null && !isAnimationRenderer(this._renderer)) {
-      throw new RuntimeError(3600, (typeof ngDevMode === "undefined" || ngDevMode) && "Angular detected that the `AnimationBuilder` was injected, but animation support was not enabled. Please make sure that you enable animations in your application by calling `provideAnimations()` or `provideAnimationsAsync()` function.");
-    }
-  }
-  build(animation2) {
-    const id = this._nextAnimationId;
-    this._nextAnimationId++;
-    const entry = Array.isArray(animation2) ? sequence(animation2) : animation2;
-    issueAnimationCommand(this._renderer, null, id, "register", [entry]);
-    return new BrowserAnimationFactory(id, this._renderer);
-  }
-  static ɵfac = function BrowserAnimationBuilder_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _BrowserAnimationBuilder)(ɵɵinject(RendererFactory2), ɵɵinject(DOCUMENT));
-  };
-  static ɵprov = ɵɵdefineInjectable({
-    token: _BrowserAnimationBuilder,
-    factory: _BrowserAnimationBuilder.ɵfac,
-    providedIn: "root"
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(BrowserAnimationBuilder, [{
-    type: Injectable,
-    args: [{
-      providedIn: "root"
-    }]
-  }], () => [{
-    type: RendererFactory2
-  }, {
-    type: Document,
-    decorators: [{
-      type: Inject,
-      args: [DOCUMENT]
-    }]
-  }], null);
-})();
-var BrowserAnimationFactory = class extends AnimationFactory {
-  _id;
-  _renderer;
-  constructor(_id, _renderer) {
-    super();
-    this._id = _id;
-    this._renderer = _renderer;
-  }
-  create(element, options) {
-    return new RendererAnimationPlayer(this._id, element, options || {}, this._renderer);
-  }
-};
-var RendererAnimationPlayer = class {
-  id;
-  element;
-  _renderer;
-  parentPlayer = null;
-  _started = false;
-  constructor(id, element, options, _renderer) {
-    this.id = id;
-    this.element = element;
-    this._renderer = _renderer;
-    this._command("create", options);
-  }
-  _listen(eventName, callback) {
-    return this._renderer.listen(this.element, `@@${this.id}:${eventName}`, callback);
-  }
-  _command(command, ...args) {
-    issueAnimationCommand(this._renderer, this.element, this.id, command, args);
-  }
-  onDone(fn2) {
-    this._listen("done", fn2);
-  }
-  onStart(fn2) {
-    this._listen("start", fn2);
-  }
-  onDestroy(fn2) {
-    this._listen("destroy", fn2);
-  }
-  init() {
-    this._command("init");
-  }
-  hasStarted() {
-    return this._started;
-  }
-  play() {
-    this._command("play");
-    this._started = true;
-  }
-  pause() {
-    this._command("pause");
-  }
-  restart() {
-    this._command("restart");
-  }
-  finish() {
-    this._command("finish");
-  }
-  destroy() {
-    this._command("destroy");
-  }
-  reset() {
-    this._command("reset");
-    this._started = false;
-  }
-  setPosition(p) {
-    this._command("setPosition", p);
-  }
-  getPosition() {
-    return unwrapAnimationRenderer(this._renderer)?.engine?.players[this.id]?.getPosition() ?? 0;
-  }
-  totalTime = 0;
-};
-function issueAnimationCommand(renderer, element, id, command, args) {
-  renderer.setProperty(element, `@@${id}:${command}`, args);
-}
-function unwrapAnimationRenderer(renderer) {
-  const type = renderer.ɵtype;
-  if (type === 0) {
-    return renderer;
-  } else if (type === 1) {
-    return renderer.animationRenderer;
-  }
-  return null;
-}
-function isAnimationRenderer(renderer) {
-  const type = renderer.ɵtype;
-  return type === 0 || type === 1;
-}
-
-// node_modules/@popperjs/core/lib/enums.js
+// ../../node_modules/@popperjs/core/lib/enums.js
 var top = "top";
 var bottom = "bottom";
 var right = "right";
@@ -408,12 +241,12 @@ var write = "write";
 var afterWrite = "afterWrite";
 var modifierPhases = [beforeRead, read, afterRead, beforeMain, main, afterMain, beforeWrite, write, afterWrite];
 
-// node_modules/@popperjs/core/lib/dom-utils/getNodeName.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getNodeName.js
 function getNodeName(element) {
   return element ? (element.nodeName || "").toLowerCase() : null;
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getWindow.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getWindow.js
 function getWindow(node) {
   if (node == null) {
     return window;
@@ -425,7 +258,7 @@ function getWindow(node) {
   return node;
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/instanceOf.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/instanceOf.js
 function isElement(node) {
   var OwnElement = getWindow(node).Element;
   return node instanceof OwnElement || node instanceof Element;
@@ -442,7 +275,7 @@ function isShadowRoot(node) {
   return node instanceof OwnElement || node instanceof ShadowRoot;
 }
 
-// node_modules/@popperjs/core/lib/modifiers/applyStyles.js
+// ../../node_modules/@popperjs/core/lib/modifiers/applyStyles.js
 function applyStyles(_ref) {
   var state2 = _ref.state;
   Object.keys(state2.elements).forEach(function(name) {
@@ -510,17 +343,17 @@ var applyStyles_default = {
   requires: ["computeStyles"]
 };
 
-// node_modules/@popperjs/core/lib/utils/getBasePlacement.js
+// ../../node_modules/@popperjs/core/lib/utils/getBasePlacement.js
 function getBasePlacement(placement) {
   return placement.split("-")[0];
 }
 
-// node_modules/@popperjs/core/lib/utils/math.js
+// ../../node_modules/@popperjs/core/lib/utils/math.js
 var max = Math.max;
 var min = Math.min;
 var round = Math.round;
 
-// node_modules/@popperjs/core/lib/utils/userAgent.js
+// ../../node_modules/@popperjs/core/lib/utils/userAgent.js
 function getUAString() {
   var uaData = navigator.userAgentData;
   if (uaData != null && uaData.brands && Array.isArray(uaData.brands)) {
@@ -531,12 +364,12 @@ function getUAString() {
   return navigator.userAgent;
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/isLayoutViewport.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/isLayoutViewport.js
 function isLayoutViewport() {
   return !/^((?!chrome|android).)*safari/i.test(getUAString());
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js
 function getBoundingClientRect(element, includeScale, isFixedStrategy) {
   if (includeScale === void 0) {
     includeScale = false;
@@ -569,7 +402,7 @@ function getBoundingClientRect(element, includeScale, isFixedStrategy) {
   };
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js
 function getLayoutRect(element) {
   var clientRect = getBoundingClientRect(element);
   var width = element.offsetWidth;
@@ -588,7 +421,7 @@ function getLayoutRect(element) {
   };
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/contains.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/contains.js
 function contains(parent, child) {
   var rootNode = child.getRootNode && child.getRootNode();
   if (parent.contains(child)) {
@@ -605,17 +438,17 @@ function contains(parent, child) {
   return false;
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js
 function getComputedStyle2(element) {
   return getWindow(element).getComputedStyle(element);
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/isTableElement.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/isTableElement.js
 function isTableElement(element) {
   return ["table", "td", "th"].indexOf(getNodeName(element)) >= 0;
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js
 function getDocumentElement(element) {
   return ((isElement(element) ? element.ownerDocument : (
     // $FlowFixMe[prop-missing]
@@ -623,7 +456,7 @@ function getDocumentElement(element) {
   )) || window.document).documentElement;
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getParentNode.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getParentNode.js
 function getParentNode(element) {
   if (getNodeName(element) === "html") {
     return element;
@@ -640,7 +473,7 @@ function getParentNode(element) {
   );
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js
 function getTrueOffsetParent(element) {
   if (!isHTMLElement(element) || // https://github.com/popperjs/popper-core/issues/837
   getComputedStyle2(element).position === "fixed") {
@@ -683,12 +516,12 @@ function getOffsetParent(element) {
   return offsetParent || getContainingBlock(element) || window2;
 }
 
-// node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js
+// ../../node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js
 function getMainAxisFromPlacement(placement) {
   return ["top", "bottom"].indexOf(placement) >= 0 ? "x" : "y";
 }
 
-// node_modules/@popperjs/core/lib/utils/within.js
+// ../../node_modules/@popperjs/core/lib/utils/within.js
 function within(min2, value, max2) {
   return max(min2, min(value, max2));
 }
@@ -697,7 +530,7 @@ function withinMaxClamp(min2, value, max2) {
   return v > max2 ? max2 : v;
 }
 
-// node_modules/@popperjs/core/lib/utils/getFreshSideObject.js
+// ../../node_modules/@popperjs/core/lib/utils/getFreshSideObject.js
 function getFreshSideObject() {
   return {
     top: 0,
@@ -707,12 +540,12 @@ function getFreshSideObject() {
   };
 }
 
-// node_modules/@popperjs/core/lib/utils/mergePaddingObject.js
+// ../../node_modules/@popperjs/core/lib/utils/mergePaddingObject.js
 function mergePaddingObject(paddingObject) {
   return Object.assign({}, getFreshSideObject(), paddingObject);
 }
 
-// node_modules/@popperjs/core/lib/utils/expandToHashMap.js
+// ../../node_modules/@popperjs/core/lib/utils/expandToHashMap.js
 function expandToHashMap(value, keys) {
   return keys.reduce(function(hashMap, key) {
     hashMap[key] = value;
@@ -720,7 +553,7 @@ function expandToHashMap(value, keys) {
   }, {});
 }
 
-// node_modules/@popperjs/core/lib/modifiers/arrow.js
+// ../../node_modules/@popperjs/core/lib/modifiers/arrow.js
 var toPaddingObject = function toPaddingObject2(padding, state2) {
   padding = typeof padding === "function" ? padding(Object.assign({}, state2.rects, {
     placement: state2.placement
@@ -782,12 +615,12 @@ var arrow_default = {
   requiresIfExists: ["preventOverflow"]
 };
 
-// node_modules/@popperjs/core/lib/utils/getVariation.js
+// ../../node_modules/@popperjs/core/lib/utils/getVariation.js
 function getVariation(placement) {
   return placement.split("-")[1];
 }
 
-// node_modules/@popperjs/core/lib/modifiers/computeStyles.js
+// ../../node_modules/@popperjs/core/lib/modifiers/computeStyles.js
 var unsetSides = {
   top: "auto",
   right: "auto",
@@ -908,7 +741,7 @@ var computeStyles_default = {
   data: {}
 };
 
-// node_modules/@popperjs/core/lib/modifiers/eventListeners.js
+// ../../node_modules/@popperjs/core/lib/modifiers/eventListeners.js
 var passive = {
   passive: true
 };
@@ -946,7 +779,7 @@ var eventListeners_default = {
   data: {}
 };
 
-// node_modules/@popperjs/core/lib/utils/getOppositePlacement.js
+// ../../node_modules/@popperjs/core/lib/utils/getOppositePlacement.js
 var hash = {
   left: "right",
   right: "left",
@@ -959,7 +792,7 @@ function getOppositePlacement(placement) {
   });
 }
 
-// node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js
+// ../../node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js
 var hash2 = {
   start: "end",
   end: "start"
@@ -970,7 +803,7 @@ function getOppositeVariationPlacement(placement) {
   });
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js
 function getWindowScroll(node) {
   var win = getWindow(node);
   var scrollLeft = win.pageXOffset;
@@ -981,12 +814,12 @@ function getWindowScroll(node) {
   };
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js
 function getWindowScrollBarX(element) {
   return getBoundingClientRect(getDocumentElement(element)).left + getWindowScroll(element).scrollLeft;
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js
 function getViewportRect(element, strategy) {
   var win = getWindow(element);
   var html = getDocumentElement(element);
@@ -1012,7 +845,7 @@ function getViewportRect(element, strategy) {
   };
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js
 function getDocumentRect(element) {
   var _element$ownerDocumen;
   var html = getDocumentElement(element);
@@ -1033,13 +866,13 @@ function getDocumentRect(element) {
   };
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js
 function isScrollParent(element) {
   var _getComputedStyle = getComputedStyle2(element), overflow = _getComputedStyle.overflow, overflowX = _getComputedStyle.overflowX, overflowY = _getComputedStyle.overflowY;
   return /auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX);
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js
 function getScrollParent(node) {
   if (["html", "body", "#document"].indexOf(getNodeName(node)) >= 0) {
     return node.ownerDocument.body;
@@ -1050,7 +883,7 @@ function getScrollParent(node) {
   return getScrollParent(getParentNode(node));
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js
 function listScrollParents(element, list) {
   var _element$ownerDocumen;
   if (list === void 0) {
@@ -1067,7 +900,7 @@ function listScrollParents(element, list) {
   );
 }
 
-// node_modules/@popperjs/core/lib/utils/rectToClientRect.js
+// ../../node_modules/@popperjs/core/lib/utils/rectToClientRect.js
 function rectToClientRect(rect) {
   return Object.assign({}, rect, {
     left: rect.x,
@@ -1077,7 +910,7 @@ function rectToClientRect(rect) {
   });
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js
 function getInnerBoundingClientRect(element, strategy) {
   var rect = getBoundingClientRect(element, false, strategy === "fixed");
   rect.top = rect.top + element.clientTop;
@@ -1123,7 +956,7 @@ function getClippingRect(element, boundary, rootBoundary, strategy) {
   return clippingRect;
 }
 
-// node_modules/@popperjs/core/lib/utils/computeOffsets.js
+// ../../node_modules/@popperjs/core/lib/utils/computeOffsets.js
 function computeOffsets(_ref) {
   var reference2 = _ref.reference, element = _ref.element, placement = _ref.placement;
   var basePlacement = placement ? getBasePlacement(placement) : null;
@@ -1178,7 +1011,7 @@ function computeOffsets(_ref) {
   return offsets;
 }
 
-// node_modules/@popperjs/core/lib/utils/detectOverflow.js
+// ../../node_modules/@popperjs/core/lib/utils/detectOverflow.js
 function detectOverflow(state2, options) {
   if (options === void 0) {
     options = {};
@@ -1216,7 +1049,7 @@ function detectOverflow(state2, options) {
   return overflowOffsets;
 }
 
-// node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js
+// ../../node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js
 function computeAutoPlacement(state2, options) {
   if (options === void 0) {
     options = {};
@@ -1246,7 +1079,7 @@ function computeAutoPlacement(state2, options) {
   });
 }
 
-// node_modules/@popperjs/core/lib/modifiers/flip.js
+// ../../node_modules/@popperjs/core/lib/modifiers/flip.js
 function getExpandedFallbackPlacements(placement) {
   if (getBasePlacement(placement) === auto) {
     return [];
@@ -1351,7 +1184,7 @@ var flip_default = {
   }
 };
 
-// node_modules/@popperjs/core/lib/modifiers/hide.js
+// ../../node_modules/@popperjs/core/lib/modifiers/hide.js
 function getSideOffsets(overflow, rect, preventedOffsets) {
   if (preventedOffsets === void 0) {
     preventedOffsets = {
@@ -1405,7 +1238,7 @@ var hide_default = {
   fn: hide
 };
 
-// node_modules/@popperjs/core/lib/modifiers/offset.js
+// ../../node_modules/@popperjs/core/lib/modifiers/offset.js
 function distanceAndSkiddingToXY(placement, rects, offset2) {
   var basePlacement = getBasePlacement(placement);
   var invertDistance = [left, top].indexOf(basePlacement) >= 0 ? -1 : 1;
@@ -1444,7 +1277,7 @@ var offset_default = {
   fn: offset
 };
 
-// node_modules/@popperjs/core/lib/modifiers/popperOffsets.js
+// ../../node_modules/@popperjs/core/lib/modifiers/popperOffsets.js
 function popperOffsets(_ref) {
   var state2 = _ref.state, name = _ref.name;
   state2.modifiersData[name] = computeOffsets({
@@ -1462,12 +1295,12 @@ var popperOffsets_default = {
   data: {}
 };
 
-// node_modules/@popperjs/core/lib/utils/getAltAxis.js
+// ../../node_modules/@popperjs/core/lib/utils/getAltAxis.js
 function getAltAxis(axis) {
   return axis === "x" ? "y" : "x";
 }
 
-// node_modules/@popperjs/core/lib/modifiers/preventOverflow.js
+// ../../node_modules/@popperjs/core/lib/modifiers/preventOverflow.js
 function preventOverflow(_ref) {
   var state2 = _ref.state, options = _ref.options, name = _ref.name;
   var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, padding = options.padding, _options$tether = options.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
@@ -1560,7 +1393,7 @@ var preventOverflow_default = {
   requiresIfExists: ["offset"]
 };
 
-// node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js
 function getHTMLElementScroll(element) {
   return {
     scrollLeft: element.scrollLeft,
@@ -1568,7 +1401,7 @@ function getHTMLElementScroll(element) {
   };
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js
 function getNodeScroll(node) {
   if (node === getWindow(node) || !isHTMLElement(node)) {
     return getWindowScroll(node);
@@ -1577,7 +1410,7 @@ function getNodeScroll(node) {
   }
 }
 
-// node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js
+// ../../node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js
 function isElementScaled(element) {
   var rect = element.getBoundingClientRect();
   var scaleX = round(rect.width) / element.offsetWidth || 1;
@@ -1621,7 +1454,7 @@ function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
   };
 }
 
-// node_modules/@popperjs/core/lib/utils/orderModifiers.js
+// ../../node_modules/@popperjs/core/lib/utils/orderModifiers.js
 function order(modifiers) {
   var map2 = /* @__PURE__ */ new Map();
   var visited = /* @__PURE__ */ new Set();
@@ -1658,7 +1491,7 @@ function orderModifiers(modifiers) {
   }, []);
 }
 
-// node_modules/@popperjs/core/lib/utils/debounce.js
+// ../../node_modules/@popperjs/core/lib/utils/debounce.js
 function debounce(fn2) {
   var pending;
   return function() {
@@ -1674,7 +1507,7 @@ function debounce(fn2) {
   };
 }
 
-// node_modules/@popperjs/core/lib/utils/mergeByName.js
+// ../../node_modules/@popperjs/core/lib/utils/mergeByName.js
 function mergeByName(modifiers) {
   var merged = modifiers.reduce(function(merged2, current) {
     var existing = merged2[current.name];
@@ -1689,7 +1522,7 @@ function mergeByName(modifiers) {
   });
 }
 
-// node_modules/@popperjs/core/lib/createPopper.js
+// ../../node_modules/@popperjs/core/lib/createPopper.js
 var DEFAULT_OPTIONS = {
   placement: "bottom",
   modifiers: [],
@@ -1830,19 +1663,19 @@ function popperGenerator(generatorOptions) {
 }
 var createPopper = popperGenerator();
 
-// node_modules/@popperjs/core/lib/popper-lite.js
+// ../../node_modules/@popperjs/core/lib/popper-lite.js
 var defaultModifiers = [eventListeners_default, popperOffsets_default, computeStyles_default, applyStyles_default];
 var createPopper2 = popperGenerator({
   defaultModifiers
 });
 
-// node_modules/@popperjs/core/lib/popper.js
+// ../../node_modules/@popperjs/core/lib/popper.js
 var defaultModifiers2 = [eventListeners_default, popperOffsets_default, computeStyles_default, applyStyles_default, offset_default, flip_default, preventOverflow_default, arrow_default, hide_default];
 var createPopper3 = popperGenerator({
   defaultModifiers: defaultModifiers2
 });
 
-// node_modules/@angular/cdk/fesm2022/fake-event-detection.mjs
+// ../../node_modules/@angular/cdk/fesm2022/fake-event-detection.mjs
 function isFakeMousedownFromScreenReader(event) {
   return event.buttons === 0 || event.detail === 0;
 }
@@ -1851,7 +1684,7 @@ function isFakeTouchstartFromScreenReader(event) {
   return !!touch && touch.identifier === -1 && (touch.radiusX == null || touch.radiusX === 1) && (touch.radiusY == null || touch.radiusY === 1);
 }
 
-// node_modules/@angular/cdk/fesm2022/keycodes2.mjs
+// ../../node_modules/@angular/cdk/fesm2022/keycodes2.mjs
 var TAB = 9;
 var SHIFT = 16;
 var CONTROL = 17;
@@ -1871,7 +1704,7 @@ var Z = 90;
 var META = 91;
 var MAC_META = 224;
 
-// node_modules/@angular/cdk/fesm2022/focus-monitor.mjs
+// ../../node_modules/@angular/cdk/fesm2022/focus-monitor.mjs
 var INPUT_MODALITY_DETECTOR_OPTIONS = new InjectionToken("cdk-input-modality-detector-options");
 var INPUT_MODALITY_DETECTOR_DEFAULT_OPTIONS = {
   ignoreKeys: [ALT, CONTROL, MAC_META, META, SHIFT]
@@ -2351,7 +2184,7 @@ var CdkMonitorFocus = class _CdkMonitorFocus {
   });
 })();
 
-// node_modules/@angular/cdk/fesm2022/style-loader.mjs
+// ../../node_modules/@angular/cdk/fesm2022/style-loader.mjs
 var appsWithLoaders = /* @__PURE__ */ new WeakMap();
 var _CdkPrivateStyleLoader = class __CdkPrivateStyleLoader {
   _appRef;
@@ -2400,7 +2233,7 @@ var _CdkPrivateStyleLoader = class __CdkPrivateStyleLoader {
   }], null, null);
 })();
 
-// node_modules/@angular/cdk/fesm2022/private.mjs
+// ../../node_modules/@angular/cdk/fesm2022/private.mjs
 var _VisuallyHiddenLoader = class __VisuallyHiddenLoader {
   static ɵfac = function _VisuallyHiddenLoader_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || __VisuallyHiddenLoader)();
@@ -2431,7 +2264,7 @@ var _VisuallyHiddenLoader = class __VisuallyHiddenLoader {
   }], null, null);
 })();
 
-// node_modules/@angular/cdk/fesm2022/breakpoints-observer.mjs
+// ../../node_modules/@angular/cdk/fesm2022/breakpoints-observer.mjs
 var mediaQueriesForWebkitCompatibility = /* @__PURE__ */ new Set();
 var mediaQueryStyleNode;
 var MediaMatcher = class _MediaMatcher {
@@ -2603,7 +2436,7 @@ function splitQueries(queries) {
   return queries.map((query2) => query2.split(",")).reduce((a1, a2) => a1.concat(a2)).map((query2) => query2.trim());
 }
 
-// node_modules/@angular/cdk/fesm2022/observers.mjs
+// ../../node_modules/@angular/cdk/fesm2022/observers.mjs
 function shouldIgnoreRecord(record) {
   if (record.type === "characterData" && record.target instanceof Comment) {
     return true;
@@ -2848,7 +2681,7 @@ var ObserversModule = class _ObserversModule {
   }], null, null);
 })();
 
-// node_modules/@angular/cdk/fesm2022/a11y-module.mjs
+// ../../node_modules/@angular/cdk/fesm2022/a11y-module.mjs
 var InteractivityChecker = class _InteractivityChecker {
   _platform = inject(Platform);
   constructor() {
@@ -3690,7 +3523,7 @@ var A11yModule = class _A11yModule {
   }], () => [], null);
 })();
 
-// node_modules/@angular/cdk/fesm2022/id-generator.mjs
+// ../../node_modules/@angular/cdk/fesm2022/id-generator.mjs
 var counters = {};
 var _IdGenerator = class __IdGenerator {
   _appId = inject(APP_ID);
@@ -3725,7 +3558,7 @@ var _IdGenerator = class __IdGenerator {
   }], null, null);
 })();
 
-// node_modules/@angular/cdk/fesm2022/typeahead.mjs
+// ../../node_modules/@angular/cdk/fesm2022/typeahead.mjs
 var DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS = 200;
 var Typeahead = class {
   _letterKeyStream = new Subject();
@@ -3789,7 +3622,7 @@ var Typeahead = class {
   }
 };
 
-// node_modules/@angular/cdk/fesm2022/keycodes.mjs
+// ../../node_modules/@angular/cdk/fesm2022/keycodes.mjs
 function hasModifierKey(event, ...modifiers) {
   if (modifiers.length) {
     return modifiers.some((modifier) => event[modifier]);
@@ -3797,7 +3630,7 @@ function hasModifierKey(event, ...modifiers) {
   return event.altKey || event.shiftKey || event.ctrlKey || event.metaKey;
 }
 
-// node_modules/@angular/cdk/fesm2022/list-key-manager.mjs
+// ../../node_modules/@angular/cdk/fesm2022/list-key-manager.mjs
 var ListKeyManager = class {
   _items;
   _activeItemIndex = signal(-1, ...ngDevMode ? [{ debugName: "_activeItemIndex" }] : []);
@@ -4129,7 +3962,7 @@ var ListKeyManager = class {
   }
 };
 
-// node_modules/@angular/cdk/fesm2022/focus-key-manager.mjs
+// ../../node_modules/@angular/cdk/fesm2022/focus-key-manager.mjs
 var FocusKeyManager = class extends ListKeyManager {
   _origin = "program";
   /**
@@ -4148,7 +3981,7 @@ var FocusKeyManager = class extends ListKeyManager {
   }
 };
 
-// node_modules/@angular/cdk/fesm2022/coercion/private.mjs
+// ../../node_modules/@angular/cdk/fesm2022/coercion/private.mjs
 function coerceObservable(data) {
   if (!isObservable(data)) {
     return of(data);
@@ -4156,7 +3989,7 @@ function coerceObservable(data) {
   return data;
 }
 
-// node_modules/@angular/cdk/fesm2022/tree-key-manager.mjs
+// ../../node_modules/@angular/cdk/fesm2022/tree-key-manager.mjs
 var TreeKeyManager = class {
   /** The index of the currently active (focused) item. */
   _activeItemIndex = -1;
@@ -4460,7 +4293,7 @@ var TREE_KEY_MANAGER = new InjectionToken("tree-key-manager", {
   factory: TREE_KEY_MANAGER_FACTORY
 });
 
-// node_modules/@angular/cdk/fesm2022/a11y.mjs
+// ../../node_modules/@angular/cdk/fesm2022/a11y.mjs
 var ID_DELIMITER = " ";
 function addAriaReferencedId(el, attr, id) {
   const ids = getAriaReferenceIds(el, attr);
@@ -4836,7 +4669,7 @@ var ConfigurableFocusTrapFactory = class _ConfigurableFocusTrapFactory {
   }], () => [], null);
 })();
 
-// node_modules/@angular/cdk/fesm2022/layout.mjs
+// ../../node_modules/@angular/cdk/fesm2022/layout.mjs
 var LayoutModule = class _LayoutModule {
   static ɵfac = function LayoutModule_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _LayoutModule)();
@@ -4853,7 +4686,7 @@ var LayoutModule = class _LayoutModule {
   }], null, null);
 })();
 
-// node_modules/@coreui/angular/fesm2022/coreui-angular.mjs
+// ../../node_modules/@coreui/angular/fesm2022/coreui-angular.mjs
 var _c0 = ["*"];
 var _c1 = () => ({
   display: "none"
@@ -22072,13 +21905,4 @@ export {
   WidgetStatEComponent,
   WidgetStatFComponent
 };
-/*! Bundled license information:
-
-@angular/animations/fesm2022/animations.mjs:
-  (**
-   * @license Angular v20.3.3
-   * (c) 2010-2025 Google LLC. https://angular.io/
-   * License: MIT
-   *)
-*/
 //# sourceMappingURL=@coreui_angular.js.map

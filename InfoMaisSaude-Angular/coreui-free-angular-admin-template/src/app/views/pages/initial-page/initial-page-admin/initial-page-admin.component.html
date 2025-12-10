@@ -1,33 +1,29 @@
 <c-row class="justify-content-center">
-  
-  <c-col md="4">
-    <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" (click)="goToClinicManagement()">
-      <img cCardImg="top" 
-      src="assets/images/agendamento.jpg" 
-      alt="Agendamento de Consulta">
-      <c-card-body>
-        <h5 cCardTitle>Gerenciar Clínicas</h5>
-        <p cCardText>
-          Gerencie as clínicas parceiras e visualize informações importantes sobre elas.
-        </p>
-        <button cButton color="dark" (click)="goToClinicManagement()">Acessar Painel</button>
-      </c-card-body>
-    </c-card>
-  </c-col>
 
-  <c-col md="4">
-    <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" (click)="goToUserManagement()">
-      <img cCardImg="top" 
-      src="assets/images/usuarios.jpg" 
-      alt="Gerenciamento da Clínica">
-      <c-card-body>
-        <h5 cCardTitle>Gerenciar Usuários</h5>
-        <p cCardText>
-        Gerencia e consulte informações importantes sobre os usuários do sistema.
-        </p>
-        <button cButton color="dark" (click)="goToUserManagement()">Acessar Painel</button>
-      </c-card-body>
-    </c-card>
-  </c-col>
+    <c-col md="4">
+        <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" (click)="goToClinicManagement()">
+            <img cCardImg="top" src="assets/images/agendamento.jpg" alt="Agendamento de Consulta">
+            <c-card-body>
+                <h5 cCardTitle>Gerenciar Clínicas</h5>
+                <p cCardText>
+                    Gerencie as clínicas parceiras e visualize informações importantes sobre elas.
+                </p>
+                <button cButton color="dark" (click)="goToClinicManagement()">Acessar Painel</button>
+            </c-card-body>
+        </c-card>
+    </c-col>
+
+    <c-col md="4">
+        <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" (click)="goToUserManagement()">
+            <img cCardImg="top" src="assets/images/usuarios.jpg" alt="Gerenciamento da Clínica">
+            <c-card-body>
+                <h5 cCardTitle>Gerenciar Usuários</h5>
+                <p cCardText>
+                    Gerencia e consulte informações importantes sobre os usuários do sistema.
+                </p>
+                <button cButton color="dark" (click)="goToUserManagement()">Acessar Painel</button>
+            </c-card-body>
+        </c-card>
+    </c-col>
 
 </c-row>

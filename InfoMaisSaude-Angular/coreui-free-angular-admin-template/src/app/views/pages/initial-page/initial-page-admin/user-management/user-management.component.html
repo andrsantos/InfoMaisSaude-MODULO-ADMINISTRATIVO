@@ -1,44 +1,74 @@
 <c-row>
-  <c-col xs="12">
-    <c-card class="mb-4">
-    <c-card-header class="d-flex justify-content-between align-items-center">
-        <div>
-          <strong>Gerenciar Usuários</strong><br> <small>Lista de usuários cadastrados</small>
-        </div>
-        <div>
-        <button cButton class="px-4" color="dark" (click)="goToCreateUser()">
-        Cadastrar novo usuário
-        </button>  
-        </div>
-      </c-card-header>
-      <c-card-body>
-        <table cTable [striped]="true" [hover]="true">
-          
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Login</th>
-              <th scope="col">Tipo</th>
-              <th scope="col">Data de Criação</th>
-            </tr>
-          </thead>
-          
-          <tbody>
-            <tr *ngFor="let user of users; let i = index">
-              <th scope="row">{{ i + 1 }}</th> 
-              <td>{{ user.login }}</td>
-              <td>{{ user.role }}</td>
-              <td>{{ user.creationDate | date:'dd/MM/yyyy HH:mm' }}</td> 
-            </tr>
+    <c-col xs="12">
+        <c-card class="mb-4">
+            <c-card-header class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>Gerenciar Usuários</strong>
+                    <br> <small>Lista de usuários cadastrados</small>
+                </div>
+                <div>
+                    <button cButton class="px-4" color="dark" (click)="goToCreateUser()">
+                        Cadastrar novo usuário
+                    </button>
+                </div>
+            </c-card-header>
+            <c-card-body>
 
-            <tr *ngIf="users.length === 0">
-              <td colspan="4" class="text-center">Nenhum usuário encontrado.</td>
-            </tr>
-          </tbody>
+                <div *ngIf="isLoading" class="text-center">
+                    <c-spinner color="primary"></c-spinner>
+                    <p>Carregando usuários...</p>
+                </div>
+                <div *ngIf="errorMessage && !isLoading" class="alert alert-danger">
+                    {{ errorMessage }}
+                </div>
 
-        </table>
-        
-      </c-card-body>
-    </c-card>
-  </c-col>
+                <table cTable [striped]="true" [hover]="true" *ngIf="!isLoading && !errorMessage">
+                    <thead>
+                        <tr>
+                            <th scope="col">Login</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Data de Criação</th>
+                            <th scope="col">Criado Por</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let usuario of usuarios; let i = index">
+                            <td>{{ usuario.login }}</td>
+                            <td>{{ usuario.tipo }}</td>
+                            <td>{{ usuario.dataHoraCriacao | date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td>{{ usuario.loginDoUsuarioCriador }}</td>
+                            <td>
+                                <button cButton color="danger" size="sm" (click)="openDeleteConfirmationModal(usuario.id, usuario.login)" style="color:white;">
+                                    Excluir
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="usuarios.length === 0 && !isLoading && !errorMessage">
+                            <td colspan="5" class="text-center">Nenhum usuário encontrado.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </c-card-body>
+        </c-card>
+    </c-col>
 </c-row>
+
+<c-modal id="deleteConfirmModal" [visible]="isDeleteModalVisible" (visibleChange)="isDeleteModalVisible = $event">
+    <c-modal-header>
+        <h5 cModalTitle>Confirmar Exclusão</h5>
+        <button (click)="closeDeleteModal()" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+        Tem certeza que deseja excluir o usuário <strong>{{ userLoginToDelete }}</strong>? Esta ação não pode ser desfeita.
+    </c-modal-body>
+    <c-modal-footer>
+        <button (click)="closeDeleteModal()" cButton color="secondary">
+            Cancelar
+        </button>
+        <button cButton color="danger" (click)="confirmDelete()" style="color:white;">
+            Sim, Excluir
+        </button>
+    </c-modal-footer>
+</c-modal>

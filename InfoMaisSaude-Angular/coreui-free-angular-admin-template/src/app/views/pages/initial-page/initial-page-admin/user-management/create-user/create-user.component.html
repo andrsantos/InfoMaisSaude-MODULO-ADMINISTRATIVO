@@ -1,48 +1,48 @@
 <c-row class="justify-content-center">
-  <c-col xs="12" md="8" lg="6">
-    <c-card class="mb-4">
-      <c-card-header>
-        <strong>Cadastrar Novo Usuário</strong>
-      </c-card-header>
-      <c-card-body>
+    <c-col xs="12" md="8" lg="6">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>Cadastrar Novo Usuário</strong>
+            </c-card-header>
+            <c-card-body>
 
-        <form cForm [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
+                <form cForm [formGroup]="usuarioForm">
 
-          <div class="mb-3">
-            <label cLabel for="login">Login</label>
-            <input cFormControl id="login" type="email" formControlName="login" placeholder="exemplo@email.com" />
-            </div>
+                    <div class="mb-3">
+                        <label cLabel for="login">Login</label>
+                        <input cFormControl id="login" type="email" formControlName="login" placeholder="ExemploAdmin" />
+                    </div>
 
-          <div class="mb-3">
-            <label cLabel for="senha">Senha</label>
-            <input cFormControl id="senha" type="password" formControlName="senha" placeholder="Mínimo 6 caracteres" />
-            </div>
+                    <div class="mb-3">
+                        <label cLabel for="senha">Senha</label>
+                        <input cFormControl id="senha" type="password" formControlName="senha" placeholder="Mínimo 6 caracteres" />
+                    </div>
 
-          <div class="mb-3">
-            <label cLabel for="role">Tipo de Usuário</label>
-            <select cSelect id="role" formControlName="role">
-              <option value="" disabled selected>Selecione um tipo</option>
-              <option *ngFor="let roleOption of userRoles" [value]="roleOption">
-                {{ roleOption }} </option>
-            </select>
-            </div>
+                    <div class="mb-3">
+                        <label cLabel for="role">Tipo de Usuário</label>
+                        <select cSelect id="role" formControlName="role">
+                            <option value="" disabled selected>Selecione um tipo</option>
+                            <option *ngFor="let roleOption of userRoles" [value]="roleOption">
+                                {{ roleOption }} </option>
+                        </select>
+                    </div>
 
-          <div *ngIf="successMessage" class="alert alert-success mt-3">
-            {{ successMessage }}
-          </div>
-          <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-            {{ errorMessage }}
-          </div>
+                    <div *ngIf="successMessage" class="alert alert-success mt-3">
+                        {{ successMessage }}
+                    </div>
+                    <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+                        {{ errorMessage }}
+                    </div>
 
-          <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-            <button cButton type="submit" color="success" [disabled]="!usuarioForm.valid">
-              Cadastrar Usuário
-            </button>
-          </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <button cButton type="submit" color="success" [disabled]="!usuarioForm.valid" (click)="cadastrarUsuario()">
+                            Cadastrar Usuário
+                        </button>
+                    </div>
 
-        </form>
+                </form>
 
-      </c-card-body>
-    </c-card>
-  </c-col>
+            </c-card-body>
+        </c-card>
+    </c-col>
 </c-row>

@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 import { loginGuard } from './guards/login.guard';
+import { clinicaNaoCadastradaGuard } from './guards/clinica-nao-cadastrada.guard';
+import { clinicaCadastradaGuard } from './guards/clinica-cadastrada.guard';
 
 export const routes: Routes = [
   {
@@ -19,10 +21,12 @@ export const routes: Routes = [
       {
         path:'initial-page',
         loadComponent: () => import('./views/pages/initial-page/initial-page/initial-page.component').then(m => m.InitialPageComponent),
+        canActivate: [clinicaCadastradaGuard]
       },
       {
         path:'register-clinic',
         loadComponent: () => import('./views/pages/initial-page/register-clinic/register-clinic.component').then(m => m.RegisterClinicComponent),
+        canActivate: [clinicaNaoCadastradaGuard]      
       },
       {
         path:'register-doctor',

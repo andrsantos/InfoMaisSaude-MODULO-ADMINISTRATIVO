@@ -8,9 +8,9 @@ import {
   withInMemoryScrolling,
   withRouterConfig,
   withViewTransitions,
-  RouterModule
+  RouterModule,
 } from '@angular/router';
-
+import { provideToastr } from 'ngx-toastr';
 import { DropdownModule, SidebarModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { routes } from './app.routes';
@@ -35,6 +35,13 @@ export const appConfig: ApplicationConfig = {
   ])),
   importProvidersFrom(RouterModule, SidebarModule, DropdownModule),
     IconSetService,
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    provideToastr({
+      timeOut: 5000, 
+      positionClass: 'toast-top-right', 
+      preventDuplicates: true, 
+      closeButton: true, 
+      progressBar: true 
+    }),
   ]
 };

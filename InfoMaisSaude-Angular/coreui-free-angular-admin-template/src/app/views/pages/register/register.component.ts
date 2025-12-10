@@ -13,7 +13,7 @@ import {
   InputGroupTextDirective,
   RowComponent,
 } from '@coreui/angular';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../../services/auth/auth.service';
 import { Router } from '@angular/router';
 
 
