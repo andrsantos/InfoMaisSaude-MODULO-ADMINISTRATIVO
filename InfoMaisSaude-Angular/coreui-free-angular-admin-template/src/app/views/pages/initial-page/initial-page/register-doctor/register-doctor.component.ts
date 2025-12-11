@@ -1,84 +1,71 @@
 import { Component } from "@angular/core";
-import { CommonModule } from "@angular/common"; 
+import { CommonModule } from "@angular/common";
 import {
   ReactiveFormsModule,
   FormBuilder,
   FormGroup,
   Validators,
-} from "@angular/forms"; 
-import { Router } from "@angular/router"; 
+} from "@angular/forms";
+import { Router } from "@angular/router";
 import {
-  CardComponent,
-  CardBodyComponent,
-  CardHeaderComponent,
-  ColComponent,
-  FormDirective,
-  FormControlDirective,
-  FormLabelDirective,
-  RowComponent,
-  ButtonDirective,
-  FormSelectDirective, 
-  ModalComponent,
-  ModalHeaderComponent,
-  ModalBodyComponent,
-  ModalFooterComponent, 
-  TableDirective,
+  CardComponent, CardBodyComponent, CardHeaderComponent, ColComponent,
+  FormDirective, FormControlDirective, FormLabelDirective, RowComponent,
+  ButtonDirective, FormSelectDirective, ModalComponent, ModalHeaderComponent,
+  ModalBodyComponent, ModalFooterComponent, TableDirective,
 } from "@coreui/angular";
+import { MedicosService } from "../../../../../services/medicos/medicos.service";
+import { ToastrService } from "ngx-toastr";
 
-interface Horario {
-  diaDaSemana: string;
+interface HorarioFrontend {
+  diaDaSemana: string; 
   horarioInicio: string;
   horarioFim: string;
 }
+
+const MAPA_DIAS_SEMANA: { [key: string]: number } = {
+  "SEGUNDA": 1,
+  "TERCA": 2,
+  "QUARTA": 3,
+  "QUINTA": 4,
+  "SEXTA": 5,
+  "SABADO": 6,
+  "DOMINGO": 7
+};
 
 @Component({
   selector: "app-register-doctor",
   templateUrl: "./register-doctor.component.html",
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    CardComponent,
-    CardHeaderComponent,
-    CardBodyComponent,
-    RowComponent,
-    ColComponent,
-    FormDirective,
-    FormLabelDirective,
-    FormControlDirective,
-    ButtonDirective,
-    FormSelectDirective,
-    ModalComponent,
-    ModalHeaderComponent,
-    ModalBodyComponent,
-    ModalFooterComponent,
-    TableDirective,
+    CommonModule, ReactiveFormsModule, CardComponent, CardHeaderComponent,
+    CardBodyComponent, RowComponent, ColComponent, FormDirective,
+    FormLabelDirective, FormControlDirective, ButtonDirective,
+    FormSelectDirective, ModalComponent, ModalHeaderComponent,
+    ModalBodyComponent, ModalFooterComponent, TableDirective,
   ],
 })
 export class RegisterDoctorComponent {
   medicoForm: FormGroup;
   horarioForm: FormGroup;
 
-  horarios: Horario[] = [];
+  horarios: HorarioFrontend[] = []; 
   isHorarioModalVisible = false;
 
-  diasDaSemana = [
-    "SEGUNDA",
-    "TERCA",
-    "QUARTA",
-    "QUINTA",
-    "SEXTA",
-    "SABADO",
-    "DOMINGO",
-  ];
+  diasDaSemana = Object.keys(MAPA_DIAS_SEMANA); 
 
   errorMessage: string = "";
   successMessage: string = "";
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router, 
+    private medicosService: MedicosService,
+    private toastr: ToastrService
+  ) {
     this.medicoForm = this.fb.group({
       nome: ["", Validators.required],
       especializacao: ["", Validators.required],
+      telefone: ["", [Validators.required, Validators.pattern(/^\d+$/)]], 
     });
 
     this.horarioForm = this.fb.group({
@@ -90,6 +77,7 @@ export class RegisterDoctorComponent {
 
   openHorarioModal(): void {
     this.horarioForm.reset();
+    this.horarioForm.patchValue({ diaDaSemana: "" }); 
     this.isHorarioModalVisible = true;
   }
 
@@ -99,9 +87,9 @@ export class RegisterDoctorComponent {
 
   adicionarHorario(): void {
     if (this.horarioForm.valid) {
-      const novoHorario: Horario = this.horarioForm.value;
+      const novoHorario: HorarioFrontend = this.horarioForm.value;
+      
       this.horarios.push(novoHorario);
-      console.log("Horários atuais:", this.horarios);
       this.closeHorarioModal();
     } else {
       this.horarioForm.markAllAsTouched();
@@ -117,15 +105,13 @@ export class RegisterDoctorComponent {
   }
 
   get rowsArray(): number[] {
-    return Array(this.maxRows)
-      .fill(0)
-      .map((x, i) => i);
+    return Array(this.maxRows).fill(0).map((x, i) => i);
   }
 
   getHorarioParaCelula(rowIndex: number, dia: string): string {
     const horariosDoDia = this.horarios.filter((h) => h.diaDaSemana === dia);
-    const horario = horariosDoDia[rowIndex]; 
-    return horario ? `${horario.horarioInicio} - ${horario.horarioFim}` : ""; 
+    const horario = horariosDoDia[rowIndex];
+    return horario ? `${horario.horarioInicio} - ${horario.horarioFim}` : "";
   }
 
   cadastrarMedico(): void {
@@ -133,14 +119,35 @@ export class RegisterDoctorComponent {
     this.successMessage = "";
 
     if (this.medicoForm.valid) {
+      const agendaBackend = this.horarios.map(item => ({
+        diaSemana: MAPA_DIAS_SEMANA[item.diaDaSemana], 
+        horarioInicio: item.horarioInicio,
+        horarioFim: item.horarioFim
+      }));
+
       const payload = {
         ...this.medicoForm.value,
-        agenda: this.horarios,
+        agenda: agendaBackend
       };
-      console.log("Payload final:", payload);
-      this.successMessage = "Médico pronto para ser cadastrado (ver console)!";
+
+      console.log("Enviando para o backend:", payload);
+
+      this.medicosService.cadastrarMedico(payload).subscribe({
+        next: (response) => {
+          this.successMessage = `Médico ${response.nomeDoMedicoCriado} cadastrado com sucesso!`;
+          this.medicoForm.reset();
+          this.horarios = [];
+          this.toastr.success(response.mensagemDeResposta, "Sucesso!");
+          
+        },
+        error: (err) => {
+          console.error("Erro ao cadastrar:", err);
+          this.errorMessage = err.error?.message || "Erro ao cadastrar médico. Verifique os dados.";
+        }
+      });
+
     } else {
-      this.errorMessage = "Preencha os dados do médico.";
+      this.errorMessage = "Por favor, preencha todos os campos obrigatórios.";
       this.medicoForm.markAllAsTouched();
     }
   }

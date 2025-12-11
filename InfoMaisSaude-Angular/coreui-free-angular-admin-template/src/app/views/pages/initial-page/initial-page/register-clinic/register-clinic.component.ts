@@ -21,14 +21,14 @@ import {
   RowComponent,
   ButtonDirective,
 } from "@coreui/angular";
-import { AuthService } from "../../../../services/auth/auth.service";
+import { AuthService } from "../../../../../services/auth/auth.service";
 import { Subscription } from "rxjs";
 import { fromEvent } from "rxjs";
 import { GoogleMapsModule, GoogleMap, MapMarker } from "@angular/google-maps";
-import { ClinicasService } from "../../../../services/clinicas/clinicas.service";
+import { ClinicasService } from "../../../../../services/clinicas/clinicas.service";
 import { ToastrService } from "ngx-toastr";
-import { ClinicaCreateResponse } from "../../../../models/clinicaModels/clinicaCreateResponse";
-import { ClinicaReadResponse } from "src/app/models/clinicaModels/clinicaReadResponse";
+import { ClinicaCreateResponse } from "../../../../../models/clinicaModels/clinicaCreateResponse";
+import { ClinicaReadResponse } from "../../../../../models/clinicaModels/clinicaReadResponse";
 
 declare var google: any;
 
@@ -105,10 +105,15 @@ export class RegisterClinicComponent {
     } | null;
     console.log("State lido do history", state?.hasRegisteredClinic);
     console.log("Id da Clinica", localStorage.getItem('idDaClinica'));
-    const idDaClinica = Number(localStorage.getItem('idDaClinica'));
-    if(idDaClinica != null){
-      this.pegarClinica(idDaClinica);
+
+    const idDaClinicaRaw = localStorage.getItem('idDaClinica');
+    if (idDaClinicaRaw) {
+    const idDaClinica = Number(idDaClinicaRaw);
+    this.pegarClinica(idDaClinica);
+    } else {
+    console.log("ID da clínica não encontrado no localStorage.");
     }
+    
     if(state?.hasRegisteredClinic){
       this.hasRegisteredClinic = true;
     }
@@ -209,6 +214,7 @@ export class RegisterClinicComponent {
   }
 
   pegarClinica(id: number){
+    console.log("Chegou no pegar clinica!");
     this.clinicasService.pegarClinica(id).subscribe({
       next: (response: ClinicaReadResponse) => {
       console.log("Nome da clínica", response.nome);

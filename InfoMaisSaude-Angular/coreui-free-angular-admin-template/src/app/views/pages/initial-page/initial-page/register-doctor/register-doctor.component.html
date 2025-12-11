@@ -7,13 +7,17 @@
             <c-card-body>
                 <form cForm [formGroup]="medicoForm">
                     <c-row class="mb-3">
-                        <c-col md="6">
+                        <c-col md="4">
                             <label cLabel for="nome">Nome do Médico</label>
                             <input cFormControl id="nome" formControlName="nome" placeholder="Nome completo" />
                         </c-col>
-                        <c-col md="6">
+                        <c-col md="4">
                             <label cLabel for="especializacao">Especialização Principal</label>
                             <input cFormControl id="especializacao" formControlName="especializacao" placeholder="Ex: Cardiologia, Dentista" />
+                        </c-col>
+                        <c-col md="4">
+                            <label cLabel for="telefone">Telefone para contato</label>
+                            <input cFormControl id="telefone" formControlName="telefone" placeholder="Ex: 91986052737" />
                         </c-col>
                     </c-row>
                 </form>
@@ -44,9 +48,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div *ngIf="successMessage" class="alert alert-success mt-3">
+                <!-- <div *ngIf="successMessage" class="alert alert-success mt-3">
                     {{ successMessage }}
-                </div>
+                </div> -->
                 <div *ngIf="errorMessage" class="alert alert-danger mt-3">
                     {{ errorMessage }}
                 </div>

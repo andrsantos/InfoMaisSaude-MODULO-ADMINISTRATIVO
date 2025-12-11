@@ -46,6 +46,9 @@ public class UsuarioController {
         catch (PermissaoException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } 
+        catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro inesperado.");
         }

@@ -23,7 +23,7 @@ export const clinicaNaoCadastradaGuard: CanActivateFn = (route, state) => {
   }
 }
 
-  if(authService.hasRegisteredClinic()){
+  if(!authService.hasRegisteredClinic()){
     return true;
   } else {
     return false

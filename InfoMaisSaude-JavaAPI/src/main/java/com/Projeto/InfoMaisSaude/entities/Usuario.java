@@ -4,12 +4,10 @@ import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import com.Projeto.InfoMaisSaude.enums.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

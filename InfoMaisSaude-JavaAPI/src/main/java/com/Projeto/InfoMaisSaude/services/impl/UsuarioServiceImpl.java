@@ -13,7 +13,6 @@ import com.Projeto.InfoMaisSaude.exceptions.PermissaoException;
 import com.Projeto.InfoMaisSaude.repositories.UsuariosRepository;
 import com.Projeto.InfoMaisSaude.services.UsuarioService;
 import jakarta.transaction.Transactional;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,12 +40,12 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new LoginJaExisteException("Erro: O login '" + dto.getLogin() + "' já existe no banco.");
         }
         UserDetails adminDetails = usuariosRepository.findByLogin(loginAdmin);
-        if (adminDetails == null) {
+         if (adminDetails == null) {
              throw new UsernameNotFoundException("Usuário criador não encontrado: " + loginAdmin);
         }
         Usuario adminQueCriou = (Usuario) adminDetails;
         if (!verificarSeUsuarioCriadorEhAdministrador(adminQueCriou)) {
-            throw new PermissaoException("Erro: O usuário criador não tem credenciais de administrador.");
+             throw new PermissaoException("Erro: O usuário criador não tem credenciais de administrador.");
         }
         
         Usuario usuarioSendoCadastrado = new Usuario();

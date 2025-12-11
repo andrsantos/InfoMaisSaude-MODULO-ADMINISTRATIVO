@@ -25,7 +25,7 @@ export const routes: Routes = [
       },
       {
         path:'register-clinic',
-        loadComponent: () => import('./views/pages/initial-page/register-clinic/register-clinic.component').then(m => m.RegisterClinicComponent),
+        loadComponent: () => import('./views/pages/initial-page/initial-page/register-clinic/register-clinic.component').then(m => m.RegisterClinicComponent),
         canActivate: [clinicaNaoCadastradaGuard]      
       },
       {
