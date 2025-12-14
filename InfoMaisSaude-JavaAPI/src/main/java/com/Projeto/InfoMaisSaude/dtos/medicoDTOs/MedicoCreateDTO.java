@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,8 +22,13 @@ public class MedicoCreateDTO {
     @Pattern(regexp = "\\d+", message = "O telefone deve conter apenas números") 
     String telefone;
 
-    @NotEmpty(message = "A agenda não pode estar vazia") 
     @Valid 
     List<AgendaItemDTO> agenda;
+    
+    @NotBlank(message = "O login é obrigatório")
+    String login;
+    
+    @NotBlank(message = "A senha é obrigatória")
+    String senha;
     
 }

@@ -6,4 +6,6 @@ export interface MedicoReadResponse {
     especializacao: string;
     telefone: string;
     agenda: AgendaItem[];
+    login: string;
+    senha: string;
 }

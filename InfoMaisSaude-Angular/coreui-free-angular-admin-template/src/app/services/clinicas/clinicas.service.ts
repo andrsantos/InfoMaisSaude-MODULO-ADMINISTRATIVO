@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { ClinicaCreateResponse } from "../../models/clinicaModels/clinicaCreateResponse";
-import { Observable } from "rxjs";
+import { catchError, map, Observable, of } from "rxjs";
 import { ClinicaReadResponse } from "../../models/clinicaModels/clinicaReadResponse";
 import { ClinicaDeleteResponse } from "../../models/clinicaModels/clinicaDeleteResponse";
 import { ClinicaUpdateResponse } from "../../models/clinicaModels/clinicaUpdateResponse";
@@ -41,5 +41,20 @@ export class ClinicasService {
   pegarClinica(clinicaId: number): Observable<ClinicaReadResponse> {
     const url = `${this.apiUrl}/api/clinicas/pegar/${clinicaId}`;
     return this.http.get<ClinicaReadResponse>(url);
+  }
+
+  verificarCadastro(): Observable<boolean> {
+  const idSalvo = localStorage.getItem('idDaClinica'); 
+    if (!idSalvo) {
+      return of(false);
+    }
+    return this.pegarClinica(Number(idSalvo)).pipe(
+      map((dados: any) => {
+        return !!dados; 
+      }),
+      catchError(() => {
+        return of(false); 
+      })
+    );
   }
 }

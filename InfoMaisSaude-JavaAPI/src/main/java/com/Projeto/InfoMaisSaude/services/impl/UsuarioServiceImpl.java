@@ -45,7 +45,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
         Usuario adminQueCriou = (Usuario) adminDetails;
         if (!verificarSeUsuarioCriadorEhAdministrador(adminQueCriou)) {
-             throw new PermissaoException("Erro: O usuário criador não tem credenciais de administrador.");
+            if(!verificarSeUsuarioCriadorEhClinica(adminQueCriou)){
+            throw new PermissaoException("Erro: O usuário criador não tem credenciais de administrador.");
+            }
         }
         
         Usuario usuarioSendoCadastrado = new Usuario();
@@ -121,6 +123,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private boolean verificarSeUsuarioCriadorEhAdministrador(Usuario usuarioCriador) {
         return usuarioCriador.getRole() == UserRole.ADMIN;
+    }
+
+    private boolean verificarSeUsuarioCriadorEhClinica(Usuario usuarioCriador) {
+        return usuarioCriador.getRole() == UserRole.CLINICA;
     }
 
 

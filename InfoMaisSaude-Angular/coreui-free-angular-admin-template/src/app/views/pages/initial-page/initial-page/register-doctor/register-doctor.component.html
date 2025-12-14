@@ -20,6 +20,20 @@
                             <input cFormControl id="telefone" formControlName="telefone" placeholder="Ex: 91986052737" />
                         </c-col>
                     </c-row>
+
+
+                    <c-row class="mb-3">
+                        <c-col md="4">
+                            <label cLabel for="login">Login</label>
+                            <input cFormControl id="login" formControlName="login" placeholder="Login para o médico" />
+                        </c-col>
+                        <c-col md="4">
+                            <label cLabel for="senha">Senha</label>
+                            <input cFormControl id="senha" formControlName="senha" placeholder="Senha para o médico" />
+                        </c-col>
+                    </c-row>
+
+
                 </form>
                 <h5 class="mt-4">Agenda Semanal</h5>
                 <div class="d-flex" style="flex-flow:column;">
@@ -41,16 +55,40 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let rowIndex of rowsArray">
-                                <td *ngFor="let dia of diasDaSemana" class="text-center">
-                                    {{ getHorarioParaCelula(rowIndex, dia) }}
+                                <td *ngFor="let dia of diasDaSemana" class="text-center p-2">
+                                    
+                                    <ng-container *ngIf="getHorarioItem(rowIndex, dia) as item">
+                                        
+                                        <div class="horario-badge">
+                                            <span>
+                                                {{ item.horarioInicio }} - {{ item.horarioFim }}
+                                            </span>
+                                            
+                                            <button type="button" 
+                                                    (click)="removerHorario(item)" 
+                                                    title="Remover este horário"
+                                                    style="background: none;
+                                                    border: none;
+                                                    color: #dc3545; 
+                                                    font-weight: bold;
+                                                    font-size: 1.1rem;
+                                                    line-height: 1;
+                                                    cursor: pointer;
+                                                    padding: 0;
+                                                    margin-left: 5px;
+                                                    opacity: 0.6;
+                                                    transition: opacity 0.2s, transform 0.2s;">
+                                                ×
+                                            </button>
+                                        </div>
+
+                                    </ng-container>
+
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <!-- <div *ngIf="successMessage" class="alert alert-success mt-3">
-                    {{ successMessage }}
-                </div> -->
                 <div *ngIf="errorMessage" class="alert alert-danger mt-3">
                     {{ errorMessage }}
                 </div>

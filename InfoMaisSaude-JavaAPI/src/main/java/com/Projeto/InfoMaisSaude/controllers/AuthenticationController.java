@@ -41,7 +41,9 @@ public class AuthenticationController {
             possuiClinica = clinicaRepository.existsByUsuario(usuarioAutenticado);
         }
 
+        Long idUsuario = usuarioAutenticado.getId();
 
-        return ResponseEntity.ok(new LoginResponseDTO(tokenJWT, possuiClinica));
+
+        return ResponseEntity.ok(new LoginResponseDTO(tokenJWT, possuiClinica, idUsuario));
     }
 }

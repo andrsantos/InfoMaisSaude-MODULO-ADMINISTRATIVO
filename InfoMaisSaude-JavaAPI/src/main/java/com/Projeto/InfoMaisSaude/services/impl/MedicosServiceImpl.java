@@ -10,15 +10,26 @@ import org.springframework.transaction.annotation.Transactional;
 import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.*;
 import com.Projeto.InfoMaisSaude.entities.AgendaMedica;
 import com.Projeto.InfoMaisSaude.entities.Medico;
+import com.Projeto.InfoMaisSaude.entities.Usuario;
+import com.Projeto.InfoMaisSaude.enums.UserRole;
 import com.Projeto.InfoMaisSaude.repositories.MedicosRepository;
+import com.Projeto.InfoMaisSaude.repositories.UsuariosRepository;
 import com.Projeto.InfoMaisSaude.services.MedicosService;
 import jakarta.persistence.EntityNotFoundException; 
+import org.springframework.security.crypto.password.PasswordEncoder; 
+
 
 @Service
 public class MedicosServiceImpl implements MedicosService {
 
     @Autowired
     MedicosRepository medicosRepository;
+
+    @Autowired
+    UsuariosRepository usuariosRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -28,12 +39,25 @@ public class MedicosServiceImpl implements MedicosService {
             throw new IllegalArgumentException("Erro: Já existe um médico com este telefone.");
         }
 
-        validarConflitoDeHorarios(dto.getAgenda());
+        if (usuariosRepository.findByLogin(dto.getLogin()) != null) {
+            throw new IllegalArgumentException("Erro: Este login já está em uso por outro usuário.");
+        }
+
+       if (dto.getAgenda() != null && !dto.getAgenda().isEmpty()) {
+            validarConflitoDeHorarios(dto.getAgenda());
+        }
+
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.setLogin(dto.getLogin()); 
+        novoUsuario.setSenha(passwordEncoder.encode(dto.getSenha()));
+        novoUsuario.setRole(UserRole.MEDICO); 
+        novoUsuario = usuariosRepository.save(novoUsuario);
 
         Medico medico = new Medico();
         medico.setNome(dto.getNome());
         medico.setEspecializacao(dto.getEspecializacao());
         medico.setTelefone(dto.getTelefone());
+        medico.setUsuario(novoUsuario);
         medico.setAgenda(new ArrayList<>()); 
 
         if (dto.getAgenda() != null) {
@@ -115,6 +139,16 @@ public class MedicosServiceImpl implements MedicosService {
         return new MedicoResponseDeleteDTO(medicoDeletado.getNome(),"Médico deletado com sucesso.");
     }
 
+    @Override
+    @Transactional
+    public MedicoResponseReadDTO pegarMedicoPorUsuario(Long idUsuario) {
+        Medico medico = medicosRepository.findByUsuarioId(idUsuario);
+        if (medico == null) {
+            throw new EntityNotFoundException("Médico não encontrado para o ID de usuário: " + idUsuario);
+        }
+        return converterParaReadDTO(medico);
+    }
+
 
     private MedicoResponseReadDTO converterParaReadDTO(Medico medico) {
         List<AgendaReadDTO> agendaDtos = medico.getAgenda().stream()
@@ -131,7 +165,9 @@ public class MedicosServiceImpl implements MedicosService {
             medico.getNome(),
             medico.getEspecializacao(),
             medico.getTelefone(),
-            agendaDtos
+            agendaDtos,
+            medico.getUsuario().getLogin(),
+            medico.getUsuario().getSenha()
         );
     }
 

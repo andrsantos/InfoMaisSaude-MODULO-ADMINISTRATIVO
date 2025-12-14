@@ -1,0 +1,44 @@
+td {
+    vertical-align: middle;
+}
+
+/* O container do horário (parece uma etiqueta) */
+.horario-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f8f9fa; /* Cinza bem claro */
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.9rem;
+    color: #495057;
+    gap: 8px; /* Espaço entre texto e o X */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+}
+
+.horario-badge:hover {
+    background-color: #e9ecef; /* Escurece um pouco ao passar o mouse */
+    border-color: #ced4da;
+}
+
+/* O botão de remover (X) */
+.btn-remove-horario {
+    background: none;
+    border: none;
+    color: #dc3545; /* Vermelho Bootstrap */
+    font-weight: bold;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 5px;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn-remove-horario:hover {
+    opacity: 1;
+    transform: scale(1.2); /* Aumenta ligeiramente ao focar */
+}

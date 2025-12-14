@@ -31,10 +31,24 @@ export const routes: Routes = [
       {
         path:'register-doctor',
         loadComponent: () => import('./views/pages/initial-page/initial-page/register-doctor/register-doctor.component').then(m => m.RegisterDoctorComponent),
+        canActivate: [clinicaCadastradaGuard]
+      },
+      {
+        path:'doctors-list',
+        loadComponent: () => import('./views/pages/initial-page/initial-page/doctors-list/doctors-list.component').then(m => m.DoctorsListComponent),
+        canActivate: [clinicaCadastradaGuard]
+      },
+      {
+        path:'medicos/agenda/:id',
+        loadComponent: () => import('./views/pages/initial-page/initial-page/doctors-list/doctor-schedule/doctor-schedule.component').then(m => m.DoctorScheduleComponent),
       },
       {
         path: 'initial-page-admin',
         loadComponent: () => import('./views/pages/initial-page/initial-page-admin/initial-page-admin.component').then(m => m.InitialPageAdminComponent),
+      },
+      {
+        path: 'initial-page-doctor',
+        loadComponent: () => import('./views/pages/initial-page/initial-page-doctor/initial-page-doctor.component').then(m => m.InitialPageDoctorComponent),
       },
       {
         path:'user-management',

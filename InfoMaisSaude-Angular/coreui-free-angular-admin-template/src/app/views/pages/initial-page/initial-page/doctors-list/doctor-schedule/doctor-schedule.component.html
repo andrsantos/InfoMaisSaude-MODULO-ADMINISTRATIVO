@@ -1,0 +1,94 @@
+<div class="schedule-container fade-in" *ngIf="medico; else loadingTpl">
+  
+  <div class="top-nav d-flex justify-content-between align-items-center">
+    <button class="btn-back" (click)="voltar()">← Voltar</button>
+    
+    <div class="action-controls">
+      <button *ngIf="!isEditing" class="btn btn-outline-primary" (click)="toggleEditMode()">
+        ✏️ Editar Agenda
+      </button>
+
+      <div *ngIf="isEditing" class="d-flex gap-2">
+        <button class="btn btn-secondary" (click)="cancelarEdicao()">Cancelar</button>
+        <button class="btn btn-success text-white" (click)="salvarAlteracoes()">
+          💾 Salvar Alterações
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="doctor-header-card">
+    <div class="avatar-large">{{ medico.nome.charAt(0) }}</div>
+    <div class="info">
+      <h1>{{ medico.nome }}</h1>
+      <div class="badges">
+        <span class="badge-spec">{{ medico.especializacao }}</span>
+        <span class="badge-phone">📞 {{ medico.telefone }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isEditing" class="alert alert-warning border-warning d-flex align-items-center mb-4">
+    <i class="fa fa-info-circle me-2"></i>
+    <span>Você está no <strong>Modo de Edição</strong>. Remova horários clicando no "X" ou adicione novos. Clique em Salvar para confirmar.</span>
+  </div>
+
+  <div class="week-grid">
+    <div class="day-card" *ngFor="let dia of diasDaSemana" 
+         [class.editing-mode]="isEditing"> <div class="day-header">{{ dia.label }}</div>
+      
+      <div class="day-body">
+        
+        <div *ngFor="let slot of getHorariosDoDia(dia.id); let i = index" class="time-slot-wrapper">
+          <div class="time-slot">
+            <span class="dot"></span>
+            {{ slot.horarioInicio }} - {{ slot.horarioFim }}
+          </div>
+          
+          <button *ngIf="isEditing" class="btn-remove" (click)="removerHorario(slot)" title="Remover horário">
+            ✕
+          </button>
+        </div>
+
+        <button *ngIf="isEditing" class="btn-add-slot" (click)="abrirModalAdicionar(dia.id)">
+          + Adicionar
+        </button>
+
+        <div *ngIf="!isEditing && getHorariosDoDia(dia.id).length === 0" class="empty-slot">
+          Sem atendimento
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="loading-state">Carregando...</div>
+</ng-template>
+
+
+<c-modal [visible]="modalVisible" (visibleChange)="modalVisible = $event">
+  <c-modal-header>
+    <h5 cModalTitle>Novo Horário para {{ getNomeDia(diaSelecionadoParaAdicao) }}</h5>
+    <button cButtonClose (click)="modalVisible = false"></button>
+  </c-modal-header>
+  <c-modal-body>
+    <form [formGroup]="formHorario">
+      <div class="row">
+        <div class="col-6">
+          <label class="form-label">Início</label>
+          <input type="time" class="form-control" formControlName="inicio">
+        </div>
+        <div class="col-6">
+          <label class="form-label">Fim</label>
+          <input type="time" class="form-control" formControlName="fim">
+        </div>
+      </div>
+    </form>
+  </c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="modalVisible = false">Cancelar</button>
+    <button cButton color="primary" [disabled]="formHorario.invalid" (click)="confirmarAdicao()">Adicionar</button>
+  </c-modal-footer>
+</c-modal>

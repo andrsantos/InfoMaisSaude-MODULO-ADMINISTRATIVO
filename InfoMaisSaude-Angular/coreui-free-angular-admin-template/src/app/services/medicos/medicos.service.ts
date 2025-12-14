@@ -34,7 +34,7 @@ export class MedicosService {
       medicoId: number,
       dadosMedico: any
     ): Observable<MedicoUpdateResponse> {
-      const url = `${this.apiUrl}/api/clinicas/atualizar/${medicoId}`;
+      const url = `${this.apiUrl}/api/medicos/atualizar/${medicoId}`;
       return this.http.put<MedicoUpdateResponse>(url, dadosMedico);
     }
   
@@ -42,4 +42,15 @@ export class MedicosService {
       const url = `${this.apiUrl}/api/medicos/pegar/${medicoId}`;
       return this.http.get<MedicoReadResponse>(url);
     }
+
+  pegarMedicoPorUsuarioId(usuarioId: number): Observable<MedicoReadResponse> {
+    const url = `${this.apiUrl}/api/medicos/pegarPorUsuario/${usuarioId}`;
+    return this.http.get<MedicoReadResponse>(url);
+  }
+
+  pegarIdDoMedicoLogado(): number {
+    const usuarioId = localStorage.getItem("usuarioId");
+    return usuarioId ? parseInt(usuarioId, 10) : 0;
+  }
+
 }

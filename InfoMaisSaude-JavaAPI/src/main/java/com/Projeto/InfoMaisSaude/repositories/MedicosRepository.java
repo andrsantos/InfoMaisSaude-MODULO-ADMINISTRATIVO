@@ -14,6 +14,7 @@ import com.Projeto.InfoMaisSaude.entities.Medico;
 public interface MedicosRepository extends JpaRepository<Medico, Long> {
 
     boolean existsByTelefone(String telefone);
+    Medico findByUsuarioId(Long idUsuario);
     List<Medico> findByEspecializacao(String especializacao);
     List<Medico> findByNomeContainingIgnoreCase(String nome);
     @Query("SELECT m FROM Medico m LEFT JOIN FETCH m.agenda WHERE m.id = :id")

@@ -1,1 +1,31 @@
-<p>initial-page-doctor works!</p>
+<c-row class="justify-content-center">
+
+    <c-col md="4">
+        <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" (click)="goToDoctorSchedule()">
+            <img cCardImg="top" src="assets/images/medico.jpg" alt="Agenda">
+            <c-card-body>
+                <h5 cCardTitle>Agenda</h5>
+                <p cCardText>
+                    Veja, adicione ou remova horários da sua agenda.
+                </p>
+                <button cButton color="dark" (click)="goToDoctorSchedule()">Acessar Painel</button>
+            </c-card-body>
+        </c-card>
+    </c-col>
+
+    <c-col md="4">
+        <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" >
+            <img cCardImg="top" src="assets/images/clinica.jpg" alt="Consultas">
+            <c-card-body>
+                <h5 cCardTitle>Consultas</h5>
+                <p cCardText>
+                    Confira as consultas agendadas para você.
+                </p>
+                <button cButton color="dark">Acessar Painel</button>
+            </c-card-body>
+        </c-card>
+    </c-col>
+
+    
+
+</c-row>

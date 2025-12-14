@@ -1,0 +1,119 @@
+<div class="list-container fade-in">
+  
+  <div class="page-header">
+    <div class="header-content">
+      <h2>Corpo Clínico</h2>
+      <p class="text-muted">Gerencie os médicos cadastrados no sistema.</p>
+    </div>
+  <button class="btn-primary" (click)="novoMedico()">
+      <i class="fa fa-plus"></i> Novo Médico
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="bordered-table">
+      <thead>
+        <tr>
+          <th style="width: 25%">Médico</th>
+          <th style="width: 20%">Especialização</th>
+          <th style="width: 20%">Telefone</th>
+          <th style="width: 20%">Login</th>
+          <th style="width: 15%" class="text-center">Agenda</th>
+          <th style="width: 15%" class="text-center">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let medico of listaMedicos">
+        
+          <td>
+            <div class="doctor-profile">
+              <span class="name">{{ medico.nome }}</span>
+            </div>
+          </td>
+
+          <td>
+            <span class="spec-badge">{{ medico.especializacao }}</span>
+          </td>
+
+          <td>{{ medico.telefone }}</td>
+
+          <td>{{ medico.login }}</td>
+
+
+          <td class="text-center">
+            <button class="btn-link" (click)="verAgenda(medico.id)">
+              Ver Horários
+            </button>
+          </td>
+
+          <td class="text-center">
+            <div class="action-group">
+              <button class="btn-icon edit"  (click)="editarMedico(medico.id)" title="Editar">
+                ✏️
+              </button>
+              <button class="btn-icon delete" (click)="deletarMedico(medico.id)" title="Excluir">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngIf="listaMedicos.length === 0">
+          <td colspan="6" class="empty-state">
+            Nenhum registro encontrado.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <c-modal [visible]="visibleEditModal" (visibleChange)="handleModalChange($event)" id="modalEdicao">
+  <c-modal-header>
+    <h5 cModalTitle>Editar Médico</h5>
+    <button cButtonClose (click)="visibleEditModal = false"></button>
+  </c-modal-header>
+
+  <c-modal-body>
+    <form [formGroup]="editForm" cForm>
+      
+      <div class="mb-3">
+        <label cLabel for="editNome">Nome Completo</label>
+        <input cFormControl id="editNome" formControlName="nome" type="text" />
+        <div class="text-danger small" *ngIf="editForm.get('nome')?.touched && editForm.get('nome')?.invalid">
+          O nome é obrigatório.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label cLabel for="editSpec">Especialização</label>
+        <input cFormControl id="editSpec" formControlName="especializacao" type="text" />
+      </div>
+
+      <div class="mb-3">
+        <label cLabel for="editTel">Telefone (apenas números)</label>
+        <input cFormControl id="editTel" formControlName="telefone" type="text" />
+        <div class="text-danger small" *ngIf="editForm.get('telefone')?.touched && editForm.get('telefone')?.invalid">
+          Telefone inválido (somente números).
+        </div>
+      </div>
+      
+      <div class="alert alert-info py-2 small">
+        <i class="fa fa-info-circle"></i> Para alterar os horários de atendimento, utilize o botão "Ver Horários" na lista principal.
+      </div>
+
+    </form>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="visibleEditModal = false">
+      Cancelar
+    </button>
+    <button cButton color="primary" [disabled]="editForm.invalid" (click)="salvarEdicao()">
+      Salvar Alterações
+    </button>
+  </c-modal-footer>
+</c-modal>
+
+
+</div>

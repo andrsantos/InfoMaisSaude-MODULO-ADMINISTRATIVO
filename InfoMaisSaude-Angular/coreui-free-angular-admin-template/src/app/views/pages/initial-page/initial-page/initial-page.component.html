@@ -1,14 +1,14 @@
 <c-row class="justify-content-center">
 
     <c-col md="4">
-        <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" (click)="goToRegisterDoctor()">
+        <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" (click)="goToDoctorsList()">
             <img cCardImg="top" src="assets/images/medico.jpg" alt="Agendamento de Consulta">
             <c-card-body>
-                <h5 cCardTitle>Cadastrar Médico</h5>
+                <h5 cCardTitle>Médicos</h5>
                 <p cCardText>
-                    Cadastre médicos, horários e especialidades para sua clínica
+                    Veja, adicione ou remova médicos do seu corpo clínico
                 </p>
-                <button cButton color="dark" (click)="goToRegisterDoctor()">Acessar Painel</button>
+                <button cButton color="dark" (click)="goToDoctorsList()">Acessar Painel</button>
             </c-card-body>
         </c-card>
     </c-col>

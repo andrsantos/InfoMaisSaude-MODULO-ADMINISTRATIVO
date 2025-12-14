@@ -66,6 +66,8 @@ export class RegisterDoctorComponent {
       nome: ["", Validators.required],
       especializacao: ["", Validators.required],
       telefone: ["", [Validators.required, Validators.pattern(/^\d+$/)]], 
+      login: ["", Validators.required],
+      senha: ["", Validators.required]
     });
 
     this.horarioForm = this.fb.group({
@@ -137,8 +139,12 @@ export class RegisterDoctorComponent {
           this.successMessage = `Médico ${response.nomeDoMedicoCriado} cadastrado com sucesso!`;
           this.medicoForm.reset();
           this.horarios = [];
-          this.toastr.success(response.mensagemDeResposta, "Sucesso!");
-          
+          this.router.navigate(["/doctors-list"], {
+            state: {
+              showSuccessToast: true,
+              message: response.mensagemDeResposta,
+            },
+          });         
         },
         error: (err) => {
           console.error("Erro ao cadastrar:", err);
@@ -151,4 +157,18 @@ export class RegisterDoctorComponent {
       this.medicoForm.markAllAsTouched();
     }
   }
+
+  getHorarioItem(rowIndex: number, dia: string): HorarioFrontend | undefined {
+    const horariosDoDia = this.horarios.filter((h) => h.diaDaSemana === dia);
+    return horariosDoDia[rowIndex];
+  }
+
+  removerHorario(item: HorarioFrontend): void {
+    const index = this.horarios.indexOf(item);
+    if (index > -1) {
+      this.horarios.splice(index, 1);
+    }
+  }
+
+
 }

@@ -53,4 +53,10 @@ public class MedicoController {
         var medico = medicosService.pegarMedico(id);
         return ResponseEntity.ok(medico);
     }
+
+    @GetMapping("/pegarPorUsuario/{idUsuario}")
+    public ResponseEntity<?> pegarMedicoPorUsuario(@PathVariable Long idUsuario) {
+        var medico = medicosService.pegarMedicoPorUsuario(idUsuario);
+        return ResponseEntity.ok(medico);
+    }
 }

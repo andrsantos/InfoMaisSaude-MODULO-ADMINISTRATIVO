@@ -62,7 +62,7 @@ export class InitialPageComponent {
     });
     } 
   }
-  goToRegisterDoctor(): void {
-    this.Router.navigate(["/register-doctor"]);
+  goToDoctorsList(): void {
+    this.Router.navigate(["/doctors-list"]);
   }
 }

@@ -1,0 +1,186 @@
+// --- Variáveis ---
+$primary: #0d6efd;
+$dark-text: #212529;
+$light-text: #6c757d;
+$border-color: #dee2e6; // Cinza clássico de bordas
+$header-bg: #f8f9fa;     // Fundo cinza claro para o cabeçalho
+$hover-bg: #f1f5f9;
+
+.list-container {
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  color: $dark-text;
+}
+
+// --- Cabeçalho da Página ---
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  h2 { margin: 0; font-size: 1.5rem; font-weight: 700; }
+  p { margin: 0; font-size: 0.9rem; }
+
+  .btn-primary {
+    background-color: $primary;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    &:hover { background-color: darken($primary, 10%); }
+  }
+}
+
+// --- Container da Tabela ---
+.table-wrapper {
+  background: white;
+  border: 1px solid $border-color; // Borda externa
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  overflow-x: auto; // Responsividade
+}
+
+// --- Estilo GRADEADO (Bordered) ---
+.bordered-table {
+  width: 100%;
+  border-collapse: collapse; // ESSENCIAL: Junta as bordas das células
+  min-width: 800px; // Garante largura mínima em telas pequenas
+
+  // Cabeçalho
+  thead {
+    background-color: $header-bg;
+    
+    th {
+      padding: 12px 15px;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #495057;
+      border: 1px solid $border-color; // Borda completa
+      border-bottom: 2px solid $border-color; // Borda inferior mais forte
+    }
+  }
+
+  // Corpo
+  tbody {
+    td {
+      padding: 10px 15px;
+      border: 1px solid $border-color; // Borda completa em cada célula
+      vertical-align: middle;
+      font-size: 0.9rem;
+      color: $dark-text;
+    }
+
+    // Efeito Zebrado (Opcional - remova se quiser tudo branco)
+    tr:nth-child(even) {
+      background-color: #fcfcfc;
+    }
+
+    // Hover na linha
+    tr:hover {
+      background-color: $hover-bg;
+    }
+  }
+}
+
+// --- Elementos Internos da Tabela ---
+
+.text-center { text-align: center; }
+.font-weight-bold { font-weight: 600; }
+
+// Perfil do Médico
+.doctor-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .avatar-small {
+    width: 32px;
+    height: 32px;
+    background-color: #e0e7ff;
+    color: $primary;
+    border-radius: 4px; // Quadrado arredondado fica melhor em tabelas gradeadas
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border: 1px solid darken(#e0e7ff, 5%);
+  }
+
+  .name {
+    font-weight: 500;
+  }
+}
+
+// Badge de Especialização
+.spec-badge {
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid #ced4da;
+}
+
+// Botão Link "Ver Horários"
+.btn-link {
+  background: none;
+  border: none;
+  color: $primary;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Ações (Ícones)
+.action-group {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+
+  .btn-icon {
+    width: 30px;
+    height: 30px;
+    border: 1px solid $border-color;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: $primary;
+      color: white;
+      border-color: $primary;
+    }
+
+    &.delete:hover {
+      background-color: #dc3545;
+      border-color: #dc3545;
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem !important;
+  color: $light-text;
+  font-style: italic;
+}
+
+// Animação de entrada
+.fade-in { animation: fadeIn 0.4s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }

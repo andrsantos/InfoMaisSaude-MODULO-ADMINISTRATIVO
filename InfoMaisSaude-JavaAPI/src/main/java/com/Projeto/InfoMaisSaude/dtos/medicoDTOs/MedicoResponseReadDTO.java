@@ -13,6 +13,8 @@ public class MedicoResponseReadDTO {
     String especializacao;
     String telefone;
     List<AgendaReadDTO> agenda; 
+    String login;
+    String senha;
 
 
     public static MedicoResponseReadDTO fromEntity(Medico medico) {
@@ -30,7 +32,9 @@ public class MedicoResponseReadDTO {
         medico.getNome(),
         medico.getEspecializacao(),
         medico.getTelefone(),
-        agendaDTOs
+        agendaDTOs,
+        medico.getUsuario().getLogin(),
+        medico.getUsuario().getSenha()
     );
 }
     

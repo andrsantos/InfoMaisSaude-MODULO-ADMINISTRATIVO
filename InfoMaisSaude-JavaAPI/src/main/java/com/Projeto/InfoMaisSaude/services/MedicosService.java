@@ -15,5 +15,6 @@ public interface MedicosService {
   MedicoResponseDeleteDTO deletarMedico(Long id);
   MedicoResponseUpdateDTO atualizarMedico(Long id, MedicoUpdateDTO dto);
   MedicoResponseReadDTO pegarMedico(Long id);    
+  MedicoResponseReadDTO pegarMedicoPorUsuario(Long idUsuario);
 
 }
