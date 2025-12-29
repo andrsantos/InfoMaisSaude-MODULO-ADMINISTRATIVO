@@ -1,0 +1,80 @@
+package com.Projeto.InfoMaisSaude.controllers;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoRequestDTO;
+import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoResponseDTO;
+import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaListagemDTO;
+import com.Projeto.InfoMaisSaude.entities.Usuario;
+import com.Projeto.InfoMaisSaude.repositories.MedicosRepository;
+import com.Projeto.InfoMaisSaude.services.AgendamentoService;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/agendamentos")
+@RequiredArgsConstructor
+public class AgendamentoController {
+
+    private final AgendamentoService agendamentoService;
+
+    private final MedicosRepository medicosRepository;
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('MEDICO', 'CLINICA', 'ADMIN')")
+    public ResponseEntity<List<ConsultaListagemDTO>> listarConsultas(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
+            @RequestParam(required = false) Long medicoIdFiltro, 
+            @AuthenticationPrincipal Usuario usuarioLogado
+    ) {
+        LocalDate dataBusca = (data != null) ? data : LocalDate.now();
+        
+        Long idParaBuscar = null;
+
+        if (usuarioLogado.getRole().name().equals("MEDICO")) {
+            var medico = Optional.ofNullable(medicosRepository.findByUsuarioId(usuarioLogado.getId()))
+                    .orElseThrow(() -> new EntityNotFoundException("Médico não encontrado para este usuário"));
+            idParaBuscar = medico.getId();
+        } else {
+            idParaBuscar = medicoIdFiltro;
+        }
+
+        var consultas = agendamentoService.listarConsultas(idParaBuscar, dataBusca);
+        return ResponseEntity.ok(consultas);
+    }
+
+    @PostMapping("/agendar")
+    public ResponseEntity<AgendamentoResponseDTO> agendarConsulta(
+            @RequestBody @Valid AgendamentoRequestDTO dto
+    ) {
+        var agendamento = agendamentoService.agendarConsulta(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(agendamento);
+    }
+
+
+    @GetMapping("/disponibilidade")
+    public ResponseEntity<List<LocalTime>> checarDisponibilidade(
+            @RequestParam Long medicoId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data
+    ) {
+        var horarios = agendamentoService.listarHorariosDisponiveis(medicoId, data);
+        return ResponseEntity.ok(horarios);
+    }
+}

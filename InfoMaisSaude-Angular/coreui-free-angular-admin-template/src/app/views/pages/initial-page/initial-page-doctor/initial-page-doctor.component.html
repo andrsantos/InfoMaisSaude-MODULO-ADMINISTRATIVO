@@ -1,8 +1,7 @@
 <c-row class="justify-content-center">
 
-    <c-col md="4">
-        <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" (click)="goToDoctorSchedule()">
-            <img cCardImg="top" src="assets/images/medico.jpg" alt="Agenda">
+    <c-col md="4" class="mb-4"> <c-card class="mx-auto card-interativo h-100" style="max-width: 23rem;" (click)="goToDoctorSchedule()">
+            <img cCardImg="top" class="card-img-padrao" src="assets/images/medico.jpg" alt="Agenda">
             <c-card-body>
                 <h5 cCardTitle>Agenda</h5>
                 <p cCardText>
@@ -13,19 +12,30 @@
         </c-card>
     </c-col>
 
-    <c-col md="4">
-        <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" >
-            <img cCardImg="top" src="assets/images/clinica.jpg" alt="Consultas">
+    <c-col md="4" class="mb-4">
+        <c-card class="mx-auto card-interativo h-100" style="max-width: 23rem;" (click)="goToAppointments()">
+            <img cCardImg="top" class="card-img-padrao" src="assets/images/clinica.jpg" alt="Consultas">
             <c-card-body>
                 <h5 cCardTitle>Consultas</h5>
                 <p cCardText>
                     Confira as consultas agendadas para você.
                 </p>
-                <button cButton color="dark">Acessar Painel</button>
+                <button cButton color="dark" (click)="goToAppointments()">Acessar Painel</button>
             </c-card-body>
         </c-card>
     </c-col>
 
-    
+    <c-col md="4" class="mb-4">
+        <c-card class="mx-auto card-interativo h-100" style="max-width: 23rem;" (click)="goToMyRequests()">
+            <img cCardImg="top" class="card-img-padrao" src="assets/images/solicitacoes.jpg" alt="Solicitacoes">
+            <c-card-body>
+                <h5 cCardTitle>Solicitações</h5>
+                <p cCardText>
+                    Confira aqui as suas solicitações.
+                </p>
+                <button cButton color="dark" (click)="goToMyRequests()">Acessar Painel</button>
+            </c-card-body>
+        </c-card>
+    </c-col>
 
 </c-row>

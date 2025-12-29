@@ -1,0 +1,70 @@
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Minhas Solicitações</strong>
+        <small class="text-medium-emphasis ms-2">Histórico de alterações solicitadas</small>
+      </c-card-header>
+      
+      <c-card-body>
+        
+        <div *ngIf="loading" class="text-center py-4">
+          <c-spinner color="primary"></c-spinner>
+          <p class="mt-2">Carregando histórico...</p>
+        </div>
+
+        <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border" *ngIf="!loading">
+          <thead class="bg-light">
+            <tr>
+              <th class="text-center">Data</th>
+              <th>Tipo</th>
+              <th class="text-center">Status</th>
+              <th>Detalhes / Motivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of listaSolicitacoes">
+              
+              <td class="text-center">
+                <div class="small text-medium-emphasis">Solicitado em</div>
+                <div class="fw-semibold">{{ item.criadoEm | date:'dd/MM/yyyy HH:mm' }}</div>
+              </td>
+
+              <td>
+                <div class="fw-bold">{{ getTipoLabel(item.tipo) }}</div>
+                <div class="small text-medium-emphasis">ID: #{{ item.id }}</div>
+              </td>
+
+              <td class="text-center">
+                <c-badge [color]="getBadgeColor(item.status)" shape="rounded-pill">
+                  {{ item.status }}
+                </c-badge>
+                <div *ngIf="item.avaliadoEm" class="small text-muted mt-1">
+                  {{ item.avaliadoEm | date:'dd/MM' }}
+                </div>
+              </td>
+
+              <td>
+                <div *ngIf="item.status === 'REJEITADO'" class="text-danger small">
+                  <strong>Motivo:</strong> {{ item.motivoRejeicao }}
+                </div>
+                
+                <div *ngIf="item.status !== 'REJEITADO'" class="text-muted small">
+                  <em>"{{ item.justificativaMedico || 'Sem justificativa' }}"</em>
+                </div>
+              </td>
+
+            </tr>
+
+            <tr *ngIf="listaSolicitacoes.length === 0">
+              <td colspan="4" class="text-center py-4 text-muted">
+                Você não possui solicitações recentes.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

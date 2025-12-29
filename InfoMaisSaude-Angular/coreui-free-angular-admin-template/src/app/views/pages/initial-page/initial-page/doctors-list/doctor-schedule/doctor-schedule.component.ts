@@ -7,12 +7,13 @@ import { ModalModule, ButtonModule } from '@coreui/angular';
 import { MedicoReadResponse } from '../../../../../../models/medicoModels/medicoReadResponse';
 import { MedicosService } from '../../../../../../services/medicos/medicos.service';
 import { AgendaItem } from '../../../../../../models/medicoModels/agendaItem';
-
+import { AuthService } from '../../../../../../services/auth/auth.service';
+import { SolicitacoesService } from '../../../../../../services/solicitacoes/solicitacoes.service';
 
 @Component({
   selector: 'app-doctor-schedule',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ModalModule, ButtonModule], // Adicione ReactiveFormsModule
+  imports: [CommonModule, ReactiveFormsModule, ModalModule, ButtonModule], 
   templateUrl: './doctor-schedule.component.html',
   styleUrl: './doctor-schedule.component.scss'
 })
@@ -24,6 +25,7 @@ export class DoctorScheduleComponent implements OnInit {
   modalVisible = false;
   diaSelecionadoParaAdicao: number | null = null;
   formHorario: FormGroup;
+  userRole: string | null = null;
 
   diasDaSemana = [
     { id: 1, label: 'Segunda-feira' },
@@ -40,7 +42,9 @@ export class DoctorScheduleComponent implements OnInit {
     private router: Router,
     private medicosService: MedicosService,
     private toastr: ToastrService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private solicitacoesService: SolicitacoesService
   ) {
     this.formHorario = this.fb.group({
       inicio: ['', Validators.required],
@@ -49,6 +53,7 @@ export class DoctorScheduleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userRole = this.authService.getUserRole();
     const id = this.route.snapshot.paramMap.get('id');
     if (id) this.carregarMedico(Number(id));
   }
@@ -117,29 +122,56 @@ export class DoctorScheduleComponent implements OnInit {
   salvarAlteracoes() {
     if (!this.medico) return;
 
-    const payload = {
-      nome: this.medico.nome,
-      especializacao: this.medico.especializacao,
-      telefone: this.medico.telefone,
-      agenda: this.medico.agenda.map(item => ({
-        diaSemana: item.diaSemana,
-        horarioInicio: item.horarioInicio,
-        horarioFim: item.horarioFim
-      }))
-    };
+    if (this.userRole === 'CLINICA' || this.userRole === 'ADMIN') {
+        
+        const payload = {
+            nome: this.medico.nome,
+            especializacao: this.medico.especializacao,
+            telefone: this.medico.telefone,
+            agenda: this.medico.agenda.map(item => ({
+                diaSemana: item.diaSemana,
+                horarioInicio: item.horarioInicio,
+                horarioFim: item.horarioFim
+            }))
+        };
 
-    this.medicosService.atualizarMedico(this.medico.id, payload).subscribe({
-      next: () => {
-        this.toastr.success('Agenda atualizada com sucesso!');
-        this.isEditing = false;
-        this.carregarMedico(this.medico!.id); 
-      },
-      error: (err) => {
-        console.error(err);
-        this.toastr.error('Erro ao salvar alterações.');
-      }
-    });
-  }
+        this.medicosService.atualizarMedico(this.medico.id, payload).subscribe({
+            next: () => {
+                this.toastr.success('Agenda atualizada com sucesso!');
+                this.isEditing = false;
+                this.carregarMedico(this.medico!.id);
+            },
+            error: (err) => {
+                console.error(err);
+                this.toastr.error('Erro ao salvar alterações.');
+            }
+        });
+
+    } 
+    else if (this.userRole === 'MEDICO') {
+        const novaAgendaPayload = this.medico.agenda.map(item => ({
+            diaSemana: item.diaSemana,
+            horarioInicio: item.horarioInicio,
+            horarioFim: item.horarioFim
+        }));
+
+        const payloadSolicitacao = {
+            novaAgenda: novaAgendaPayload,
+            justificativa: "Alteração realizada via painel do médico" 
+        };
+        console.log('Payload da solicitação:', payloadSolicitacao);
+        this.solicitacoesService.solicitarAlteracaoAgenda(payloadSolicitacao).subscribe({
+            next: (resp) => {
+                this.toastr.info('Solicitação enviada para análise da administração.', 'Enviado');
+                this.cancelarEdicao(); 
+            },
+            error: (err) => {
+                console.error(err);
+                this.toastr.error('Erro ao enviar solicitação.');
+            }
+        });
+    }
+}
 
   getNomeDia(diaId: number | null): string {
     if (!diaId) return '';
@@ -147,6 +179,6 @@ export class DoctorScheduleComponent implements OnInit {
   }
   
   voltar() {
-    this.router.navigate(['/doctors-list']);
+    this.router.navigate(['/initial-page-doctor']);
   }
 }

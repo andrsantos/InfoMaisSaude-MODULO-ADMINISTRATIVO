@@ -16,5 +16,6 @@ public interface UsuarioService {
     List<UsuarioResponseReadDTO> listarUsuarios();
     UsuarioUpdateResponseDTO atualizarUsuario(Long id, UsuarioUpdateDTO usuario);
     UsuarioResponseDeleteDTO deletarUsuario(Long id);
+    UsuarioResponseReadDTO pegarUsuario(Long id);
    
 }

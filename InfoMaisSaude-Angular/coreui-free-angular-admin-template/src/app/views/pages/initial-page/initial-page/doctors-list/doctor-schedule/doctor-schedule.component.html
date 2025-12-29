@@ -10,8 +10,19 @@
 
       <div *ngIf="isEditing" class="d-flex gap-2">
         <button class="btn btn-secondary" (click)="cancelarEdicao()">Cancelar</button>
-        <button class="btn btn-success text-white" (click)="salvarAlteracoes()">
-          💾 Salvar Alterações
+        
+        <button class="btn text-white" 
+                [ngClass]="userRole === 'MEDICO' ? 'btn-primary' : 'btn-success'" 
+                (click)="salvarAlteracoes()">
+          
+          <span *ngIf="userRole === 'MEDICO'">
+             📨 Enviar Solicitação
+          </span>
+          
+          <span *ngIf="userRole !== 'MEDICO'">
+             💾 Salvar Alterações
+          </span>
+
         </button>
       </div>
     </div>
@@ -28,14 +39,29 @@
     </div>
   </div>
 
-  <div *ngIf="isEditing" class="alert alert-warning border-warning d-flex align-items-center mb-4">
-    <i class="fa fa-info-circle me-2"></i>
-    <span>Você está no <strong>Modo de Edição</strong>. Remova horários clicando no "X" ou adicione novos. Clique em Salvar para confirmar.</span>
+  <div *ngIf="isEditing" class="alert d-flex align-items-center mb-4"
+       [ngClass]="userRole === 'MEDICO' ? 'alert-info border-info' : 'alert-warning border-warning'">
+    
+    <i class="fa me-2" 
+       [ngClass]="userRole === 'MEDICO' ? 'fa-envelope-open-text' : 'fa-exclamation-triangle'">
+    </i>
+    
+    <div>
+      <span *ngIf="userRole !== 'MEDICO'">
+        <strong>Modo de Edição Direta:</strong> Cuidado! As alterações salvas impactam a agenda em tempo real.
+      </span>
+
+      <span *ngIf="userRole === 'MEDICO'">
+        <strong>Modo de Solicitação:</strong> Faça as alterações desejadas. Ao finalizar, elas serão enviadas para aprovação da administração.
+      </span>
+    </div>
   </div>
 
   <div class="week-grid">
     <div class="day-card" *ngFor="let dia of diasDaSemana" 
-         [class.editing-mode]="isEditing"> <div class="day-header">{{ dia.label }}</div>
+         [class.editing-mode]="isEditing"> 
+      
+      <div class="day-header">{{ dia.label }}</div>
       
       <div class="day-body">
         

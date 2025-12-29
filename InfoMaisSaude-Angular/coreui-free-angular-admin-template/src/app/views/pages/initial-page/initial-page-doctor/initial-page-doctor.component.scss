@@ -1,0 +1,17 @@
+
+.card-img-padrao {
+  height: 200px;       /* Define uma altura fixa para todas */
+  object-fit: cover;   /* Corta a imagem para caber sem esticar/achatá-la */
+  width: 100%;         /* Garante largura total */
+}
+
+.card-interativo {
+  height: 100%;        /* Força o card a ocupar toda a altura da coluna */
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+}

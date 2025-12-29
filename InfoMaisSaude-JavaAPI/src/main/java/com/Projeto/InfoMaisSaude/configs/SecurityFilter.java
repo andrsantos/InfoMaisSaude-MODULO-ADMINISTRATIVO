@@ -1,8 +1,6 @@
 package com.Projeto.InfoMaisSaude.configs;
 
-
 import jakarta.servlet.FilterChain;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,10 +29,19 @@ public class SecurityFilter extends OncePerRequestFilter {
         String tokenJWT = recuperarToken(request);
 
         if (tokenJWT != null) {
-            String login = tokenService.getSubject(tokenJWT);
-            UserDetails usuario = usuarioRepository.findByLogin(login);
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            try {
+                String login = tokenService.getSubject(tokenJWT);
+                
+                UserDetails usuario = usuarioRepository.findByLogin(login); 
+
+                if (usuario != null) {
+                    var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                    
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            } catch (Exception e) {
+                System.out.println("Token inválido: " + e.getMessage());
+            }
         }
         filterChain.doFilter(request, response);
     }

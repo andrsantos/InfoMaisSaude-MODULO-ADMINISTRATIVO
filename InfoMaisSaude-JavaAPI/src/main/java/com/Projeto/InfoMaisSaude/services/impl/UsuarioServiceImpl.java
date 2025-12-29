@@ -93,6 +93,19 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     }
 
+    @Override
+    public UsuarioResponseReadDTO pegarUsuario(Long id) {
+        return usuariosRepository.findById(id)
+            .map(usuario -> new UsuarioResponseReadDTO(
+                usuario.getId(),
+                usuario.getLogin(),
+                usuario.getRole(),
+                usuario.getDataHoraCriacao(),
+                usuario.getCreatedBy().getLogin()
+            ))
+            .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o ID: " + id));
+    }
+
     private boolean verificaSeExistemUsuariosCadastrados(){
 
         if(usuariosRepository.findAll() != null){
@@ -133,6 +146,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     private boolean verificarSeOLoginJaExiste(String login) {
         return usuariosRepository.findByLogin(login) != null;
     }
+
+
 
 
 }

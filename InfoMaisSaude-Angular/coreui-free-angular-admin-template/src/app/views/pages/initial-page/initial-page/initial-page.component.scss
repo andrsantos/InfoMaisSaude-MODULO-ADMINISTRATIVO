@@ -1,4 +1,12 @@
+.card-img-padrao {
+  height: 200px;       /* Define uma altura fixa para todas */
+  object-fit: cover;   /* Corta a imagem para caber sem esticar/achatá-la */
+  width: 100%;         /* Garante largura total */
+}
+
+
 .card-interativo {
+  height: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 

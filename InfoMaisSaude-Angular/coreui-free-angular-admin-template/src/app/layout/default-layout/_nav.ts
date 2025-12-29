@@ -4,19 +4,14 @@ export const navItems: INavData[] = [
 
   {
     name: 'Página Inicial',
-    url: '/dashboard',
+    url: '/',
     iconComponent: { name: 'cil-home' }
   },
   
   {
     name: 'Ver Perfil',
-    url: '/dashboard',
+    url: '/profile-redirect',
     iconComponent: { name: 'cilUser' }
-  },
-  {
-    name: 'Sobre o sistema',
-    url: 'https://coreui.io/angular/docs/',
-    iconComponent: { name: 'cil-description' },
-    attributes: { target: '_blank' }
   }
+
 ];

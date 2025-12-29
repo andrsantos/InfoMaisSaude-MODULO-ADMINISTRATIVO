@@ -9,6 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.Projeto.InfoMaisSaude.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,7 +42,8 @@ public class Usuario implements UserDetails {
 
     @Column(name = "login", nullable = false, unique = true, length = 100)
     private String login;
-
+    
+    @JsonIgnore
     @Column(name = "senha", nullable = false, length = 255)
     private String senha; 
 

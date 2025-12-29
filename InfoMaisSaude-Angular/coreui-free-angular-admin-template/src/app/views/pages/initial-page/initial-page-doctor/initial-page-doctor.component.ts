@@ -49,4 +49,11 @@ export class InitialPageDoctorComponent implements OnInit{
     this.resgatandoMedico();
   }
 
+  goToMyRequests(): void {
+    this.router.navigate(['medicos/solicitacoes']);
+  }
+  goToAppointments(): void {
+    this.router.navigate(['appointments']);
+  }
+
 }

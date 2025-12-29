@@ -3,13 +3,9 @@ import { authGuard } from './guards/auth.guard';
 import { loginGuard } from './guards/login.guard';
 import { clinicaNaoCadastradaGuard } from './guards/clinica-nao-cadastrada.guard';
 import { clinicaCadastradaGuard } from './guards/clinica-cadastrada.guard';
-
+import { roleRedirectGuard } from './guards/role-redirect.guard';
+import { profileRedirectGuard } from './guards/profile-redirect.guard';
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
-  },
   {
     path: '',
     loadComponent: () => import('./layout').then(m => m.DefaultLayoutComponent),
@@ -18,6 +14,21 @@ export const routes: Routes = [
     },
     canActivate: [authGuard],
     children: [
+      {
+        path:'',
+        pathMatch:'full',
+        canActivate:[roleRedirectGuard],
+        loadComponent: () => import('./views/pages/initial-page/initial-page/initial-page.component')
+        .then(m => m.InitialPageComponent)      
+      },
+      {
+        path:'profile-redirect',
+        pathMatch:'full',  
+        canActivate:[profileRedirectGuard],
+        loadComponent: () => import('./views/pages/initial-page/initial-page/initial-page.component')
+        .then(m => m.InitialPageComponent)
+
+      },
       {
         path:'initial-page',
         loadComponent: () => import('./views/pages/initial-page/initial-page/initial-page.component').then(m => m.InitialPageComponent),
@@ -34,13 +45,30 @@ export const routes: Routes = [
         canActivate: [clinicaCadastradaGuard]
       },
       {
+        path:'doctor-profile',
+        loadComponent: () => import('./views/pages/initial-page/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent),
+      },
+      {
         path:'doctors-list',
         loadComponent: () => import('./views/pages/initial-page/initial-page/doctors-list/doctors-list.component').then(m => m.DoctorsListComponent),
         canActivate: [clinicaCadastradaGuard]
       },
       {
+        path: 'clinic-requests',
+        loadComponent: () => import('./views/pages/initial-page/clinic-requests/clinic-requests.component').then(m => m.ClinicRequestsComponent),
+        
+      },
+      {
+        path:'appointments',
+        loadComponent: () => import('./views/pages/initial-page/appointments/appointments.component').then(m => m.AppointmentsComponent),
+      },
+      {
         path:'medicos/agenda/:id',
         loadComponent: () => import('./views/pages/initial-page/initial-page/doctors-list/doctor-schedule/doctor-schedule.component').then(m => m.DoctorScheduleComponent),
+      },
+      {
+        path:'medicos/solicitacoes',
+        loadComponent: () => import('./views/pages/initial-page/doctor-requests/my-requests.component').then(m => m.MyRequestsComponent),
       },
       {
         path: 'initial-page-admin',

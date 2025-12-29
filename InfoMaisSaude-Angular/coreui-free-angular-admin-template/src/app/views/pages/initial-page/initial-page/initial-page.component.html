@@ -1,27 +1,39 @@
 <c-row class="justify-content-center">
 
-    <c-col md="4">
-        <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" (click)="goToDoctorsList()">
-            <img cCardImg="top" src="assets/images/medico.jpg" alt="Agendamento de Consulta">
+    <c-col md="4" class="mb-4"> <c-card class="mx-auto card-interativo h-100" style="max-width: 23rem;" (click)="goToDoctorsList()">
+            <img cCardImg="top" class="card-img-padrao" src="assets/images/medico.jpg" alt="Agenda">
             <c-card-body>
                 <h5 cCardTitle>Médicos</h5>
                 <p cCardText>
-                    Veja, adicione ou remova médicos do seu corpo clínico
+                    Veja, adicione ou remova médicos do corpo clínico.
                 </p>
                 <button cButton color="dark" (click)="goToDoctorsList()">Acessar Painel</button>
             </c-card-body>
         </c-card>
     </c-col>
 
-    <c-col md="4">
-        <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" (click)="goToRegisterClinic()">
-            <img cCardImg="top" src="assets/images/clinica.jpg" alt="Gerenciamento da Clínica">
+    <c-col md="4" class="mb-4">
+        <c-card class="mx-auto card-interativo h-100" style="max-width: 23rem;">
+            <img cCardImg="top" class="card-img-padrao" src="assets/images/clinica.jpg" alt="Consultas">
             <c-card-body>
-                <h5 cCardTitle>Minha Clínica</h5>
+                <h5 cCardTitle>Minha Clinica</h5>
                 <p cCardText>
-                    Atualize, adicione ou delete informações sobre a sua clínica
+                    Confira os dados da sua clinica.
                 </p>
-                <button cButton color="dark" (click)="goToRegisterClinic()">Acessar Painel</button>
+                <button cButton color="dark">Acessar Painel</button>
+            </c-card-body>
+        </c-card>
+    </c-col>
+
+    <c-col md="4" class="mb-4">
+        <c-card class="mx-auto card-interativo h-100" style="max-width: 23rem;" (click)="goToClinicRequests()">
+            <img cCardImg="top" class="card-img-padrao" src="assets/images/solicitacoes.jpg" alt="Solicitacoes" style="height:200px;">
+            <c-card-body>
+                <h5 cCardTitle>Solicitações</h5>
+                <p cCardText>
+                    Confira aqui as suas solicitações.
+                </p>
+                <button cButton color="dark" (click)="goToClinicRequests()">Acessar Painel</button>
             </c-card-body>
         </c-card>
     </c-col>

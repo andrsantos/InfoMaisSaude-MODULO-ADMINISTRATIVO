@@ -149,6 +149,14 @@ public class MedicosServiceImpl implements MedicosService {
         return converterParaReadDTO(medico);
     }
 
+    @Override
+    public List<MedicoResponseReadDTO> buscarPorEspecialidade(String especialidade) {
+        List<Medico> medicos = medicosRepository.findByEspecializacaoContainingIgnoreCase(especialidade);
+        return medicos.stream()
+                .map(this::converterParaReadDTO)
+                .collect(Collectors.toList());
+    }
+
 
     private MedicoResponseReadDTO converterParaReadDTO(Medico medico) {
         List<AgendaReadDTO> agendaDtos = medico.getAgenda().stream()
@@ -197,4 +205,6 @@ public class MedicosServiceImpl implements MedicosService {
             }
         }
     }
+
+
 }

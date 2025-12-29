@@ -1,0 +1,146 @@
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Central de Solicitações</strong>
+        <span class="badge bg-danger ms-2" *ngIf="listaPendentes.length > 0">{{ listaPendentes.length }} Pendentes</span>
+      </c-card-header>
+      
+      <c-card-body>
+        
+        <div *ngIf="loading" class="text-center py-5">
+          <c-spinner color="primary"></c-spinner>
+        </div>
+
+        <table [hover]="true" [striped]="true" cTable class="align-middle" *ngIf="!loading">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Solicitante</th>
+              <th>Tipo</th>
+              <th class="text-end">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of listaPendentes">
+              <td>{{ item.criadoEm | date:'dd/MM HH:mm' }}</td>
+              <td>
+                <div class="fw-bold">Usuário ID: {{ item.solicitante?.id || '?' }}</div>
+                
+              </td>
+              <td>
+                <c-badge color="info" *ngIf="item.tipo === 'ALTERACAO_AGENDA'">Agenda</c-badge>
+                <c-badge color="secondary" *ngIf="item.tipo !== 'ALTERACAO_AGENDA'">{{ item.tipo }}</c-badge>
+              </td>
+              <td class="text-end">
+                <button cButton color="primary" size="sm" (click)="abrirDetalhes(item)">
+                  🔍 Analisar
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="listaPendentes.length === 0">
+              <td colspan="4" class="text-center text-muted py-4">
+                Nenhuma solicitação pendente no momento.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+
+<c-modal [visible]="modalVisible" (visibleChange)="modalVisible = $event" size="lg">
+  <c-modal-header>
+    <h5 cModalTitle>Análise de Solicitação #{{ solicitacaoSelecionada?.id }}</h5>
+    <button cButtonClose (click)="modalVisible = false"></button>
+  </c-modal-header>
+  
+  <c-modal-body *ngIf="solicitacaoSelecionada">
+    
+    <div class="mb-3">
+      <strong>Justificativa do Médico:</strong>
+      <p class="text-muted fst-italic border p-2 rounded bg-light">
+        "{{ solicitacaoSelecionada.justificativaMedico || 'Sem justificativa informada.' }}"
+      </p>
+    </div>
+
+    <div *ngIf="solicitacaoSelecionada.tipo === 'ALTERACAO_AGENDA'">
+      <h6 class="text-primary mb-3">📅 Nova Agenda Proposta:</h6>
+      
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm">
+          <thead class="table-light">
+            <tr>
+              <th>Dia</th>
+              <th>Horário</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let slot of agendaDecodificada">
+              <td class="fw-bold">{{ getNomeDia(slot.diaSemana) }}</td>
+              <td>{{ slot.horarioInicio }} às {{ slot.horarioFim }}</td>
+            </tr>
+            <tr *ngIf="agendaDecodificada.length === 0">
+              <td colspan="2" class="text-center text-danger">A agenda proposta está vazia (Remover todos os horários).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="solicitacaoSelecionada.tipo === 'ALTERACAO_DADOS_CADASTRAIS' && perfilDecodificado">
+      <h6 class="text-primary mb-3">👤 Novos Dados Cadastrais:</h6>
+      
+      <div class="card bg-light border-0">
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm-4 fw-bold text-secondary">Nome Completo:</div>
+            <div class="col-sm-8">{{ perfilDecodificado.nome }}</div>
+          </div>
+          
+          <div class="row mb-2">
+            <div class="col-sm-4 fw-bold text-secondary">Especialização:</div>
+            <div class="col-sm-8">{{ perfilDecodificado.especializacao }}</div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-sm-4 fw-bold text-secondary">Telefone:</div>
+            <div class="col-sm-8">{{ perfilDecodificado.telefone }}</div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4 fw-bold text-secondary">Login/Email:</div>
+            <div class="col-sm-8">{{ perfilDecodificado.login }}</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="alert alert-warning mt-3 small">
+        <i class="fa fa-exclamation-triangle"></i> 
+        Ao aprovar, os dados atuais do médico e do usuário de acesso serão substituídos por estes acima.
+      </div>
+    </div>
+
+    <div *ngIf="showRejeicaoInput" class="mt-4 p-3 border border-danger rounded bg-danger-subtle fade-in">
+      <label class="form-label text-danger fw-bold">Motivo da Rejeição:</label>
+      <textarea class="form-control mb-2" rows="2" [(ngModel)]="motivoRejeicao" placeholder="Explique ao médico por que está rejeitando..."></textarea>
+      <div class="d-flex justify-content-end gap-2">
+        <button cButton color="secondary" size="sm" (click)="showRejeicaoInput = false">Cancelar</button>
+        <button cButton color="danger" size="sm" (click)="confirmarRejeicao()">Confirmar Rejeição</button>
+      </div>
+    </div>
+
+  </c-modal-body>
+
+  <c-modal-footer *ngIf="!showRejeicaoInput">
+    <button cButton color="danger" variant="outline" (click)="prepararRejeicao()">
+      Rejeitar
+    </button>
+    <button cButton color="success" class="text-white" (click)="aprovar()">
+      ✅ Aprovar Alteração
+    </button>
+  </c-modal-footer>
+</c-modal>
