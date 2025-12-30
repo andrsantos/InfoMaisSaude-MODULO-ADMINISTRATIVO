@@ -1,8 +1,10 @@
 package com.Projeto.InfoMaisSaude.services.impl;
 
+import java.text.Normalizer;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -149,9 +151,13 @@ public class MedicosServiceImpl implements MedicosService {
         return converterParaReadDTO(medico);
     }
 
-    @Override
+    // @Override
     public List<MedicoResponseReadDTO> buscarPorEspecialidade(String especialidade) {
-        List<Medico> medicos = medicosRepository.findByEspecializacaoContainingIgnoreCase(especialidade);
+        System.out.println("Buscando médicos com especialidade: " + especialidade);
+        System.out.println("Especialidade normalizada: " + normalizarTexto(especialidade));
+
+        String especialidadeNormalizada = normalizarTexto(especialidade);  
+        List<Medico> medicos = medicosRepository.findByEspecializacaoContainingIgnoreCase(especialidadeNormalizada);
         return medicos.stream()
                 .map(this::converterParaReadDTO)
                 .collect(Collectors.toList());
@@ -204,6 +210,19 @@ public class MedicosServiceImpl implements MedicosService {
                 }
             }
         }
+    }
+
+    private String normalizarTexto(String texto) {
+        if (texto == null) return "";
+        
+        String textoSemUnderline = texto.replace("_", " ");
+        
+        String normalizado = Normalizer.normalize(textoSemUnderline, Normalizer.Form.NFD);
+        
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        String textoSemAcento = pattern.matcher(normalizado).replaceAll("");
+        
+        return textoSemAcento.trim(); 
     }
 
 

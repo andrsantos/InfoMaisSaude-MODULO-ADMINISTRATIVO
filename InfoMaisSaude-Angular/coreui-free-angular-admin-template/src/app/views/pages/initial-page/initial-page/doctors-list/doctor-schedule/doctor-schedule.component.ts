@@ -179,6 +179,11 @@ export class DoctorScheduleComponent implements OnInit {
   }
   
   voltar() {
-    this.router.navigate(['/initial-page-doctor']);
+    if(this.userRole === 'CLINICA'){
+      this.router.navigate(['/doctors-list']);
+    } 
+    if(this.userRole === 'MEDICO'){
+      this.router.navigate(['/initial-page-doctor']);
+    }
   }
 }

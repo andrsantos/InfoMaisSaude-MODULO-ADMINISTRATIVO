@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoResponseDTO;
+import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.SlotDisponivelDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaListagemDTO;
 import com.Projeto.InfoMaisSaude.entities.Usuario;
 import com.Projeto.InfoMaisSaude.repositories.MedicosRepository;
@@ -76,5 +77,13 @@ public class AgendamentoController {
     ) {
         var horarios = agendamentoService.listarHorariosDisponiveis(medicoId, data);
         return ResponseEntity.ok(horarios);
+    }
+
+    @GetMapping("/disponibilidade-combo")
+    public ResponseEntity<List<SlotDisponivelDTO>> getDisponibilidadeCombo(
+            @RequestParam String especialidade
+    ) {
+        var slots = agendamentoService.listarProximosHorariosLivres(especialidade);
+        return ResponseEntity.ok(slots);
     }
 }

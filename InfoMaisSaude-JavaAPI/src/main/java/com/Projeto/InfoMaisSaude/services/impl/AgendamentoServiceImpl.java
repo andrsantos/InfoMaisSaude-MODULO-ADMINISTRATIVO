@@ -1,18 +1,23 @@
 package com.Projeto.InfoMaisSaude.services.impl;
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoResponseDTO;
+import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.SlotDisponivelDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaListagemDTO;
 import com.Projeto.InfoMaisSaude.entities.AgendaMedica;
 import com.Projeto.InfoMaisSaude.entities.Consulta;
+import com.Projeto.InfoMaisSaude.entities.Medico;
 import com.Projeto.InfoMaisSaude.entities.Paciente;
 import com.Projeto.InfoMaisSaude.enums.StatusConsulta;
 import com.Projeto.InfoMaisSaude.repositories.AgendaMedicaRepository;
@@ -152,4 +157,90 @@ public class AgendamentoServiceImpl implements AgendamentoService {
             consulta.getStatus().name()
         );
     }
+
+    @Override
+    public List<SlotDisponivelDTO> listarProximosHorariosLivres(String especialidade) {
+        String termoBusca = normalizarTexto(especialidade);
+
+        List<Medico> medicos = medicosRepository.findByEspecializacaoContainingIgnoreCase(termoBusca);
+        
+        List<SlotDisponivelDTO> slotsLivres = new ArrayList<>();
+        LocalDate hoje = LocalDate.now();
+        
+        for (int i = 0; i < 14; i++) {
+            LocalDate dataAnalise = hoje.plusDays(i);
+            var diaSemanaJava = dataAnalise.getDayOfWeek(); 
+            
+            for (Medico medico : medicos) {
+                var agendasDoDia = medico.getAgenda().stream()
+                    .filter(a -> verificarDiaSemana(a.getDiaSemana(), diaSemanaJava)) 
+                    .toList();
+
+                for (AgendaMedica agenda : agendasDoDia) {
+                    LocalTime cursor = agenda.getHorarioInicio();
+                    while (cursor.isBefore(agenda.getHorarioFim())) {
+                        
+                        boolean ocupado = consultaRepository.existsByMedicoIdAndDataConsultaAndHorarioInicioAndStatusNot(
+                            medico.getId(),
+                            dataAnalise,
+                            cursor,
+                            StatusConsulta.CANCELADA_PELO_PACIENTE
+                        );
+
+                        if (!ocupado) {
+                            slotsLivres.add(new SlotDisponivelDTO(
+                                medico.getId(),
+                                medico.getNome(),
+                                medico.getEspecializacao(),
+                                dataAnalise,
+                                cursor,
+                                traduzirDiaSemana(diaSemanaJava) 
+                            ));
+                        }
+                        
+                        cursor = cursor.plusMinutes(30);
+                        
+                        if (slotsLivres.size() >= 30) return slotsLivres;
+                    }
+                }
+            }
+        }
+        
+        slotsLivres.sort(Comparator.comparing(SlotDisponivelDTO::data)
+                .thenComparing(SlotDisponivelDTO::horario));
+        return slotsLivres;
+
+    }
+
+    private String normalizarTexto(String texto) {
+        if (texto == null) return "";
+        
+        String textoSemUnderline = texto.replace("_", " ");
+        
+        String normalizado = Normalizer.normalize(textoSemUnderline, Normalizer.Form.NFD);
+        
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        String textoSemAcento = pattern.matcher(normalizado).replaceAll("");
+        
+        return textoSemAcento.trim(); 
+    }
+
+    private String traduzirDiaSemana(java.time.DayOfWeek dia) {
+        switch (dia) {
+            case MONDAY: return "Segunda-feira";
+            case TUESDAY: return "Terça-feira";
+            case WEDNESDAY: return "Quarta-feira";
+            case THURSDAY: return "Quinta-feira";
+            case FRIDAY: return "Sexta-feira";
+            case SATURDAY: return "Sábado";
+            case SUNDAY: return "Domingo";
+            default: return "";
+        }
+    }
+
+    private boolean verificarDiaSemana(int diaBanco, java.time.DayOfWeek diaJava) {
+        return diaBanco == diaJava.getValue(); 
+    }
+
+
 }

@@ -68,6 +68,7 @@ public class MedicoController {
     public ResponseEntity<List<MedicoResponseReadDTO>> buscarPorEspecialidade(
             @RequestParam String especialidade
     ) {
+        System.out.println("Especialidade: " + especialidade);
         var medicos = medicosService.buscarPorEspecialidade(especialidade);
         return ResponseEntity.ok(medicos);
     }

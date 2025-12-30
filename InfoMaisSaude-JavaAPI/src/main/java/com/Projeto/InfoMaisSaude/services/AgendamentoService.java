@@ -6,10 +6,12 @@ import java.util.List;
 
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoResponseDTO;
+import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.SlotDisponivelDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaListagemDTO;
 
 public interface AgendamentoService {
     List<LocalTime> listarHorariosDisponiveis(Long medicoId, LocalDate data);
     AgendamentoResponseDTO agendarConsulta(AgendamentoRequestDTO dto);
     List<ConsultaListagemDTO> listarConsultas(Long medicoId, LocalDate data);
+    List<SlotDisponivelDTO> listarProximosHorariosLivres(String especialidade);
 }
