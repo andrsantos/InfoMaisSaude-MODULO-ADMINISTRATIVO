@@ -119,6 +119,7 @@ export class RegisterDoctorComponent {
   cadastrarMedico(): void {
     this.errorMessage = "";
     this.successMessage = "";
+    const clinica_id = localStorage.getItem("idDaClinica");
 
     if (this.medicoForm.valid) {
       const agendaBackend = this.horarios.map(item => ({
@@ -129,7 +130,8 @@ export class RegisterDoctorComponent {
 
       const payload = {
         ...this.medicoForm.value,
-        agenda: agendaBackend
+        agenda: agendaBackend,
+        clinica_id
       };
 
       console.log("Enviando para o backend:", payload);

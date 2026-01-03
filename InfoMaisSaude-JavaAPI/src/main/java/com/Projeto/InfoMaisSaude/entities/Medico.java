@@ -27,14 +27,16 @@ public class Medico {
     @Column(nullable = false, length = 20)
     private String telefone;
 
-  
     @OneToMany(mappedBy = "medico", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AgendaMedica> agenda = new ArrayList<>();
-
 
     @OneToOne(cascade = CascadeType.ALL) 
     @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
     private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "clinica_id", nullable = false) 
+    private Clinica clinica;
 
     public void adicionarHorario(AgendaMedica horario) {
         agenda.add(horario);

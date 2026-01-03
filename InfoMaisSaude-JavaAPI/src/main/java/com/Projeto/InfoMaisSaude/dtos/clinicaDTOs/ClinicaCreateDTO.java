@@ -4,8 +4,8 @@ import java.time.LocalTime;
 import java.util.Set;
 import com.Projeto.InfoMaisSaude.enums.Especializacao;
 import lombok.Data;
-import lombok.NoArgsConstructor; // Adicionar
-import lombok.AllArgsConstructor; // Adicionar
+import lombok.NoArgsConstructor; 
+import lombok.AllArgsConstructor; 
 
 @Data
 @NoArgsConstructor 

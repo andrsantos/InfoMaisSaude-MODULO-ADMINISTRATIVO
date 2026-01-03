@@ -14,4 +14,5 @@ public interface AgendamentoService {
     AgendamentoResponseDTO agendarConsulta(AgendamentoRequestDTO dto);
     List<ConsultaListagemDTO> listarConsultas(Long medicoId, LocalDate data);
     List<SlotDisponivelDTO> listarProximosHorariosLivres(String especialidade);
+    List<ConsultaListagemDTO> listarConsultasPorClinica(Long clinicaId, LocalDate data);
 }

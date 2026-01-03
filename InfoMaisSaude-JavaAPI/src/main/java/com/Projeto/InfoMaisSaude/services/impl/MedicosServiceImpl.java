@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.*;
 import com.Projeto.InfoMaisSaude.entities.AgendaMedica;
+import com.Projeto.InfoMaisSaude.entities.Clinica;
 import com.Projeto.InfoMaisSaude.entities.Medico;
 import com.Projeto.InfoMaisSaude.entities.Usuario;
 import com.Projeto.InfoMaisSaude.enums.UserRole;
+import com.Projeto.InfoMaisSaude.repositories.ClinicaRepository;
 import com.Projeto.InfoMaisSaude.repositories.MedicosRepository;
 import com.Projeto.InfoMaisSaude.repositories.UsuariosRepository;
 import com.Projeto.InfoMaisSaude.services.MedicosService;
@@ -29,6 +31,9 @@ public class MedicosServiceImpl implements MedicosService {
 
     @Autowired
     UsuariosRepository usuariosRepository;
+
+    @Autowired
+    ClinicaRepository clinicaRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -54,6 +59,13 @@ public class MedicosServiceImpl implements MedicosService {
         novoUsuario.setSenha(passwordEncoder.encode(dto.getSenha()));
         novoUsuario.setRole(UserRole.MEDICO); 
         novoUsuario = usuariosRepository.save(novoUsuario);
+        
+        if (!clinicaRepository.existsById(dto.getClinica_id())) {
+            throw new IllegalArgumentException("Erro: este médico não está vinculado a nenhuma clínica.");
+        }
+
+        Clinica clinica = clinicaRepository.findById(dto.getClinica_id())
+            .orElseThrow(() -> new EntityNotFoundException("Clínica não encontrada"));
 
         Medico medico = new Medico();
         medico.setNome(dto.getNome());
@@ -61,6 +73,7 @@ public class MedicosServiceImpl implements MedicosService {
         medico.setTelefone(dto.getTelefone());
         medico.setUsuario(novoUsuario);
         medico.setAgenda(new ArrayList<>()); 
+        medico.setClinica(clinica);
 
         if (dto.getAgenda() != null) {
             dto.getAgenda().forEach(itemAgenda -> {

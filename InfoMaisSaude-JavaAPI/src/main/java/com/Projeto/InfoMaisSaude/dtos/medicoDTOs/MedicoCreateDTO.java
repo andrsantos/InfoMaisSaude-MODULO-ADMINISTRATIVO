@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,5 +31,8 @@ public class MedicoCreateDTO {
     
     @NotBlank(message = "A senha é obrigatória")
     String senha;
+
+    @NotNull(message = "O médico precisa estar vinculado a uma clínica")
+    Long clinica_id;
     
 }

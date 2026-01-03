@@ -121,7 +121,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         List<UsuarioResponseReadDTO> usuariosResponseReadDTO = new ArrayList<>();
 
         usuarios.forEach(usuario -> {
-            if(!usuario.getLogin().equals("SuperAdmin")){
+            if(!usuario.getLogin().equals("admin")){
                 UsuarioResponseReadDTO dto = new UsuarioResponseReadDTO(usuario.getId(),  
                 usuario.getLogin(),
                 usuario.getRole(),

@@ -1,0 +1,96 @@
+<c-col xs="12">
+    
+    <c-card class="mb-4">
+        <c-card-header>
+            <strong>Filtros de Agenda</strong>
+        </c-card-header>
+        <c-card-body>
+            <c-row class="g-3 align-items-end">
+                
+                <c-col md="4">
+                    <label cLabel for="dataFiltro" class="fw-bold">Data da Consulta</label>
+                    <input cFormControl 
+                           id="dataFiltro" 
+                           type="date" 
+                           [(ngModel)]="dataFiltro" 
+                           (change)="filtrarNoBackend()" 
+                    />
+                    </c-col>
+
+                <c-col md="4">
+                    <label cLabel for="statusFiltro" class="fw-bold">Status</label>
+                    <select cSelect id="statusFiltro" [(ngModel)]="statusFiltro">
+                        <option value="">Todos os status</option>
+                        <option value="AGENDADA">Agendada</option>
+                        <option value="REALIZADA">Realizada</option>
+                        <option value="CANCELADA">Cancelada</option>
+                        <option value="PENDENTE">Pendente</option>
+                    </select>
+                </c-col>
+
+                <c-col md="4">
+                    <button cButton color="secondary" variant="outline" (click)="filtrarNoBackend()">
+                        Atualizar Lista
+                    </button>
+                </c-col>
+
+            </c-row>
+        </c-card-body>
+    </c-card>
+
+
+    <div *ngIf="loading" class="text-center my-4">
+        <c-spinner color="primary"></c-spinner>
+        <p>Carregando consultas...</p>
+    </div>
+
+    <table [hover]="true" [striped]="true" cTable class="align-middle" *ngIf="!loading">
+      <thead class="bg-light">
+        <tr>
+          <th class="text-center">Horário</th>
+          <th>Paciente</th>
+          <th>Médico / Especialidade</th>
+          <th>Queixa (Chatbot)</th>
+          <th class="text-center">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let consulta of consultasFiltradas">
+            
+            <td class="text-center">
+                <div class="fw-bold">{{ consulta.horario | slice:0:5 }}</div>
+                <small class="text-muted">{{ consulta.data | date:'dd/MM' }}</small>
+            </td>
+
+            <td>
+                <div class="fw-bold">{{ consulta.nomePaciente }}</div>
+                <small class="text-muted">Tel: {{ consulta.telefonePaciente }}</small>
+            </td>
+
+            <td>
+                <div class="fw-bold">{{ consulta.nomeMedico }}</div>
+                <small class="text-muted">{{ consulta.especialidadeMedico }}</small>
+            </td>
+
+            <td>
+                <button cButton color="info" variant="ghost" size="sm" (click)="verDetalhes(consulta.motivo)">
+                    Ver detalhes
+                </button>
+            </td>
+
+            <td class="text-center">
+                <c-badge [color]="getBadgeColor(consulta.status)">
+                    {{ consulta.status }}
+                </c-badge>
+            </td>
+        </tr>
+
+        <tr *ngIf="consultasFiltradas.length === 0">
+            <td colspan="5" class="text-center py-4 text-muted">
+                <span *ngIf="listaConsultasPorClinica.length === 0">Nenhuma consulta marcada para esta data.</span>
+                <span *ngIf="listaConsultasPorClinica.length > 0">Nenhuma consulta com este status.</span>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+</c-col>

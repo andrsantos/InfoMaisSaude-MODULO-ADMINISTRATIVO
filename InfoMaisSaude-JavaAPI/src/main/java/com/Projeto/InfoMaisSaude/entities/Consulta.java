@@ -51,6 +51,10 @@ public class Consulta {
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
+    @ManyToOne
+    @JoinColumn(name = "clinica_id", nullable = false) 
+    private Clinica clinica;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusConsulta status;

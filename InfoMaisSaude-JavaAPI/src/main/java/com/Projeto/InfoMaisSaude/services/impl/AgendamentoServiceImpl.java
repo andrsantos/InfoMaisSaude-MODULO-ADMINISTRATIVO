@@ -8,24 +8,23 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
-
 import org.springframework.stereotype.Service;
-
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoResponseDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.SlotDisponivelDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaListagemDTO;
 import com.Projeto.InfoMaisSaude.entities.AgendaMedica;
+import com.Projeto.InfoMaisSaude.entities.Clinica;
 import com.Projeto.InfoMaisSaude.entities.Consulta;
 import com.Projeto.InfoMaisSaude.entities.Medico;
 import com.Projeto.InfoMaisSaude.entities.Paciente;
 import com.Projeto.InfoMaisSaude.enums.StatusConsulta;
 import com.Projeto.InfoMaisSaude.repositories.AgendaMedicaRepository;
+import com.Projeto.InfoMaisSaude.repositories.ClinicaRepository;
 import com.Projeto.InfoMaisSaude.repositories.ConsultaRepository;
 import com.Projeto.InfoMaisSaude.repositories.MedicosRepository;
 import com.Projeto.InfoMaisSaude.repositories.PacienteRepository;
 import com.Projeto.InfoMaisSaude.services.AgendamentoService;
-
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +38,7 @@ public class AgendamentoServiceImpl implements AgendamentoService {
     private static final int DURACAO_CONSULTA_MINUTOS = 30;
     private final MedicosRepository medicosRepository;
     private final PacienteRepository pacienteRepository;
+    private final ClinicaRepository clinicaRepository;
 
     @Override
     public List<LocalTime> listarHorariosDisponiveis(Long medicoId, LocalDate data) {
@@ -98,6 +98,8 @@ public class AgendamentoServiceImpl implements AgendamentoService {
                 .toList();
     }
 
+
+
     private boolean isHorarioLivre(LocalTime slot, List<Consulta> agendadas) {
         for (Consulta agendada : agendadas) {
             if (agendada.getHorarioInicio().equals(slot)) {
@@ -138,6 +140,9 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         paciente.setSexo(dto.sexo());   
         pacienteRepository.save(paciente);
 
+
+        Clinica clinica = clinicaRepository.findById(medico.getClinica().getId()).orElseThrow(() -> new EntityNotFoundException("Clínica não encontrada"));
+
         Consulta consulta = new Consulta();
         consulta.setMedico(medico);
         consulta.setPaciente(paciente);
@@ -146,6 +151,7 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         consulta.setHorarioFim(dto.horario().plusMinutes(30));
         consulta.setStatus(StatusConsulta.AGENDADA);
         consulta.setMotivoOuQueixa(dto.resumoClinico());
+        consulta.setClinica(clinica);
         consultaRepository.save(consulta);
 
         return new AgendamentoResponseDTO(
@@ -212,6 +218,18 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
     }
 
+    @Override
+    public List<ConsultaListagemDTO> listarConsultasPorClinica(Long clinicaId, LocalDate data) {
+
+    LocalDate dataFiltro = (data != null) ? data : LocalDate.now();
+    
+    var consultas = consultaRepository.findByClinicaIdAndDataConsultaOrderByHorarioInicioAsc(clinicaId, dataFiltro);
+    return consultas.stream()
+            .map(ConsultaListagemDTO::fromEntity)
+            .toList();
+
+    }
+
     private String normalizarTexto(String texto) {
         if (texto == null) return "";
         
@@ -241,6 +259,10 @@ public class AgendamentoServiceImpl implements AgendamentoService {
     private boolean verificarDiaSemana(int diaBanco, java.time.DayOfWeek diaJava) {
         return diaBanco == diaJava.getValue(); 
     }
+
+
+
+
 
 
 }

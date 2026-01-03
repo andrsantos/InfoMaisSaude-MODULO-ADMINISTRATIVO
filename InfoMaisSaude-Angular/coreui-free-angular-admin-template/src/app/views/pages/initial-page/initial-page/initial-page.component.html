@@ -39,3 +39,18 @@
     </c-col>
 
 </c-row>
+
+<c-row>
+    <c-col md="4" class="mb-4">
+        <c-card class="mx-auto card-interativo h-100" style="max-width: 23rem;" (click)="goToClinicAppointments()">
+            <img cCardImg="top" class="card-img-padrao" src="assets/images/clinica.jpg" alt="Consultas" style="height:200px;">
+            <c-card-body>
+                <h5 cCardTitle>Consultas</h5>
+                <p cCardText>
+                    Confira as consultas da sua clínica.
+                </p>
+                <button cButton color="dark" (click)="goToClinicAppointments()">Acessar Painel</button>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>

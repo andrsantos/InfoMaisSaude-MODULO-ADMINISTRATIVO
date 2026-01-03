@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { ClinicaCreateResponse } from "../../models/clinicaModels/clinicaCreateResponse";
@@ -6,6 +6,7 @@ import { catchError, map, Observable, of } from "rxjs";
 import { ClinicaReadResponse } from "../../models/clinicaModels/clinicaReadResponse";
 import { ClinicaDeleteResponse } from "../../models/clinicaModels/clinicaDeleteResponse";
 import { ClinicaUpdateResponse } from "../../models/clinicaModels/clinicaUpdateResponse";
+import { ConsultasPorClinicaReadResponse } from "../../models/consultaModels/consultasPorClinica.model";
 
 @Injectable({
   providedIn: "root",
@@ -55,6 +56,19 @@ export class ClinicasService {
       catchError(() => {
         return of(false); 
       })
+    );
+  }
+
+listarConsultasPorClinica(idDaClinica: any, data?: string) {
+    let params = new HttpParams();
+    
+    if (data) {
+      params = params.set('data', data);
+    }
+
+    return this.http.get<ConsultasPorClinicaReadResponse[]>(
+      `${this.apiUrl}/api/agendamentos/consultas-clinica/${idDaClinica}`, 
+      { params }
     );
   }
 }

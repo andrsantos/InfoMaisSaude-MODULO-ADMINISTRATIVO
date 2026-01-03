@@ -63,6 +63,10 @@ export const routes: Routes = [
         loadComponent: () => import('./views/pages/initial-page/appointments/appointments.component').then(m => m.AppointmentsComponent),
       },
       {
+        path:'clinic-appointments',
+        loadComponent: () => import('./views/pages/initial-page/initial-page/clinic-appointments/clinic-appointments.component').then(m => m.ClinicAppointmentsComponent),
+      },
+      {
         path:'medicos/agenda/:id',
         loadComponent: () => import('./views/pages/initial-page/initial-page/doctors-list/doctor-schedule/doctor-schedule.component').then(m => m.DoctorScheduleComponent),
       },
