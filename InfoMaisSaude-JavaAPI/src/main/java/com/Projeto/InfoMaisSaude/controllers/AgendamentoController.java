@@ -82,11 +82,12 @@ public class AgendamentoController {
         return ResponseEntity.ok(horarios);
     }
 
-    @GetMapping("/disponibilidade-combo")
+@GetMapping("/disponibilidade-combo")
     public ResponseEntity<List<SlotDisponivelDTO>> getDisponibilidadeCombo(
-            @RequestParam String especialidade
+            @RequestParam String especialidade,
+            @RequestParam Long clinicaId 
     ) {
-        var slots = agendamentoService.listarProximosHorariosLivres(especialidade);
+        var slots = agendamentoService.listarProximosHorariosLivres(especialidade, clinicaId);
         return ResponseEntity.ok(slots);
     }
 

@@ -23,5 +23,6 @@ public interface MedicosRepository extends JpaRepository<Medico, Long> {
     List<Medico> findAllWithAgenda();
     List<Medico> findByEspecializacaoContainingIgnoreCase(String especializacao);
     List<Medico> findByClinicaId(Long clinicaId);
+    List<Medico> findByClinicaIdAndEspecializacaoContainingIgnoreCase(Long clinicaId, String especializacao);
 
 }

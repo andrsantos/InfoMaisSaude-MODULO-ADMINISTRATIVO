@@ -122,11 +122,17 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         var medico = medicosRepository.findById(dto.medicoId())
                 .orElseThrow(() -> new EntityNotFoundException("Médico não encontrado"));
 
-        boolean ocupado = consultaRepository.existsByMedicoIdAndDataConsultaAndHorarioInicioAndStatusNot(
+        List<StatusConsulta> statusQueOcupam = List.of(
+            StatusConsulta.AGENDADA,
+            StatusConsulta.CONFIRMADA,
+            StatusConsulta.REALIZADA
+        );
+
+        boolean ocupado = consultaRepository.existsByMedicoIdAndDataConsultaAndHorarioInicioAndStatusIn(
                 dto.medicoId(), 
                 dto.data(), 
                 dto.horario(),
-                StatusConsulta.CANCELADA_PELO_PACIENTE 
+                statusQueOcupam
         );
 
         if (ocupado) {
@@ -170,14 +176,21 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         );
     }
 
-    @Override
-    public List<SlotDisponivelDTO> listarProximosHorariosLivres(String especialidade) {
+@Override
+    public List<SlotDisponivelDTO> listarProximosHorariosLivres(String especialidade, Long clinicaId) {
+
         String termoBusca = normalizarTexto(especialidade);
 
-        List<Medico> medicos = medicosRepository.findByEspecializacaoContainingIgnoreCase(termoBusca);
+        List<Medico> medicos = medicosRepository.findByClinicaIdAndEspecializacaoContainingIgnoreCase(clinicaId, termoBusca);
         
         List<SlotDisponivelDTO> slotsLivres = new ArrayList<>();
         LocalDate hoje = LocalDate.now();
+        
+        List<StatusConsulta> statusQueOcupamHorario = List.of(
+            StatusConsulta.AGENDADA,
+            StatusConsulta.CONFIRMADA,
+            StatusConsulta.REALIZADA
+        );
         
         for (int i = 0; i < 14; i++) {
             LocalDate dataAnalise = hoje.plusDays(i);
@@ -190,23 +203,26 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
                 for (AgendaMedica agenda : agendasDoDia) {
                     LocalTime cursor = agenda.getHorarioInicio();
+                    
                     while (cursor.isBefore(agenda.getHorarioFim())) {
-                        
-                        boolean ocupado = consultaRepository.existsByMedicoIdAndDataConsultaAndHorarioInicioAndStatusNot(
+           
+                        boolean ocupado = consultaRepository.existsByMedicoIdAndDataConsultaAndHorarioInicioAndStatusIn(
                             medico.getId(),
                             dataAnalise,
                             cursor,
-                            StatusConsulta.CANCELADA_PELO_PACIENTE
+                            statusQueOcupamHorario
                         );
 
                         if (!ocupado) {
+ 
                             slotsLivres.add(new SlotDisponivelDTO(
                                 medico.getId(),
                                 medico.getNome(),
-                                medico.getEspecializacao(),
+                                medico.getEspecializacao(), 
                                 dataAnalise,
                                 cursor,
-                                traduzirDiaSemana(diaSemanaJava) 
+                                traduzirDiaSemana(diaSemanaJava),
+                                clinicaId 
                             ));
                         }
                         
@@ -220,8 +236,8 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         
         slotsLivres.sort(Comparator.comparing(SlotDisponivelDTO::data)
                 .thenComparing(SlotDisponivelDTO::horario));
+                
         return slotsLivres;
-
     }
 
     @Override

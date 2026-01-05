@@ -23,11 +23,11 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
         LocalTime horario
     );
 
-    boolean existsByMedicoIdAndDataConsultaAndHorarioInicioAndStatusNot(
+    boolean existsByMedicoIdAndDataConsultaAndHorarioInicioAndStatusIn(
         Long medicoId, 
         LocalDate data, 
-        LocalTime horario,
-        StatusConsulta statusCancelado
+        LocalTime horario, 
+        List<StatusConsulta> statusOcupados
     );
 
     List<Consulta> findByMedicoIdAndDataConsultaOrderByHorarioInicio(Long medicoId, LocalDate data);

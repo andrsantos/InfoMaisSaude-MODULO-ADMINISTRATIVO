@@ -15,7 +15,7 @@ public interface AgendamentoService {
     List<LocalTime> listarHorariosDisponiveis(Long medicoId, LocalDate data);
     AgendamentoResponseDTO agendarConsulta(AgendamentoRequestDTO dto);
     List<ConsultaListagemDTO> listarConsultas(Long medicoId, LocalDate data);
-    List<SlotDisponivelDTO> listarProximosHorariosLivres(String especialidade);
+    List<SlotDisponivelDTO> listarProximosHorariosLivres(String especialidade, Long clinicaId);
     List<ConsultaListagemDTO> listarConsultasPorClinica(Long clinicaId, LocalDate data);
     void cancelarConsulta(Long consultaId, String motivo, Long usuarioId) throws AccessDeniedException;
     void finalizarConsulta(Long consultaId, FinalizarConsultaDTO dto, Long medicoId) throws AccessDeniedException;

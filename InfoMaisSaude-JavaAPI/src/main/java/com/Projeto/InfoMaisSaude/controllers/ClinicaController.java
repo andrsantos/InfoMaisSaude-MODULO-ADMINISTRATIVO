@@ -1,5 +1,9 @@
 package com.Projeto.InfoMaisSaude.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -87,6 +91,26 @@ public class ClinicaController {
     catch(ClinicaNaoExisteException e){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+    }
+
+    @GetMapping("/listar-resumo")
+    public ResponseEntity<?> listarClinicasResumo(){
+        return ResponseEntity.ok().body(clinicaService.listarClinicasResumo());
+    }
+
+    @GetMapping("/listar-especialidades/{clinicaId}")
+    public ResponseEntity<?> listarEspecialidadesClinica(@PathVariable Long clinicaId){
+
+        Set<String> especialidades = clinicaService.listarEspecialidadesClinica(clinicaId);
+        List<String> especialidadesLista = new ArrayList<>();
+
+        especialidades.forEach(especialidade -> {
+            especialidadesLista.add(especialidade);
+        });
+
+        return ResponseEntity.ok().body(especialidadesLista);
+
+        
     }
     
 }

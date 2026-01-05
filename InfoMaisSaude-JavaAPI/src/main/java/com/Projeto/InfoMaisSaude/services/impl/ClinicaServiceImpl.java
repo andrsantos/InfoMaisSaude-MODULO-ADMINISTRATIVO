@@ -2,7 +2,10 @@ package com.Projeto.InfoMaisSaude.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,17 +16,21 @@ import com.Projeto.InfoMaisSaude.dtos.clinicaDTOs.ClinicaResponseCreateDTO;
 import com.Projeto.InfoMaisSaude.dtos.clinicaDTOs.ClinicaResponseDeleteDTO;
 import com.Projeto.InfoMaisSaude.dtos.clinicaDTOs.ClinicaResponseReadDTO;
 import com.Projeto.InfoMaisSaude.dtos.clinicaDTOs.ClinicaResponseUpdateDTO;
+import com.Projeto.InfoMaisSaude.dtos.clinicaDTOs.ClinicaResumoDTO;
 import com.Projeto.InfoMaisSaude.dtos.clinicaDTOs.ClinicaUpdateDTO;
 import com.Projeto.InfoMaisSaude.entities.Clinica;
+import com.Projeto.InfoMaisSaude.entities.Medico;
 import com.Projeto.InfoMaisSaude.entities.Usuario;
 import com.Projeto.InfoMaisSaude.enums.UserRole;
 import com.Projeto.InfoMaisSaude.exceptions.ClinicaJaExisteException;
 import com.Projeto.InfoMaisSaude.exceptions.ClinicaNaoExisteException;
 import com.Projeto.InfoMaisSaude.exceptions.PermissaoException;
 import com.Projeto.InfoMaisSaude.repositories.ClinicaRepository;
+import com.Projeto.InfoMaisSaude.repositories.MedicosRepository;
 import com.Projeto.InfoMaisSaude.repositories.UsuariosRepository;
 import com.Projeto.InfoMaisSaude.services.ClinicaService;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -34,6 +41,9 @@ public class ClinicaServiceImpl implements ClinicaService {
 
     @Autowired
     private UsuariosRepository usuariosRepository;
+
+    @Autowired
+    private MedicosRepository medicosRepository;
 
 
 
@@ -146,6 +156,44 @@ public class ClinicaServiceImpl implements ClinicaService {
         return clinicaRecuperadaConvertidaParaDTO;
     } 
 
+    @Override
+    public List<ClinicaResumoDTO> listarClinicasResumo() {
+    List<Clinica> clinicas = clinicaRepository.findAll();
+    if(clinicas == null){
+        throw new EntityNotFoundException("Nenhuma clínica encontrada no banco de dados.");
+    }
+    List<ClinicaResumoDTO> clinicasResumo =  new ArrayList<>();
+    clinicas.forEach(clinica ->  {
+    clinicasResumo.add(new ClinicaResumoDTO(clinica.getId(), clinica.getNome()));
+    }
+    );
+    return clinicasResumo;
+    
+    }
+
+    
+    @Override
+    public Set<String> listarEspecialidadesClinica(Long clinicaId) {
+
+    List<Medico> medicos = medicosRepository.findByClinicaId(clinicaId);
+
+    if(medicos == null){
+        throw new EntityNotFoundException("Médicos não encontrados na busca de especializações.");
+    }
+
+    Set<String> especialidades = new HashSet<>();
+
+    medicos.forEach(medico -> {
+        especialidades.add(medico.getEspecializacao());
+    });
+
+    return especialidades;
+
+    }
+
+
+
+
     public Clinica converteDtoParaEntidade(ClinicaCreateDTO dto, Usuario usuarioLogado){
         Clinica clinicaSendoCadastrada = new Clinica();
         clinicaSendoCadastrada.setNome(dto.getNome());
@@ -204,5 +252,8 @@ public class ClinicaServiceImpl implements ClinicaService {
         });
         return clinicasResponse;
     }
+
+
+
     
 }
