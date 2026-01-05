@@ -19,6 +19,10 @@ export class SolicitacoesService {
   listarPendentes(): Observable<Solicitacao[]> {
     return this.http.get<Solicitacao[]>(`${this.apiUrl}/pendentes`);
   }
+
+  listarTodos(id: any): Observable<Solicitacao[]> {
+    return this.http.get<Solicitacao[]>(`${this.apiUrl}/todos/${id}`);
+  }
   
   solicitarAlteracaoAgenda(payload: any): Observable<Solicitacao> {
       return this.http.post<Solicitacao>(`${this.apiUrl}/agenda`, payload);
@@ -34,5 +38,9 @@ export class SolicitacoesService {
 
   rejeitarSolicitacao(id: number, motivo: string): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/${id}/rejeitar`, { motivo });
+  }
+
+  solicitarAlteracaoClinica(payload: any) {
+  return this.http.post(`${this.apiUrl}/clinica`, payload);
   }
 }

@@ -2,6 +2,7 @@ package com.Projeto.InfoMaisSaude.services;
 
 import java.util.List;
 import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.MedicoCreateDTO;
+import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.MedicoNomeDTO;
 import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.MedicoResponseCreateDTO;
 import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.MedicoResponseDeleteDTO;
 import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.MedicoResponseReadDTO;
@@ -17,5 +18,6 @@ public interface MedicosService {
   MedicoResponseReadDTO pegarMedico(Long id);    
   MedicoResponseReadDTO pegarMedicoPorUsuario(Long idUsuario);
   List<MedicoResponseReadDTO> buscarPorEspecialidade(String especialidade);
+  List<MedicoNomeDTO> buscaPorNome(Long idDaClinica);
 
 }

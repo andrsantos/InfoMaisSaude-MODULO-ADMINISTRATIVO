@@ -6,6 +6,7 @@ import { MedicoReadResponse } from '../../models/medicoModels/medicoReadResponse
 import { MedicoDeleteResponse } from '../../models/medicoModels/medicoDeleteResponse';
 import { MedicoCreateResponse } from '../../models/medicoModels/medicoCreateResponse';
 import { MedicoUpdateResponse } from '../../models/medicoModels/medicoUpdateResponse';
+import { MedicoNomeReadResponse } from '../../models/medicoModels/medicoNomeReadResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,11 @@ export class MedicosService {
   pegarIdDoMedicoLogado(): number {
     const usuarioId = localStorage.getItem("usuarioId");
     return usuarioId ? parseInt(usuarioId, 10) : 0;
+  }
+
+  pegarMedicosNome(clinicaId: any): Observable<MedicoNomeReadResponse>{
+    const url = `${this.apiUrl}/api/medicos/por-nome/${clinicaId}`;
+    return this.http.get<MedicoNomeReadResponse>(url);
   }
 
 }

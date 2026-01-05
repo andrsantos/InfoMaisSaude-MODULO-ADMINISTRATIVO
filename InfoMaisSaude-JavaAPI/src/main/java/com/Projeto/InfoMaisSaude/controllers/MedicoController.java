@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.MedicoCreateDTO;
+import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.MedicoNomeDTO;
 import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.MedicoResponseReadDTO;
 import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.MedicoUpdateDTO;
 import com.Projeto.InfoMaisSaude.services.MedicosService;
@@ -27,6 +28,8 @@ public class MedicoController {
 
     @Autowired
     MedicosService medicosService;
+
+    
 
     @PostMapping("/criar")
     public ResponseEntity<?> criarNovoMedico(@RequestBody @Valid MedicoCreateDTO dto) {
@@ -70,6 +73,12 @@ public class MedicoController {
     ) {
         System.out.println("Especialidade: " + especialidade);
         var medicos = medicosService.buscarPorEspecialidade(especialidade);
+        return ResponseEntity.ok(medicos);
+    }
+
+    @GetMapping("/por-nome/{clinicaId}")
+    public ResponseEntity<List<MedicoNomeDTO>> buscarPorNome(@PathVariable Long clinicaId){
+        var medicos = medicosService.buscaPorNome(clinicaId);
         return ResponseEntity.ok(medicos);
     }
 

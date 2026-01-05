@@ -8,49 +8,151 @@
       
       <c-card-body>
         
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link" 
+                   [class.active]="activeTab === 'recebidas'" 
+                   (click)="setActiveTab('recebidas')" 
+                   style="cursor: pointer;">
+                    📥 Recebidas (Médicos)
+                    <span class="badge bg-danger ms-1" *ngIf="listaRecebidas.length > 0">
+                        {{ listaRecebidas.length }}
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" 
+                   [class.active]="activeTab === 'enviadas'" 
+                   (click)="setActiveTab('enviadas')" 
+                   style="cursor: pointer;">
+                    📤 Enviadas (Minhas)
+                    <span class="badge bg-secondary ms-1" *ngIf="listaEnviadas.length > 0">
+                        {{ listaEnviadas.length }}
+                    </span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="p-3 mb-3 bg-light rounded border">
+            <c-row class="g-3 align-items-end">
+                
+                <c-col md="3">
+                    <label class="small fw-bold mb-1">Tipo</label>
+                    <select cSelect [(ngModel)]="filtroTipo">
+                        <option value="">Todos os Tipos</option>
+                        <option value="ALTERACAO_AGENDA">Agenda</option>
+                        <option value="ALTERACAO_DADOS_CADASTRAIS">Dados Cadastrais</option>
+                        <option value="ALTERACAO_DADOS_CLINICA" *ngIf="activeTab === 'enviadas'">Dados da Clínica</option>
+                    </select>
+                </c-col>
+
+                <c-col md="3">
+                    <label class="small fw-bold mb-1">Status</label>
+                    <select cSelect [(ngModel)]="filtroStatus">
+                        <option value="">Todos os Status</option>
+                        <option value="PENDENTE">Pendente</option>
+                        <option value="APROVADO">Aprovado</option>
+                        <option value="REJEITADO">Rejeitado</option>
+                    </select>
+                </c-col>
+
+                <c-col md="4" *ngIf="activeTab === 'recebidas'">
+                    <label class="small fw-bold mb-1">Solicitante (Médico)</label>
+                    <select cSelect [(ngModel)]="filtroSolicitante">
+                        <option value="">Todos os Médicos</option>
+                        <option *ngFor="let med of listaMedicos" [value]="med.id">
+                            {{ med.nome }}
+                        </option>
+                    </select>
+                </c-col>
+                
+                <c-col>
+                     <button cButton color="secondary" variant="ghost" size="sm" class="w-100" 
+                             (click)="filtroTipo=''; filtroStatus=''; filtroSolicitante=''">
+                        Limpar Filtros
+                     </button>
+                </c-col>
+            </c-row>
+        </div>
+
         <div *ngIf="loading" class="text-center py-5">
-          <c-spinner color="primary"></c-spinner>
+            <c-spinner color="primary"></c-spinner>
         </div>
 
         <table [hover]="true" [striped]="true" cTable class="align-middle" *ngIf="!loading">
-          <thead>
+            <thead>
             <tr>
-              <th>Data</th>
-              <th>Solicitante</th>
-              <th>Tipo</th>
-              <th class="text-end">Ação</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of listaPendentes">
-              <td>{{ item.criadoEm | date:'dd/MM HH:mm' }}</td>
-              <td>
-                <div class="fw-bold">Usuário ID: {{ item.solicitante?.id || '?' }}</div>
+                <th (click)="alternarOrdem()" style="cursor: pointer; user-select: none;">
+                    Data
+                    <span *ngIf="ordemData === 'desc'" class="small">▼</span>
+                    <span *ngIf="ordemData === 'asc'" class="small">▲</span>
+                </th>
                 
-              </td>
-              <td>
-                <c-badge color="info" *ngIf="item.tipo === 'ALTERACAO_AGENDA'">Agenda</c-badge>
-                <c-badge color="secondary" *ngIf="item.tipo !== 'ALTERACAO_AGENDA'">{{ item.tipo }}</c-badge>
-              </td>
-              <td class="text-end">
-                <button cButton color="primary" size="sm" (click)="abrirDetalhes(item)">
-                  🔍 Analisar
-                </button>
-              </td>
+                <th>
+                    {{ activeTab === 'recebidas' ? 'Solicitante' : 'Destino' }}
+                </th>
+                
+                <th>Tipo</th>
+                
+                <th>Status</th>
+                
+                <th class="text-end">Ação</th>
             </tr>
-            <tr *ngIf="listaPendentes.length === 0">
-              <td colspan="4" class="text-center text-muted py-4">
-                Nenhuma solicitação pendente no momento.
-              </td>
+            </thead>
+            <tbody>
+            
+            <tr *ngFor="let item of listaFiltrada">
+                <td>{{ item.criadoEm | date:'dd/MM HH:mm' }}</td>
+                
+                <td>
+                    <div class="fw-bold" *ngIf="activeTab === 'recebidas'">
+                        {{ item.solicitante?.login || 'Médico ID ' + item.solicitante?.id }}
+                    </div>
+                    <div class="text-muted" *ngIf="activeTab === 'enviadas'">
+                        Administração
+                    </div>
+                </td>
+                
+                <td>
+                    <c-badge color="info" *ngIf="item.tipo === 'ALTERACAO_AGENDA'">Agenda</c-badge>
+                    <c-badge color="warning" *ngIf="item.tipo === 'ALTERACAO_DADOS_CADASTRAIS'">Perfil</c-badge>
+                    <c-badge color="primary" *ngIf="item.tipo === 'ALTERACAO_DADOS_CLINICA'">Dados Clínica</c-badge>
+                </td>
+
+                <td>
+                    <c-badge [color]="item.status === 'PENDENTE' ? 'warning' : (item.status === 'APROVADO' ? 'success' : 'danger')">
+                        {{ item.status }}
+                    </c-badge>
+                </td>
+                
+                <td class="text-end">
+                    <button cButton color="primary" size="sm" (click)="abrirDetalhes(item)" *ngIf="activeTab === 'recebidas'">
+                        🔍 Analisar
+                    </button>
+
+                    <button cButton color="secondary" size="sm" (click)="abrirDetalhes(item)" *ngIf="activeTab === 'enviadas'">
+                        👁️ Visualizar
+                    </button>
+                </td>
             </tr>
-          </tbody>
+            
+            <tr *ngIf="listaFiltrada.length === 0">
+                <td colspan="5" class="text-center text-muted py-4">
+                    <span *ngIf="listaPendentes.length === 0 && !filtroTipo && !filtroStatus">
+                        Nenhuma solicitação encontrada.
+                    </span>
+                    <span *ngIf="filtroTipo || filtroStatus || filtroSolicitante">
+                        Nenhum resultado para os filtros selecionados.
+                    </span>
+                </td>
+            </tr>
+            </tbody>
         </table>
 
       </c-card-body>
     </c-card>
   </c-col>
 </c-row>
-
 
 <c-modal [visible]="modalVisible" (visibleChange)="modalVisible = $event" size="lg">
   <c-modal-header>
@@ -61,7 +163,7 @@
   <c-modal-body *ngIf="solicitacaoSelecionada">
     
     <div class="mb-3">
-      <strong>Justificativa do Médico:</strong>
+      <strong>Justificativa do Solicitante:</strong>
       <p class="text-muted fst-italic border p-2 rounded bg-light">
         "{{ solicitacaoSelecionada.justificativaMedico || 'Sem justificativa informada.' }}"
       </p>
@@ -69,7 +171,6 @@
 
     <div *ngIf="solicitacaoSelecionada.tipo === 'ALTERACAO_AGENDA'">
       <h6 class="text-primary mb-3">📅 Nova Agenda Proposta:</h6>
-      
       <div class="table-responsive">
         <table class="table table-bordered table-sm">
           <thead class="table-light">
@@ -84,7 +185,7 @@
               <td>{{ slot.horarioInicio }} às {{ slot.horarioFim }}</td>
             </tr>
             <tr *ngIf="agendaDecodificada.length === 0">
-              <td colspan="2" class="text-center text-danger">A agenda proposta está vazia (Remover todos os horários).</td>
+              <td colspan="2" class="text-center text-danger">A agenda proposta está vazia.</td>
             </tr>
           </tbody>
         </table>
@@ -93,40 +194,35 @@
 
     <div *ngIf="solicitacaoSelecionada.tipo === 'ALTERACAO_DADOS_CADASTRAIS' && perfilDecodificado">
       <h6 class="text-primary mb-3">👤 Novos Dados Cadastrais:</h6>
-      
       <div class="card bg-light border-0">
         <div class="card-body">
           <div class="row mb-2">
             <div class="col-sm-4 fw-bold text-secondary">Nome Completo:</div>
             <div class="col-sm-8">{{ perfilDecodificado.nome }}</div>
           </div>
-          
           <div class="row mb-2">
             <div class="col-sm-4 fw-bold text-secondary">Especialização:</div>
             <div class="col-sm-8">{{ perfilDecodificado.especializacao }}</div>
           </div>
-
           <div class="row mb-2">
             <div class="col-sm-4 fw-bold text-secondary">Telefone:</div>
             <div class="col-sm-8">{{ perfilDecodificado.telefone }}</div>
           </div>
-
           <div class="row">
             <div class="col-sm-4 fw-bold text-secondary">Login/Email:</div>
             <div class="col-sm-8">{{ perfilDecodificado.login }}</div>
           </div>
         </div>
       </div>
-      
       <div class="alert alert-warning mt-3 small">
         <i class="fa fa-exclamation-triangle"></i> 
-        Ao aprovar, os dados atuais do médico e do usuário de acesso serão substituídos por estes acima.
+        Ao aprovar, os dados atuais serão substituídos.
       </div>
     </div>
 
     <div *ngIf="showRejeicaoInput" class="mt-4 p-3 border border-danger rounded bg-danger-subtle fade-in">
       <label class="form-label text-danger fw-bold">Motivo da Rejeição:</label>
-      <textarea class="form-control mb-2" rows="2" [(ngModel)]="motivoRejeicao" placeholder="Explique ao médico por que está rejeitando..."></textarea>
+      <textarea class="form-control mb-2" rows="2" [(ngModel)]="motivoRejeicao" placeholder="Explique o motivo..."></textarea>
       <div class="d-flex justify-content-end gap-2">
         <button cButton color="secondary" size="sm" (click)="showRejeicaoInput = false">Cancelar</button>
         <button cButton color="danger" size="sm" (click)="confirmarRejeicao()">Confirmar Rejeição</button>
@@ -136,11 +232,11 @@
   </c-modal-body>
 
   <c-modal-footer *ngIf="!showRejeicaoInput">
-    <button cButton color="danger" variant="outline" (click)="prepararRejeicao()">
-      Rejeitar
-    </button>
-    <button cButton color="success" class="text-white" (click)="aprovar()">
-      ✅ Aprovar Alteração
-    </button>
+    <button cButton color="secondary" (click)="modalVisible = false">Fechar</button>
+
+    <ng-container *ngIf="activeTab === 'recebidas'">
+        <button cButton color="danger" variant="outline" (click)="prepararRejeicao()">Rejeitar</button>
+        <button cButton color="success" class="text-white" (click)="aprovar()">✅ Aprovar Alteração</button>
+    </ng-container>
   </c-modal-footer>
 </c-modal>

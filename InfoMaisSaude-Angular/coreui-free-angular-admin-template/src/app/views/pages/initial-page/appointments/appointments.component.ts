@@ -24,6 +24,8 @@ export class AppointmentsComponent implements OnInit {
   loading = false;
   
   dataFiltro: string = new Date().toISOString().split('T')[0];
+  filtroStatus: string = ''; 
+  ordemHorario: 'asc' | 'desc' = 'asc'; 
 
   constructor(
     private agendamentoService: AgendamentoService,
@@ -52,6 +54,28 @@ export class AppointmentsComponent implements OnInit {
   aoMudarData() {
     this.carregarConsultas();
   }
+
+  
+  get listaFiltrada() {
+    let lista = [...this.listaConsultas];
+
+    if (this.filtroStatus) {
+      lista = lista.filter(item => item.status === this.filtroStatus);
+    }
+
+    return lista.sort((a, b) => {
+      if (this.ordemHorario === 'asc') {
+        return a.horario.localeCompare(b.horario);
+      } else {
+        return b.horario.localeCompare(a.horario);
+      }
+    });
+  }
+
+  alternarOrdem() {
+    this.ordemHorario = this.ordemHorario === 'asc' ? 'desc' : 'asc';
+  }
+
 
   getStatusColor(status: string): string {
     switch(status) {

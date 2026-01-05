@@ -9,6 +9,7 @@ interface DecodedToken {
   exp: number;
   iat: number;
   role: string;
+  id: number;
 }
 
 @Injectable({
@@ -54,6 +55,18 @@ export class AuthService {
   public getUserRole(): string | null {
     const decodedToken = this.getDecodedToken();
     return decodedToken ? decodedToken.role : null;
+  }
+
+  public getCurrentUser() {
+    const decodedToken = this.getDecodedToken();
+    
+    if (!decodedToken) return null;
+
+    return {
+      id: decodedToken.id,
+      login: decodedToken.sub,
+      role: decodedToken.role
+    };
   }
 
   public isAuthenticated(): boolean {

@@ -1,0 +1,122 @@
+<c-row class="justify-content-center">
+    <c-col xs="12" md="8" lg="6">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>
+                    <span *ngIf="userRole === 'ADMIN'">Administração de Clínica</span>
+                    <span *ngIf="userRole !== 'ADMIN'">Dados da Clínica</span>
+                </strong>
+            </c-card-header>
+            <c-card-body>
+
+                <div *ngIf="userRole === 'CLINICA'" class="alert alert-info d-flex align-items-center mb-4 border-info">
+                    <i class="fa fa-info-circle me-3 fs-4"></i>
+                    <div>
+                        <strong>Modo de Solicitação:</strong><br>
+                        As alterações realizadas aqui não são imediatas. Elas serão enviadas para a administração do sistema para análise e aprovação.
+                    </div>
+                </div>
+
+                <div *ngIf="userRole === 'ADMIN'" class="alert alert-warning d-flex align-items-center mb-4 border-warning">
+                    <i class="fa fa-exclamation-triangle me-3 fs-4"></i>
+                    <div>
+                        <strong>Modo Administrativo:</strong><br>
+                        Você possui permissão total. As alterações salvas aqui serão aplicadas <strong>imediatamente</strong> no banco de dados.
+                    </div>
+                </div>
+
+                <form cForm [formGroup]="clinicaForm">
+
+                    <div class="mb-3">
+                        <label cLabel for="nome">Nome da Clínica</label>
+                        <input cFormControl id="nome" formControlName="nome"/>
+                    </div>
+                    <div class="mb-3">
+                        <label cLabel for="cnpj">CNPJ</label>
+                        <input cFormControl id="cnpj" formControlName="cnpj" placeholder="00.000.000/0000-00" />
+                    </div>
+
+                    <div class="mb-3" formGroupName="especializacoes">
+                        <label cLabel>Especializações</label>
+                        <c-row>
+                            <c-col>
+                                <c-form-check>
+                                    <input cFormCheckInput id="medica" type="checkbox" formControlName="MEDICA" />
+                                    <label cFormCheckLabel for="medica">Médica</label>
+                                </c-form-check>
+                            </c-col>
+                            <c-col>
+                                <c-form-check>
+                                    <input cFormCheckInput id="odontologica" type="checkbox" formControlName="ODONTOLOGICA" />
+                                    <label cFormCheckLabel for="odontologica">Odontológica</label>
+                                </c-form-check>
+                            </c-col>
+                        </c-row>
+                    </div>
+
+                    <div class="mb-3">
+                        <label cLabel>Horário de Funcionamento</label>
+                        <c-row class="align-items-center">
+                            <c-col>
+                                <label cLabel for="horarioInicio" class="small">Início</label>
+                                <input cFormControl id="horarioInicio" type="time" formControlName="horarioFuncionamentoInicio" />
+                            </c-col>
+                            <c-col>
+                                <label cLabel for="horarioFinal" class="small">Fim</label>
+                                <input cFormControl id="horarioFinal" type="time" formControlName="horarioFuncionamentoFinal" />
+                            </c-col>
+                        </c-row>
+                    </div>
+
+                    <div class="mb-3">
+                        <label cLabel for="email">E-mail</label>
+                        <input cFormControl id="email" type="email" formControlName="email" placeholder="contato@suaclinica.com" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label cLabel for="site">Site (Opcional)</label>
+                        <input cFormControl id="site" formControlName="site" placeholder="www.suaclinica.com.br" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label cLabel for="endereco">Endereço Completo</label>
+                        <input cFormControl id="endereco" formControlName="endereco" placeholder="Rua, Número, Bairro, Cidade - Estado" #searchBox/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label cLabel>Localização no Mapa</label>
+                        <small class="text-muted d-block mb-2">O marcador aparecerá quando você selecionar um endereço na busca.</small>
+                        <google-map height="400px" width="100%" [center]="mapCenter" [zoom]="mapZoom" [options]="mapOptions">
+                            <map-marker *ngIf="markerPosition" [position]="markerPosition"></map-marker>
+                        </google-map>
+                    </div>
+
+                    <div class="mb-3">
+                        <label cLabel for="telefone">Telefone</label>
+                        <input cFormControl id="telefone" formControlName="telefone" placeholder="(00) 00000-0000" />
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button cButton 
+                                [color]="userRole === 'CLINICA' ? 'info' : 'dark'" 
+                                (click)="atualizarClinica()" 
+                                [disabled]="clinicaForm.invalid"
+                                class="text-white py-2">
+                            
+                            <span *ngIf="userRole === 'CLINICA'" class="d-flex align-items-center justify-content-center gap-2">
+                                <span>📨</span> Enviar Solicitação para Aprovação
+                            </span>
+
+                            <span *ngIf="userRole !== 'CLINICA'" class="d-flex align-items-center justify-content-center gap-2">
+                                <span>💾</span> Salvar Alterações
+                            </span>
+
+                        </button>
+                    </div>
+
+                </form>
+
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>

@@ -8,6 +8,41 @@
       
       <c-card-body>
         
+        <div class="p-3 mb-4 bg-light rounded border">
+          <c-row class="g-3 align-items-end">
+            
+            <c-col md="3">
+              <label class="form-label fw-bold small mb-1">Data</label>
+              <input cFormControl type="date" [(ngModel)]="filtroData">
+            </c-col>
+
+            <c-col md="3">
+              <label class="form-label fw-bold small mb-1">Tipo</label>
+              <select cSelect [(ngModel)]="filtroTipo">
+                <option value="">Todos</option>
+                <option value="ALTERACAO_AGENDA">Agenda</option>
+                <option value="ALTERACAO_DADOS_CADASTRAIS">Dados Cadastrais</option>
+              </select>
+            </c-col>
+
+            <c-col md="3">
+              <label class="form-label fw-bold small mb-1">Status</label>
+              <select cSelect [(ngModel)]="filtroStatus">
+                <option value="">Todos</option>
+                <option value="PENDENTE">Pendente</option>
+                <option value="APROVADO">Aprovado</option>
+                <option value="REJEITADO">Rejeitado</option>
+              </select>
+            </c-col>
+
+            <c-col md="3">
+              <button cButton color="secondary" variant="outline" class="w-100" (click)="limparFiltros()">
+                Limpar Filtros
+              </button>
+            </c-col>
+          </c-row>
+        </div>
+
         <div *ngIf="loading" class="text-center py-4">
           <c-spinner color="primary"></c-spinner>
           <p class="mt-2">Carregando histórico...</p>
@@ -16,14 +51,21 @@
         <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border" *ngIf="!loading">
           <thead class="bg-light">
             <tr>
-              <th class="text-center">Data</th>
+              
+              <th class="text-center" style="cursor: pointer; user-select: none;" (click)="alternarOrdem()">
+                Data
+                <span *ngIf="ordemData === 'desc'" class="small text-muted">▼</span>
+                <span *ngIf="ordemData === 'asc'" class="small text-muted">▲</span>
+              </th>
+
               <th>Tipo</th>
               <th class="text-center">Status</th>
               <th>Detalhes / Motivo</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of listaSolicitacoes">
+            
+            <tr *ngFor="let item of listaFiltrada">
               
               <td class="text-center">
                 <div class="small text-medium-emphasis">Solicitado em</div>
@@ -56,9 +98,10 @@
 
             </tr>
 
-            <tr *ngIf="listaSolicitacoes.length === 0">
+            <tr *ngIf="listaFiltrada.length === 0">
               <td colspan="4" class="text-center py-4 text-muted">
-                Você não possui solicitações recentes.
+                <span *ngIf="listaSolicitacoes.length === 0">Você não possui solicitações recentes.</span>
+                <span *ngIf="listaSolicitacoes.length > 0">Nenhuma solicitação encontrada com os filtros atuais.</span>
               </td>
             </tr>
           </tbody>

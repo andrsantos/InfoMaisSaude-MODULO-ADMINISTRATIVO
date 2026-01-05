@@ -40,6 +40,10 @@ export const routes: Routes = [
         canActivate: [clinicaNaoCadastradaGuard]      
       },
       {
+        path: 'update-clinic',
+        loadComponent: () => import('./views/pages/initial-page/initial-page/update-clinic/update-clinic.component').then(m => m.UpdateClinicComponent)
+      },
+      {
         path:'register-doctor',
         loadComponent: () => import('./views/pages/initial-page/initial-page/register-doctor/register-doctor.component').then(m => m.RegisterDoctorComponent),
         canActivate: [clinicaCadastradaGuard]
@@ -57,6 +61,10 @@ export const routes: Routes = [
         path: 'clinic-requests',
         loadComponent: () => import('./views/pages/initial-page/clinic-requests/clinic-requests.component').then(m => m.ClinicRequestsComponent),
         
+      },
+      {
+        path: 'admin-requests',
+        loadComponent: () => import('./views/pages/initial-page/initial-page-admin/admin-requests/admin-requests.component').then(m => m.AdminRequestsComponent),
       },
       {
         path:'appointments',

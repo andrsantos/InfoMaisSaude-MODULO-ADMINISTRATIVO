@@ -73,4 +73,8 @@ export class InitialPageComponent {
   goToClinicAppointments():void{
     this.Router.navigate(["/clinic-appointments"]);
   }
+
+  goToUpdateClinic(): void{
+    this.Router.navigate(["/update-clinic"]);
+  }
 }

@@ -133,6 +133,16 @@ public class ClinicaServiceImpl implements ClinicaService {
         clinicaRecuperadaConvertidaParaDTO.setHorarioFuncionamentoFinal(clinica.getHorarioFuncionamentoFinal());
         clinicaRecuperadaConvertidaParaDTO.setLatitude(clinica.getLatitude());
         clinicaRecuperadaConvertidaParaDTO.setLongitude(clinica.getLongitude());
+
+        if (clinica.getEspecializacoes() != null) {
+        clinicaRecuperadaConvertidaParaDTO.setEspecializacoes(
+            clinica.getEspecializacoes().stream()
+                   .map(Enum::name) 
+                   .toList()        
+        );
+    }
+
+
         return clinicaRecuperadaConvertidaParaDTO;
     } 
 

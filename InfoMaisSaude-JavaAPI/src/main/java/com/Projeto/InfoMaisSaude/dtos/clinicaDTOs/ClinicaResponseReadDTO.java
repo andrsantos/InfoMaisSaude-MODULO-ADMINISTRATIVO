@@ -1,6 +1,7 @@
 package com.Projeto.InfoMaisSaude.dtos.clinicaDTOs;
 
 import java.time.LocalTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class ClinicaResponseReadDTO {
     private LocalTime horarioFuncionamentoFinal;
     private Double latitude;
     private Double longitude;
+    private List<String> especializacoes;
 
     
     

@@ -39,4 +39,8 @@ export class InitialPageAdminComponent {
   goToClinicManagement() {
     this.Router.navigate(["/clinic-management"]);
   }
+  goToAdminRequests(){
+    this.Router.navigate(["/admin-requests"]);
+  }
+  
 }

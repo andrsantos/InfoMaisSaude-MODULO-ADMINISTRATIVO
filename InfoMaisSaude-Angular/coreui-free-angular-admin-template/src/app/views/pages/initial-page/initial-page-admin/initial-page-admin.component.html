@@ -26,4 +26,19 @@
         </c-card>
     </c-col>
 
+        <c-col md="4">
+        <c-card class="mb-4 mx-auto card-interativo" style="max-width: 23rem;" (click)="goToAdminRequests()">
+            <img cCardImg="top" class="card-img-padrao" src="assets/images/solicitacoes.jpg" alt="Solicitacoes" style="height:210px;">
+            <c-card-body style="height:180px;">
+                <h5 cCardTitle>Solicitações</h5>
+                <p cCardText>
+                    Confira aqui as suas solicitações.
+                </p>
+                <button cButton color="dark" style="margin-top:40px;" (click)="goToAdminRequests()">Acessar Painel</button>
+            </c-card-body>
+        </c-card>
+    </c-col>
+
+
+
 </c-row>

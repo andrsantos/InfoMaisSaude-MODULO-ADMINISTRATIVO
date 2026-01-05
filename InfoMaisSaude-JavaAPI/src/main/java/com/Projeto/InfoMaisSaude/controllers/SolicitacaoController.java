@@ -1,6 +1,7 @@
 package com.Projeto.InfoMaisSaude.controllers;
 
 import com.Projeto.InfoMaisSaude.dtos.solicitacaoDTOs.SolicitacaoAgendaRequestDTO;
+import com.Projeto.InfoMaisSaude.dtos.solicitacaoDTOs.SolicitacaoClinicaRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.solicitacaoDTOs.SolicitacaoPerfilRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.solicitacaoDTOs.SolicitacaoRejeicaoRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.solicitacaoDTOs.SolicitacaoResponseDTO;
@@ -58,6 +59,20 @@ public class SolicitacaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
+    @PostMapping("/clinica")
+    @PreAuthorize("hasRole('CLINICA')")
+    public ResponseEntity<SolicitacaoResponseDTO> solicitarAlteracaoClinica(
+            @RequestBody SolicitacaoClinicaRequestDTO dto,
+            @AuthenticationPrincipal Usuario usuarioLogado
+    ) {
+        var solicitacao = solicitacaoService.solicitarAlteracaoClinica(
+                usuarioLogado.getId(),
+                dto
+        );
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(SolicitacaoResponseDTO.fromEntity(solicitacao));
+    }
+
    @GetMapping("/meus-pedidos")
     @PreAuthorize("hasRole('MEDICO')") 
     public ResponseEntity<List<SolicitacaoResponseDTO>> verMeusPedidos( 
@@ -81,6 +96,16 @@ public class SolicitacaoController {
                 .toList();
 
         return ResponseEntity.ok(pendentesDTO);
+    }
+
+    @GetMapping("/todos/{usuarioId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLINICA','MEDICO')") 
+    public ResponseEntity<List<SolicitacaoResponseDTO>> listarTodos(@PathVariable Long usuarioId) { 
+    var todos = solicitacaoService.listarTodos(usuarioId);     
+    var todosDTO = todos.stream()
+                .map(SolicitacaoResponseDTO::fromEntity)
+                .toList();
+    return ResponseEntity.ok(todosDTO);
     }
 
     @PostMapping("/{id}/aprovar")

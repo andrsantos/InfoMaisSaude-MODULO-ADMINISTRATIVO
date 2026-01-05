@@ -27,17 +27,15 @@ import { fromEvent } from "rxjs";
 import { GoogleMapsModule, GoogleMap, MapMarker } from "@angular/google-maps";
 import { ClinicasService } from "../../../../../services/clinicas/clinicas.service";
 import { ToastrService } from "ngx-toastr";
-import { ClinicaCreateResponse } from "../../../../../models/clinicaModels/clinicaCreateResponse";
 import { ClinicaReadResponse } from "../../../../../models/clinicaModels/clinicaReadResponse";
+import { SolicitacoesService } from "../../../../../services/solicitacoes/solicitacoes.service";
 
 declare var google: any;
 
 @Component({
-  selector: "app-cadastro-clinica",
-  templateUrl: "./register-clinic.component.html",
+  selector: 'app-update-clinic',
   standalone: true,
-  imports: [
-    CommonModule,
+  imports: [CommonModule,
     ReactiveFormsModule,
     CardComponent,
     GoogleMapsModule,
@@ -51,15 +49,18 @@ declare var google: any;
     FormDirective,
     FormLabelDirective,
     FormControlDirective,
-    ButtonDirective,
-  ],
+    ButtonDirective,],
+  templateUrl: './update-clinic.component.html',
+  styleUrl: './update-clinic.component.scss'
 })
-export class RegisterClinicComponent {
+export class UpdateClinicComponent {
+
   clinicaForm: FormGroup;
   errorMessage: string = "";
   successMessage: string = "";
   hasRegisteredClinic: boolean = false;
-
+  clinica: ClinicaReadResponse | undefined;
+  userRole: string | null = null; 
   @ViewChild("searchBox") searchBox!: ElementRef;
   private autocomplete!: google.maps.places.Autocomplete;
   private geocoder!: google.maps.Geocoder;
@@ -79,7 +80,8 @@ export class RegisterClinicComponent {
     private router: Router,
     private ngZone: NgZone,
     private clinicasService: ClinicasService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private solicitacoesService: SolicitacoesService 
   ) {
     this.clinicaForm = this.fb.group({
       nome: ["", Validators.required],
@@ -98,7 +100,9 @@ export class RegisterClinicComponent {
       longitude: [null, Validators.required],
     });
   }
+
   ngOnInit(): void {
+    this.userRole = this.authService.getUserRole();
 
     const state = history.state as {
       hasRegisteredClinic?: boolean;
@@ -108,13 +112,13 @@ export class RegisterClinicComponent {
 
     const idDaClinicaRaw = localStorage.getItem('idDaClinica');
     if (idDaClinicaRaw) {
-    const idDaClinica = Number(idDaClinicaRaw);
-    this.pegarClinica(idDaClinica);
+      const idDaClinica = Number(idDaClinicaRaw);
+      this.pegarClinica(idDaClinica);
     } else {
-    console.log("ID da clínica não encontrado no localStorage.");
+      console.log("ID da clínica não encontrado no localStorage.");
     }
-    
-    if(state?.hasRegisteredClinic){
+
+    if (state?.hasRegisteredClinic) {
       this.hasRegisteredClinic = true;
     }
 
@@ -165,69 +169,100 @@ export class RegisterClinicComponent {
     });
   }
 
-  cadastrarClinica(): void {
-    this.errorMessage = "";
-    this.successMessage = "";
+  pegarClinica(id: number) {
+    console.log("Buscando clínica ID:", id);
+    this.clinicasService.pegarClinica(id).subscribe({
+      next: (response: ClinicaReadResponse) => {
+        this.clinica = response;
+        console.log("Dados recebidos:", this.clinica);
+        this.preencherFormulario(this.clinica);
+      },
+      error: (erro) => {
+        console.error("Erro ao pegar clínica:", erro);
+        this.toastr.error("Erro ao carregar dados da clínica.");
+      },
+    });
+  }
 
-    if (this.clinicaForm.valid) {
-      const formValue = this.clinicaForm.value;
-      const especializacoesSelecionadas = Object.keys(
-        formValue.especializacoes
-      ).filter((key) => formValue.especializacoes[key]);
+  preencherFormulario(dados: ClinicaReadResponse) {
 
-      const payload = {
-        ...formValue,
-        especializacoes: especializacoesSelecionadas,
-      };
+    const inicio = dados.horarioFuncionamentoInicio ? dados.horarioFuncionamentoInicio.substring(0, 5) : '';
+    const fim = dados.horarioFuncionamentoFinal ? dados.horarioFuncionamentoFinal.substring(0, 5) : '';
 
-      console.log("Payload final a ser enviado:", payload);
+    this.clinicaForm.patchValue({
+      nome: dados.nome,
+      cnpj: dados.cnpj,
+      email: dados.email,
+      site: dados.site,
+      endereco: dados.endereco,
+      telefone: dados.telefone,
+      horarioFuncionamentoInicio: inicio,
+      horarioFuncionamentoFinal: fim,
+      latitude: dados.latitude,
+      longitude: dados.longitude
+    });
 
-      this.clinicasService.cadastrarClinica(payload).subscribe({
-        next: (response: ClinicaCreateResponse) => {
-          console.log("Clínica cadastrada com sucesso:", response);
-          localStorage.setItem("possuiClinica", "true");
-          localStorage.setItem("idDaClinica", JSON.stringify(response.idDaClinica));
-          this.clinicaForm.reset();
-          this.markerPosition = null;
-          this.router.navigate(["/initial-page"], {
-            state: {
-              showSuccessToast: true,
-              message: response.mensagemDeResposta,
-            },
-          });
-        },
-        error: (erro) => {
-          console.error("Erro ao cadastrar clínica:", erro);
-          const errorMsg =
-            erro.error?.message ||
-            erro.error ||
-            "Falha ao cadastrar a clínica.";
-          this.errorMessage = errorMsg;
-          this.toastr.error(errorMsg, "Erro!");
-        },
+    if (dados.especializacoes) {
+      this.clinicaForm.get('especializacoes')?.patchValue({
+        MEDICA: dados.especializacoes.includes('MEDICA'),
+        ODONTOLOGICA: dados.especializacoes.includes('ODONTOLOGICA')
       });
-    } else {
-      this.clinicaForm.markAllAsTouched();
-      this.errorMessage =
-        "Formulário inválido. Verifique os campos obrigatórios (incluindo endereço e tipo).";
+    }
+
+    if (dados.latitude && dados.longitude) {
+      this.markerPosition = { lat: dados.latitude, lng: dados.longitude };
+      this.mapCenter = { lat: dados.latitude, lng: dados.longitude };
     }
   }
 
-  pegarClinica(id: number){
-    console.log("Chegou no pegar clinica!");
-    this.clinicasService.pegarClinica(id).subscribe({
-      next: (response: ClinicaReadResponse) => {
-      console.log("Nome da clínica", response.nome);
-      },
-      error: (erro) => {
-      console.error("Erro ao pegar clínica:", erro);
-      const errorMsg =
-      erro.error?.message ||
-      erro.error ||
-      "Falha ao pegar a clínica.";
-      this.errorMessage = errorMsg;
-      this.toastr.error(errorMsg, "Erro!");
-      },
-    });
+  atualizarClinica() {
+    if (this.clinicaForm.invalid) {
+      this.toastr.warning("Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    if (!this.clinica) return;
+
+    const formValues = this.clinicaForm.value;
+
+    const especializacoesArray = [];
+    if (formValues.especializacoes.MEDICA) especializacoesArray.push('MEDICA');
+    if (formValues.especializacoes.ODONTOLOGICA) especializacoesArray.push('ODONTOLOGICA');
+
+    const payload = {
+      ...formValues,
+      especializacoes: especializacoesArray
+    };
+
+    if (this.userRole === 'ADMIN') {
+      const payloadAdmin = { ...payload, id: this.clinica.id };
+
+      this.clinicasService.atualizarClinica(this.clinica.id, payloadAdmin).subscribe({
+        next: (res) => {
+          this.toastr.success("Clínica atualizada com sucesso (Modo Admin)!");
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastr.error("Erro ao atualizar clínica.");
+        }
+      });
+    }
+
+    else if (this.userRole === 'CLINICA') {
+      this.solicitacoesService.solicitarAlteracaoClinica(payload).subscribe({
+        next: (res) => {
+          this.toastr.info(
+            "Suas alterações foram enviadas para aprovação da administração.",
+            "Solicitação Enviada"
+          );
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastr.error("Erro ao enviar solicitação de alteração.");
+        }
+      });
+    }
   }
 }

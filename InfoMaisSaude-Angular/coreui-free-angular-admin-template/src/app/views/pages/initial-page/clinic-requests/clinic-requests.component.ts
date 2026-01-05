@@ -8,6 +8,9 @@ import {
 } from '@coreui/angular';
 import { Solicitacao } from '../../../../models/solicitacaoModels/solicitacao.model';
 import { SolicitacoesService } from '../../../../services/solicitacoes/solicitacoes.service';
+import { AuthService } from '../../../../services/auth/auth.service';
+import { MedicosService } from '../../../../services/medicos/medicos.service';
+import { MedicoNomeReadResponse } from '../../../../models/medicoModels/medicoNomeReadResponse';
 
 @Component({
   selector: 'app-clinic-requests',
@@ -20,7 +23,8 @@ import { SolicitacoesService } from '../../../../services/solicitacoes/solicitac
   styleUrl: './clinic-requests.component.scss'
 })
 export class ClinicRequestsComponent implements OnInit {
-  
+
+  activeTab: 'recebidas' | 'enviadas' = 'recebidas';
   perfilDecodificado: any = null;
   listaPendentes: Solicitacao[] = [];
   loading = true;
@@ -30,24 +34,44 @@ export class ClinicRequestsComponent implements OnInit {
   motivoRejeicao = '';
   showRejeicaoInput = false;
 
+  todasSolicitacoes: Solicitacao[] = []; 
+  listaRecebidas: Solicitacao[] = [];
+  listaEnviadas: Solicitacao[] = [];
+
+  userId: number | null = null;
+
+  filtroTipo: string = '';
+  filtroStatus: string = '';
+  filtroSolicitante: string = ''; 
+  ordemData: 'asc' | 'desc' = 'desc'; 
+  
+  listaMedicos: MedicoNomeReadResponse[] = [];
+
   diasMapa: { [key: number]: string } = {
     1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado', 7: 'Domingo'
   };
 
   constructor(
     private solicitacoesService: SolicitacoesService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authService: AuthService,
+    private medicosService: MedicosService 
   ) {}
 
   ngOnInit(): void {
-    this.carregarPendencias();
+    const user = this.authService.getCurrentUser(); 
+    this.userId = user ? user.id : null;
+    
+    this.carregarTodos();
+    this.carregarMedicos(); 
   }
 
-  carregarPendencias() {
+  carregarTodos() {
     this.loading = true;
-    this.solicitacoesService.listarPendentes().subscribe({
+    this.solicitacoesService.listarTodos(this.userId).subscribe({
       next: (data) => {
-        this.listaPendentes = data;
+        this.todasSolicitacoes = data;
+        this.separarListas(); 
         this.loading = false;
       },
       error: (err) => {
@@ -56,6 +80,75 @@ export class ClinicRequestsComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  carregarMedicos() {
+    const idClinica = localStorage.getItem('idDaClinica');
+    if (idClinica) {
+      this.medicosService.pegarMedicosNome(idClinica).subscribe({
+        next: (dados) => {
+           this.listaMedicos = Array.isArray(dados) ? dados : [dados];
+        },
+        error: () => console.error("Erro ao carregar lista de médicos para filtro")
+      });
+    }
+  }
+
+  separarListas() {
+    if (!this.userId) return;
+
+    this.listaRecebidas = this.todasSolicitacoes.filter(s => 
+        s.solicitante?.id !== this.userId
+    );
+
+    this.listaEnviadas = this.todasSolicitacoes.filter(s => 
+        s.solicitante?.id === this.userId
+    );
+  }
+
+  get listaFiltrada() {
+    let lista = this.activeTab === 'recebidas' ? this.listaRecebidas : this.listaEnviadas;
+
+    if (this.filtroTipo) {
+      lista = lista.filter(s => s.tipo === this.filtroTipo);
+    }
+
+    if (this.filtroStatus) {
+      lista = lista.filter(s => s.status === this.filtroStatus);
+    }
+
+
+    if (this.filtroSolicitante && this.activeTab === 'recebidas') {
+      lista = lista.filter(s => 
+         s.solicitante?.id.toString() === this.filtroSolicitante
+      );
+    }
+
+    return lista.sort((a, b) => {
+      const dataA = new Date(a.criadoEm).getTime();
+      const dataB = new Date(b.criadoEm).getTime();
+      
+      if (this.ordemData === 'asc') {
+        return dataA - dataB;
+      } else {
+        return dataB - dataA;
+      }
+    });
+  }
+
+  alternarOrdem() {
+    this.ordemData = this.ordemData === 'asc' ? 'desc' : 'asc';
+  }
+
+  setActiveTab(tab: 'recebidas' | 'enviadas') {
+    this.activeTab = tab;
+    this.filtroTipo = '';
+    this.filtroStatus = '';
+    this.filtroSolicitante = '';
+  }
+
+  get listaAtual() {
+    return this.listaFiltrada;
   }
 
   abrirDetalhes(solicitacao: Solicitacao) {
@@ -93,7 +186,7 @@ export class ClinicRequestsComponent implements OnInit {
         next: () => {
           this.toastr.success('Solicitação aprovada e aplicada!');
           this.modalVisible = false;
-          this.carregarPendencias(); 
+          this.carregarTodos(); 
         },
         error: () => this.toastr.error('Erro ao aprovar.')
       });
@@ -115,7 +208,7 @@ export class ClinicRequestsComponent implements OnInit {
       next: () => {
         this.toastr.info('Solicitação rejeitada.');
         this.modalVisible = false;
-        this.carregarPendencias();
+        this.carregarTodos();
       },
       error: () => this.toastr.error('Erro ao rejeitar.')
     });

@@ -22,5 +22,6 @@ public interface MedicosRepository extends JpaRepository<Medico, Long> {
     @Query("SELECT DISTINCT m FROM Medico m LEFT JOIN FETCH m.agenda")
     List<Medico> findAllWithAgenda();
     List<Medico> findByEspecializacaoContainingIgnoreCase(String especializacao);
+    List<Medico> findByClinicaId(Long clinicaId);
 
 }

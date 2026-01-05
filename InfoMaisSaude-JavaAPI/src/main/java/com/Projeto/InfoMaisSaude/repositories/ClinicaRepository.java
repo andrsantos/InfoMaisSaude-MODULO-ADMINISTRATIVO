@@ -10,5 +10,6 @@ import com.Projeto.InfoMaisSaude.entities.Usuario;
 public interface ClinicaRepository extends JpaRepository<Clinica, Long>{
     Clinica findByLatitudeAndLongitude(Double latitude, Double longitude);
     boolean existsByUsuario(Usuario usuario);
+    Object findByUsuarioId(Long id);
     
 }

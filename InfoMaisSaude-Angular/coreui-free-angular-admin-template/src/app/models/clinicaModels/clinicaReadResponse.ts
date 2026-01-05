@@ -8,4 +8,7 @@ export interface ClinicaReadResponse {
     email: string;
     horarioFuncionamentoInicio: string;
     horarioFuncionamentoFinal: string;
+    latitude: number;  
+    longitude: number; 
+    especializacoes: string[];
 }

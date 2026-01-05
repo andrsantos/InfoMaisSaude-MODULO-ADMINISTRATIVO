@@ -2,6 +2,7 @@ package com.Projeto.InfoMaisSaude.services;
 
 import java.util.List;
 import com.Projeto.InfoMaisSaude.dtos.medicoDTOs.AgendaItemDTO;
+import com.Projeto.InfoMaisSaude.dtos.solicitacaoDTOs.SolicitacaoClinicaRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.solicitacaoDTOs.SolicitacaoPerfilRequestDTO;
 import com.Projeto.InfoMaisSaude.entities.Solicitacao;
 
@@ -12,6 +13,8 @@ public interface SolicitacaoService {
     void aprovarSolicitacao(Long solicitacaoId, Long adminId);
     void rejeitarSolicitacao(Long solicitacaoId, Long adminId, String motivo);
     List<Solicitacao> listarPendentes();
+    List<Solicitacao> listarTodos(Long id);
     List<Solicitacao> listarHistoricoDoUsuario(Long usuarioId);
+    Solicitacao solicitarAlteracaoClinica(Long usuarioId, SolicitacaoClinicaRequestDTO dto);
     
 }

@@ -13,14 +13,14 @@
     </c-col>
 
     <c-col md="4" class="mb-4">
-        <c-card class="mx-auto card-interativo h-100" style="max-width: 23rem;">
-            <img cCardImg="top" class="card-img-padrao" src="assets/images/clinica.jpg" alt="Consultas">
+        <c-card class="mx-auto card-interativo h-100" style="max-width: 23rem;" (click)="goToUpdateClinic()">
+            <img cCardImg="top" class="card-img-padrao" src="assets/images/clinica2.jpg" alt="Consultas">
             <c-card-body>
                 <h5 cCardTitle>Minha Clinica</h5>
                 <p cCardText>
                     Confira os dados da sua clinica.
                 </p>
-                <button cButton color="dark">Acessar Painel</button>
+                <button cButton color="dark" (click)="goToUpdateClinic()">Acessar Painel</button>
             </c-card-body>
         </c-card>
     </c-col>

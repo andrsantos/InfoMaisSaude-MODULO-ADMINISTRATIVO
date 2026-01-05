@@ -1,0 +1,121 @@
+<c-card class="mb-4">
+  <c-card-header>
+    <strong>Solicitações Pendentes (Clínicas)</strong>
+  </c-card-header>
+  <c-card-body>
+
+    <div *ngIf="loading" class="text-center my-4">
+      <c-spinner color="primary"></c-spinner>
+    </div>
+
+    <table [hover]="true" [striped]="true" cTable class="align-middle" *ngIf="!loading">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Solicitante (Clínica)</th>
+          <th>Tipo</th>
+          <th class="text-center">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sol of listaSolicitacoes">
+          <td>{{ sol.criadoEm | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ sol.nomeSolicitante || 'Clínica' }}</td>
+          <td>
+            <c-badge color="info">Dados Cadastrais</c-badge>
+          </td>
+          <td class="text-center">
+            <button cButton color="primary" size="sm" (click)="verDetalhes(sol)">
+              Analisar Pedido
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="listaSolicitacoes.length === 0">
+          <td colspan="4" class="text-center text-muted py-4">
+            Nenhuma solicitação pendente no momento.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </c-card-body>
+</c-card>
+
+
+<c-modal [visible]="modalDetalhesVisible" (visibleChange)="modalDetalhesVisible = $event" size="lg">
+  <c-modal-header>
+    <h5 cModalTitle>Análise de Alteração de Dados</h5>
+    <button cButtonClose (click)="modalDetalhesVisible = false"></button>
+  </c-modal-header>
+  
+  <c-modal-body *ngIf="dadosNovosParseados">
+    <div class="alert alert-info">
+      <strong>Clínica Solicitante:</strong> {{ solicitacaoSelecionada?.nomeSolicitante }}<br>
+      <strong>Justificativa:</strong> {{ solicitacaoSelecionada?.justificativaMedico }}
+    </div>
+
+    <h6>Dados propostos para atualização:</h6>
+    <div class="p-3 bg-light rounded border">
+      <div class="row g-2">
+        <div class="col-md-6">
+          <small class="text-muted">Nome:</small>
+          <div class="fw-bold">{{ dadosNovosParseados.nome }}</div>
+        </div>
+        <div class="col-md-6">
+          <small class="text-muted">CNPJ:</small>
+          <div class="fw-bold">{{ dadosNovosParseados.cnpj }}</div>
+        </div>
+        <div class="col-md-6">
+            <small class="text-muted">Email:</small>
+            <div class="fw-bold">{{ dadosNovosParseados.email }}</div>
+        </div>
+        <div class="col-md-6">
+            <small class="text-muted">Telefone:</small>
+            <div class="fw-bold">{{ dadosNovosParseados.telefone }}</div>
+        </div>
+        <div class="col-12">
+            <small class="text-muted">Endereço:</small>
+            <div class="fw-bold">{{ dadosNovosParseados.endereco }}</div>
+        </div>
+        <div class="col-12">
+            <small class="text-muted">Especializações:</small>
+            <div>
+                <c-badge *ngFor="let esp of dadosNovosParseados.especializacoes" color="success" class="me-1">
+                    {{ esp }}
+                </c-badge>
+            </div>
+        </div>
+      </div>
+    </div>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="modalDetalhesVisible = false">Fechar</button>
+    <button cButton color="danger" (click)="abrirModalRejeicao(solicitacaoSelecionada); modalDetalhesVisible = false">
+      Rejeitar
+    </button>
+    <button cButton color="success" class="text-white" (click)="aprovar()">
+      ✅ Aprovar Alteração
+    </button>
+  </c-modal-footer>
+</c-modal>
+
+
+<c-modal [visible]="modalRejeicaoVisible" (visibleChange)="modalRejeicaoVisible = $event">
+  <c-modal-header>
+    <h5 cModalTitle>Rejeitar Solicitação</h5>
+    <button cButtonClose (click)="modalRejeicaoVisible = false"></button>
+  </c-modal-header>
+  
+  <c-modal-body>
+    <p>Por favor, informe o motivo da rejeição para que a clínica possa corrigir:</p>
+    <textarea cFormControl rows="4" [(ngModel)]="motivoRejeicao" placeholder="Ex: O CNPJ informado parece inválido..."></textarea>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="modalRejeicaoVisible = false">Cancelar</button>
+    <button cButton color="danger" (click)="confirmarRejeicao()" [disabled]="!motivoRejeicao">
+      Confirmar Rejeição
+    </button>
+  </c-modal-footer>
+</c-modal>

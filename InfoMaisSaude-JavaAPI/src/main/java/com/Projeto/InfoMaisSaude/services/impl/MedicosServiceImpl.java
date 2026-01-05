@@ -176,6 +176,20 @@ public class MedicosServiceImpl implements MedicosService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<MedicoNomeDTO> buscaPorNome(Long clinicaId) {
+        List<Medico> medicos = medicosRepository.findByClinicaId(clinicaId);
+        if(medicos == null){
+            throw new NullPointerException("Lista de médicos retornou null");
+        }
+        List<MedicoNomeDTO> dtos = new ArrayList<>();
+        medicos.forEach(medico -> {
+            MedicoNomeDTO dto = new MedicoNomeDTO(medico.getId(), medico.getNome());
+            dtos.add(dto);
+        });
+        return dtos;
+    }
+
 
     private MedicoResponseReadDTO converterParaReadDTO(Medico medico) {
         List<AgendaReadDTO> agendaDtos = medico.getAgenda().stream()
@@ -237,6 +251,8 @@ public class MedicosServiceImpl implements MedicosService {
         
         return textoSemAcento.trim(); 
     }
+
+
 
 
 }

@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +15,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import java.util.stream.Collectors;
 
 @Service
 public class TokenService {
@@ -34,15 +34,16 @@ public class TokenService {
         Instant expirationTime = now.plus(expirationHours, ChronoUnit.HOURS);
 
         List<String> roles = usuario.getAuthorities().stream()
-                                  .map(GrantedAuthority::getAuthority)
-                                  .collect(Collectors.toList());
+                                    .map(GrantedAuthority::getAuthority)
+                                    .collect(Collectors.toList());
 
         return Jwts.builder()
                 .setIssuer("InfoMaisSaude API") 
                 .setSubject(usuario.getLogin()) 
                 .setIssuedAt(Date.from(now)) 
                 .setExpiration(Date.from(expirationTime)) 
-                 .claim("role", roles.isEmpty() ? null : roles.get(0).replace("ROLE_", "")) 
+                .claim("id", usuario.getId()) 
+                .claim("role", roles.isEmpty() ? null : roles.get(0).replace("ROLE_", "")) 
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256) 
                 .compact();
     }
