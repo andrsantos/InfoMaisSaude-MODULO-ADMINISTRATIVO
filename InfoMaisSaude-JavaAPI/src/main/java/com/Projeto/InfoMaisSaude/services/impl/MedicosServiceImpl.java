@@ -106,6 +106,21 @@ public class MedicosServiceImpl implements MedicosService {
     }
 
     @Override
+    public List<MedicoResponseReadDTO> listarMedicosPorClinica(Long idDaClinica) {
+        List<Medico> medicosDaClinica = medicosRepository.findByClinicaId(idDaClinica);
+
+        if(medicosDaClinica == null){
+            throw new EntityNotFoundException("Médicos retornaram nulo para este id de clinica");
+        }
+
+        return medicosDaClinica.stream()
+            .map(this::converterParaReadDTO)
+            .collect(Collectors.toList());
+
+    }
+
+
+    @Override
     @Transactional(readOnly = true)
     public MedicoResponseReadDTO pegarMedico(Long id) {
         Medico medico = medicosRepository.findById(id)
@@ -254,6 +269,8 @@ public class MedicosServiceImpl implements MedicosService {
         
         return textoSemAcento.trim(); 
     }
+
+
 
 
 

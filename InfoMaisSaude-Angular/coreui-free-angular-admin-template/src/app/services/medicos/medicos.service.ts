@@ -20,6 +20,10 @@ export class MedicosService {
       const url = `${this.apiUrl}/api/medicos/listar`;
       return this.http.get<MedicoReadResponse[]>(url);
     }
+  listarMedicosPorClinica(clinicaId: any): Observable<MedicoReadResponse[]> {
+      const url = `${this.apiUrl}/api/medicos/listar/por-clinica/${clinicaId}`;
+      return this.http.get<MedicoReadResponse[]>(url);
+    }
   
   excluirMedico(medicoId: number): Observable<MedicoDeleteResponse> {
       const url = `${this.apiUrl}/api/medicos/deletar/${medicoId}`;

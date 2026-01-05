@@ -6,6 +6,7 @@ import { MedicosService } from '../../../../../services/medicos/medicos.service'
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule, FormModule, GridModule, ModalModule } from '@coreui/angular';
+import { AuthService, DecodedToken } from '../../../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-doctors-list',
@@ -20,19 +21,23 @@ import { ButtonModule, FormModule, GridModule, ModalModule } from '@coreui/angul
   templateUrl: './doctors-list.component.html',
   styleUrl: './doctors-list.component.scss'
 })
+
+
 export class DoctorsListComponent implements OnInit {
 
-
+ 
   listaMedicos: MedicoReadResponse[] = [];
   editForm: FormGroup;
   visibleEditModal = false;
   medicoSelecionadoId: number | null = null;
+  idDaClinica: any;
+ 
 
 constructor(
     private router: Router, 
     private toastr: ToastrService, 
     private medicoService: MedicosService,
-    private fb: FormBuilder 
+    private fb: FormBuilder
   ) {
     this.editForm = this.fb.group({
       nome: ['', Validators.required],
@@ -41,6 +46,9 @@ constructor(
     });
   }
   ngOnInit(): void {
+
+   this.idDaClinica = localStorage.getItem("idDaClinica");
+
     const state = history.state as {
       showSuccessToast?: boolean;
       message?: string;
@@ -61,7 +69,7 @@ constructor(
   }
 
   listarMedicos():void {
-    this.medicoService.listarMedicos().subscribe({
+    this.medicoService.listarMedicosPorClinica(this.idDaClinica).subscribe({
       next: (medicos) => {
         this.listaMedicos = medicos;
         console.log("Lista de médicos:", this.listaMedicos);
@@ -73,6 +81,7 @@ constructor(
       }
     });
   }
+
 
   verAgenda(id: number) {
   this.router.navigate(['/medicos/agenda', id]);

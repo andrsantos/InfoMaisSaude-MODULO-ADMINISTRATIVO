@@ -19,5 +19,6 @@ public interface MedicosService {
   MedicoResponseReadDTO pegarMedicoPorUsuario(Long idUsuario);
   List<MedicoResponseReadDTO> buscarPorEspecialidade(String especialidade);
   List<MedicoNomeDTO> buscaPorNome(Long idDaClinica);
+  List<MedicoResponseReadDTO> listarMedicosPorClinica(Long idDaClinica);
 
 }

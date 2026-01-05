@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { Router } from "@angular/router";
 import { jwtDecode } from "jwt-decode";
 
-interface DecodedToken {
+export interface DecodedToken {
   sub: string;
   exp: number;
   iat: number;

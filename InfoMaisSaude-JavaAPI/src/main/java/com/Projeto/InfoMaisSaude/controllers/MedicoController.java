@@ -43,6 +43,12 @@ public class MedicoController {
         return ResponseEntity.ok(listaMedicos);
     }
 
+    @GetMapping("/listar/por-clinica/{idDaClinica}")
+    public ResponseEntity<?> listarMedicosPorClinica(@PathVariable Long idDaClinica) {
+        var listaMedicos = medicosService.listarMedicosPorClinica(idDaClinica);
+        return ResponseEntity.ok(listaMedicos);
+    }
+
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<?> deletarMedico(@PathVariable Long id) {
         var resposta = medicosService.deletarMedico(id);
