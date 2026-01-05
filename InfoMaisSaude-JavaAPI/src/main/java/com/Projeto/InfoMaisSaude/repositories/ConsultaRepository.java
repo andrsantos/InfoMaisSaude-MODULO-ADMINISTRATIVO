@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.Projeto.InfoMaisSaude.entities.Consulta;
 import com.Projeto.InfoMaisSaude.enums.StatusConsulta;
@@ -41,4 +43,18 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
     List<Consulta> findByClinicaId(Long clinicaId);
 
     List<Consulta> findByClinicaIdAndDataConsultaOrderByHorarioInicioAsc(Long clinicaId, LocalDate data);
+
+    @Query("SELECT c FROM Consulta c " +
+           "JOIN c.paciente p " +
+           "JOIN c.medico m " +
+           "JOIN m.clinica cl " +
+           "WHERE p.telefone LIKE %:telefone% " +
+           "AND cl.id = :clinicaId " +
+           "AND c.status IN :statusList " +
+           "ORDER BY c.dataConsulta ASC, c.horarioInicio ASC")
+    List<Consulta> findByPacienteTelefoneAndClinicaIdAndStatusIn(
+        @Param("telefone") String telefone,
+        @Param("clinicaId") Long clinicaId,
+        @Param("statusList") List<StatusConsulta> statusList
+    );
 }

@@ -22,6 +22,7 @@ import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoResponseDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.SlotDisponivelDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.CancelamentoRequestDTO;
+import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaAgendadaDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaListagemDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.FinalizarConsultaDTO;
 import com.Projeto.InfoMaisSaude.entities.Usuario;
@@ -94,7 +95,8 @@ public class AgendamentoController {
     @GetMapping("/consultas-clinica/{clinicaId}")
     public ResponseEntity<List<ConsultaListagemDTO>> getConsultasPorClinica(@PathVariable Long clinicaId,
     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data
-    ){
+    ){  
+        System.out.println("clinica id" + clinicaId);
         var consultasPorClinica = agendamentoService.listarConsultasPorClinica(clinicaId, data);
         return ResponseEntity.ok(consultasPorClinica);
     }
@@ -128,6 +130,14 @@ public class AgendamentoController {
     }
 
 
+    @GetMapping("/paciente/{telefone}/clinica/{clinicaId}/ativas")
+    public ResponseEntity<List<ConsultaAgendadaDTO>> buscarConsultasAtivasPaciente(
+            @PathVariable String telefone,
+            @PathVariable Long clinicaId
+    ) {
+        var consultas = agendamentoService.buscarConsultasAtivasPorTelefoneEClinica(telefone, clinicaId);
+        return ResponseEntity.ok(consultas);
+    }
 
     @PostMapping("/{id}/finalizar")
     @PreAuthorize("hasRole('MEDICO')")

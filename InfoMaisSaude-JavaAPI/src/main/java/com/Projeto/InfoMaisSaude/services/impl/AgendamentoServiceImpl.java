@@ -10,11 +10,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoResponseDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.SlotDisponivelDTO;
+import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaAgendadaDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaListagemDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.FinalizarConsultaDTO;
+import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.NotificacaoPosConsultaDTO;
 import com.Projeto.InfoMaisSaude.entities.AgendaMedica;
 import com.Projeto.InfoMaisSaude.entities.Clinica;
 import com.Projeto.InfoMaisSaude.entities.Consulta;
@@ -45,6 +49,9 @@ public class AgendamentoServiceImpl implements AgendamentoService {
     private final PacienteRepository pacienteRepository;
     private final ClinicaRepository clinicaRepository;
     private final UsuariosRepository usuarioRepository;
+    private final String BOT_SERVICE_URL = "https://infomaissaude.com.br//webhook/notificar-encerramento";
+    private final RestTemplate restTemplate = new RestTemplate();
+
 
     @Override
     public List<LocalTime> listarHorariosDisponiveis(Long medicoId, LocalDate data) {
@@ -243,7 +250,7 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
     @Override
     public List<ConsultaListagemDTO> listarConsultasPorClinica(Long clinicaId, LocalDate data) {
-
+    
     LocalDate dataFiltro = (data != null) ? data : LocalDate.now();
     
     var consultas = consultaRepository.findByClinicaIdAndDataConsultaOrderByHorarioInicioAsc(clinicaId, dataFiltro);
@@ -328,6 +335,26 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         consulta.setStatus(StatusConsulta.REALIZADA); 
         
         consultaRepository.save(consulta);
+
+        if (dto.prescricao() != null && !dto.prescricao().isBlank()) {
+            try {
+                String telefone = consulta.getPaciente().getTelefone().replaceAll("\\D", ""); 
+                
+                var payload = new NotificacaoPosConsultaDTO(
+                    telefone,
+                    consulta.getPaciente().getNome(),
+                    consulta.getMedico().getNome(),
+                    dto.prescricao()
+                );
+                
+                restTemplate.postForEntity(BOT_SERVICE_URL, payload, Void.class);
+                
+                System.out.println("Solicitação de notificação enviada ao Bot.");
+
+            } catch (Exception e) {
+                System.err.println("Falha ao comunicar com o serviço de Bot: " + e.getMessage());
+            }
+        }
     }
 
 
@@ -362,6 +389,32 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         return diaBanco == diaJava.getValue(); 
     }
 
+@Override
+    public List<ConsultaAgendadaDTO> buscarConsultasAtivasPorTelefoneEClinica(String telefone, Long clinicaId) {
+        
+        String telefoneLimpo = telefone.replaceAll("\\D", "");
+        
+        List<StatusConsulta> statusAtivos = List.of(
+            StatusConsulta.AGENDADA,
+            StatusConsulta.CONFIRMADA
+        );
+        
+        List<Consulta> consultas = consultaRepository.findByPacienteTelefoneAndClinicaIdAndStatusIn(
+            telefoneLimpo, 
+            clinicaId,
+            statusAtivos
+        );
+        
+        return consultas.stream()
+                .map(c -> new ConsultaAgendadaDTO(
+                    c.getId(),
+                    c.getMedico().getNome(),
+                    c.getMedico().getEspecializacao(), 
+                    c.getDataConsulta(),
+                    c.getHorarioInicio()
+                ))
+                .toList();
+    }
 
 
 

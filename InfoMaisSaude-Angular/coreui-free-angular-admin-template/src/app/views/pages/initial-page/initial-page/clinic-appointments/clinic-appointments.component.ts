@@ -76,6 +76,7 @@ export class ClinicAppointmentsComponent implements OnInit {
      this.clinicaService.listarConsultasPorClinica(idDaClinica, this.dataFiltro).subscribe({
        next: (dados) => {
          this.listaConsultasPorClinica = Array.isArray(dados) ? dados : [dados];
+         console.log(this.listaConsultasPorClinica);
          this.loading = false;
        },
        error: (err) => {
