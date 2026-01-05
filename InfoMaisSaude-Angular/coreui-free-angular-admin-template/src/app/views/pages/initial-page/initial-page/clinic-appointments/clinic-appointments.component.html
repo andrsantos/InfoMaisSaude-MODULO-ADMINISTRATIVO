@@ -1,7 +1,7 @@
 <c-col xs="12">
     
     <c-card class="mb-4">
-        <c-card-header><strong>Filtros de Agenda</strong></c-card-header>
+        <c-card-header><strong>Filtros de Agenda (Visão Clínica)</strong></c-card-header>
         <c-card-body>
             <c-row class="g-3 align-items-end">
                 
@@ -15,8 +15,11 @@
                     <select cSelect [(ngModel)]="statusFiltro">
                         <option value="">Todos</option>
                         <option value="AGENDADA">Agendada</option>
+                        <option value="CONFIRMADA">Confirmada</option>
                         <option value="REALIZADA">Realizada</option>
-                        <option value="CANCELADA">Cancelada</option>
+                        <option value="CANCELADA_PELO_PACIENTE">Cancelada (Pac)</option>
+                        <option value="CANCELADA_PELO_MEDICO">Cancelada (Med)</option>
+                        <option value="CANCELADA_PELA_CLINICA">Cancelada (Clin)</option>
                     </select>
                 </c-col>
 
@@ -53,6 +56,7 @@
           <th>Médico / Especialidade</th>
           <th>Queixa</th>
           <th class="text-center">Status</th>
+          <th class="text-center">Ações</th>
         </tr>
       </thead>
       
@@ -84,13 +88,49 @@
                     {{ consulta.status }}
                 </c-badge>
             </td>
+
+            <td class="text-end">
+                <button cButton color="danger" variant="ghost" size="sm"
+                        (click)="iniciarCancelamento(consulta)"
+                        *ngIf="consulta.status === 'AGENDADA' || consulta.status === 'CONFIRMADA'">
+                    ✕ Cancelar
+                </button>
+            </td>
         </tr>
 
         <tr *ngIf="consultasFiltradas.length === 0">
-            <td colspan="5" class="text-center py-4 text-muted">
+            <td colspan="6" class="text-center py-4 text-muted">
                 Nenhuma consulta encontrada com esses filtros.
             </td>
         </tr>
       </tbody>
     </table>
 </c-col>
+
+<c-modal [visible]="modalCancelamentoVisible" (visibleChange)="modalCancelamentoVisible = $event">
+  <c-modal-header>
+    <h5 cModalTitle>Cancelar Consulta (Administração)</h5>
+    <button cButtonClose (click)="modalCancelamentoVisible = false"></button>
+  </c-modal-header>
+  
+  <c-modal-body>
+    <p>Você está cancelando a consulta do paciente <strong>{{ consultaParaCancelar?.nomePaciente }}</strong> com o <strong>{{ consultaParaCancelar?.nomeMedico }}</strong>.</p>
+    
+    <div class="mb-3">
+        <label class="form-label fw-bold">Motivo do Cancelamento <span class="text-danger">*</span></label>
+        <textarea cFormControl rows="3" 
+                  [(ngModel)]="motivoCancelamento" 
+                  placeholder="Ex: Médico ausente, Manutenção na clínica, Erro de agendamento..."></textarea>
+    </div>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="modalCancelamentoVisible = false">
+        Voltar
+    </button>
+    <button cButton color="danger" (click)="confirmarCancelamento()" [disabled]="loadingCancelamento">
+        <span *ngIf="loadingCancelamento" class="spinner-border spinner-border-sm me-1"></span>
+        Confirmar Cancelamento
+    </button>
+  </c-modal-footer>
+</c-modal>

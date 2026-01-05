@@ -49,9 +49,9 @@
               </th>
               
               <th>Paciente</th>
-              <th>Médico / Especialidade</th>
               <th>Queixa (Chatbot)</th>
               <th class="text-center">Status</th>
+              <th class="text-center">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -72,11 +72,6 @@
               </td>
 
               <td>
-                <div class="fw-semibold">{{ item.nomeMedico }}</div>
-                <div class="small text-medium-emphasis">{{ item.especialidadeMedico }}</div>
-              </td>
-
-              <td>
                 <div class="text-wrap fst-italic text-muted small" style="max-width: 250px;">
                   "{{ item.motivo || 'Sem observações' }}"
                 </div>
@@ -86,6 +81,26 @@
                 <c-badge [color]="getStatusColor(item.status)" shape="rounded-pill">
                   {{ item.status }}
                 </c-badge>
+              </td>
+
+              <td class="text-end">
+
+                <button cButton color="success" class="text-white me-2" size="sm" 
+                          (click)="iniciarAtendimento(item)"
+                          *ngIf="item.status === 'AGENDADA' || item.status === 'CONFIRMADA'">
+                      ✅ Finalizar
+                  </button>
+
+                  <button cButton color="danger" class="text-white me-2"   size="sm" 
+                          (click)="iniciarCancelamento(item)"
+                          *ngIf="item.status === 'AGENDADA' || item.status === 'CONFIRMADA'">
+                    ✕ Cancelar
+                  </button>
+
+                  <span *ngIf="item.status === 'REALIZADA'" class="text-success small fw-bold">
+                      Concluído ✓
+                  </span>
+                  
               </td>
 
             </tr>
@@ -106,3 +121,80 @@
     </c-card>
   </c-col>
 </c-row>
+
+<c-modal [visible]="modalCancelamentoVisible" (visibleChange)="modalCancelamentoVisible = $event">
+  <c-modal-header>
+    <h5 cModalTitle>Cancelar Consulta</h5>
+    <button cButtonClose (click)="modalCancelamentoVisible = false"></button>
+  </c-modal-header>
+  
+  <c-modal-body>
+    <p>Você está prestes a cancelar a consulta de <strong>{{ consultaParaCancelar?.nomePaciente }}</strong>.</p>
+    <p class="text-muted small">Essa ação enviará uma notificação ao paciente.</p>
+    
+    <div class="mb-3">
+        <label class="form-label fw-bold">Motivo do Cancelamento <span class="text-danger">*</span></label>
+        <textarea cFormControl rows="3" 
+                  [(ngModel)]="motivoCancelamento" 
+                  placeholder="Ex: Imprevisto médico, urgência familiar, etc."></textarea>
+    </div>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="modalCancelamentoVisible = false">
+        Voltar
+    </button>
+    <button cButton color="danger" (click)="confirmarCancelamento()" [disabled]="loadingCancelamento">
+        <span *ngIf="loadingCancelamento" class="spinner-border spinner-border-sm me-1"></span>
+        Confirmar Cancelamento
+    </button>
+  </c-modal-footer>
+</c-modal>
+
+<c-modal [visible]="modalFinalizarVisible" (visibleChange)="modalFinalizarVisible = $event" size="lg">
+  <c-modal-header>
+    <h5 cModalTitle>Finalizar Atendimento</h5>
+    <button cButtonClose (click)="modalFinalizarVisible = false"></button>
+  </c-modal-header>
+  
+  <c-modal-body>
+    <div class="alert alert-info d-flex align-items-center">
+        <i class="fa fa-user-md me-2 fs-4"></i>
+        <div>
+            Atendendo: <strong>{{ consultaEmAtendimento?.nomePaciente }}</strong><br>
+            <small>Queixa inicial: "{{ consultaEmAtendimento?.motivo || 'Nenhuma' }}"</small>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-bold">Diagnóstico / Anotações Clínicas</label>
+        <small class="text-muted d-block mb-1">Registro interno do prontuário (sintomas, CID, observações).</small>
+        <textarea cFormControl rows="3" 
+                  [(ngModel)]="formFinalizacao.diagnostico" 
+                  placeholder="Ex: Paciente apresenta quadro febril, garganta inflamada..."></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-bold text-success">Prescrição e Recomendações</label>
+        <small class="text-muted d-block mb-1">
+            <i class="fa fa-whatsapp text-success"></i> 
+            Este conteúdo será enviado ao paciente via WhatsApp posteriormente.
+        </small>
+        <textarea cFormControl rows="4" 
+                  [(ngModel)]="formFinalizacao.prescricao" 
+                  placeholder="Ex: 1. Dipirona 500mg a cada 6h em caso de dor.&#10;2. Beber 2L de água por dia.&#10;3. Repouso por 3 dias."></textarea>
+    </div>
+
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="modalFinalizarVisible = false">Voltar</button>
+    <button cButton color="success" class="text-white" (click)="confirmarFinalizacao()" [disabled]="loadingFinalizacao">
+        <span *ngIf="loadingFinalizacao" class="spinner-border spinner-border-sm me-1"></span>
+        Concluir Atendimento
+    </button>
+  </c-modal-footer>
+</c-modal>
+
+
+

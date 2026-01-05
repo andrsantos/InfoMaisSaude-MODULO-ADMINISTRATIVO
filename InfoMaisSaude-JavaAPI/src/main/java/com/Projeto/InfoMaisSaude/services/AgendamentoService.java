@@ -9,6 +9,7 @@ import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoResponseDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.SlotDisponivelDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaListagemDTO;
+import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.FinalizarConsultaDTO;
 
 public interface AgendamentoService {
     List<LocalTime> listarHorariosDisponiveis(Long medicoId, LocalDate data);
@@ -17,4 +18,5 @@ public interface AgendamentoService {
     List<SlotDisponivelDTO> listarProximosHorariosLivres(String especialidade);
     List<ConsultaListagemDTO> listarConsultasPorClinica(Long clinicaId, LocalDate data);
     void cancelarConsulta(Long consultaId, String motivo, Long usuarioId) throws AccessDeniedException;
+    void finalizarConsulta(Long consultaId, FinalizarConsultaDTO dto, Long medicoId) throws AccessDeniedException;
 }

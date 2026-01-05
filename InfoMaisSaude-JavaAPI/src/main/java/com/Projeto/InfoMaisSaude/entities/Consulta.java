@@ -65,6 +65,12 @@ public class Consulta {
     @Column(columnDefinition = "TEXT")
     private String motivoCancelamento;
 
+    @Column(columnDefinition = "TEXT")
+    private String diagnostico; 
+
+    @Column(columnDefinition = "TEXT")
+    private String prescricao; 
+
     private LocalDateTime dataAgendamento; 
 
     @PrePersist

@@ -24,4 +24,14 @@ export class AgendamentoService {
 
     return this.http.get<Consulta[]>(this.apiUrl, { params });
   }
+
+  cancelarConsulta(id: number, motivo: string) {
+    return this.http.post(`${this.apiUrl}/consultas/${id}/cancelar`, { motivo });
+  }
+
+  finalizarConsulta(id: number, diagnostico: string, prescricao: string) {
+    const payload = { diagnostico, prescricao };
+    return this.http.post(`${this.apiUrl}/consultas/${id}/finalizar`, payload);
+  }
+
 }

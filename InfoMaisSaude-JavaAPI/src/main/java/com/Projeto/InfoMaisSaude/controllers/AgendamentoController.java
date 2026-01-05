@@ -1,5 +1,6 @@
 package com.Projeto.InfoMaisSaude.controllers;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoResponseDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.SlotDisponivelDTO;
+import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.CancelamentoRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaListagemDTO;
+import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.FinalizarConsultaDTO;
 import com.Projeto.InfoMaisSaude.entities.Usuario;
 import com.Projeto.InfoMaisSaude.repositories.MedicosRepository;
 import com.Projeto.InfoMaisSaude.services.AgendamentoService;
@@ -94,4 +97,34 @@ public class AgendamentoController {
         var consultasPorClinica = agendamentoService.listarConsultasPorClinica(clinicaId, data);
         return ResponseEntity.ok(consultasPorClinica);
     }
+
+    @PostMapping("/{id}/cancelar")
+    public ResponseEntity<Void> cancelarConsulta(
+            @PathVariable Long id,
+            @RequestBody CancelamentoRequestDTO dto,
+            @AuthenticationPrincipal Usuario usuarioLogado
+    ) {
+        try {
+            agendamentoService.cancelarConsulta(id, dto.motivo(), usuarioLogado.getId());
+        } catch (AccessDeniedException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/finalizar")
+    @PreAuthorize("hasRole('MEDICO')")
+    public ResponseEntity<Void> finalizarConsulta(
+            @PathVariable Long id,
+            @RequestBody FinalizarConsultaDTO dto,
+            @AuthenticationPrincipal Usuario usuarioLogado
+    ) {
+        try {
+            agendamentoService.finalizarConsulta(id, dto, usuarioLogado.getId());
+        } catch (AccessDeniedException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.noContent().build();
+    }
+    
 }

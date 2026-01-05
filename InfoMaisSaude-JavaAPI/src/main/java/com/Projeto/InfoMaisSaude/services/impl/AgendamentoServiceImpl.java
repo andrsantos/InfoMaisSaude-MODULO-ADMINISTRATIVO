@@ -14,6 +14,7 @@ import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.AgendamentoResponseDTO;
 import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.SlotDisponivelDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaListagemDTO;
+import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.FinalizarConsultaDTO;
 import com.Projeto.InfoMaisSaude.entities.AgendaMedica;
 import com.Projeto.InfoMaisSaude.entities.Clinica;
 import com.Projeto.InfoMaisSaude.entities.Consulta;
@@ -237,15 +238,14 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
     @Transactional
     public void cancelarConsulta(Long consultaId, String motivo, Long usuarioId) throws AccessDeniedException {
+
         Consulta consulta = consultaRepository.findById(consultaId)
                 .orElseThrow(() -> new EntityNotFoundException("Consulta não encontrada"));
         
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
-        if (usuario.getRole() == UserRole.PACIENTE) {
-            consulta.setStatus(StatusConsulta.CANCELADA_PELO_PACIENTE);
-        } else if (usuario.getRole() == UserRole.MEDICO) {
+        if (usuario.getRole() == UserRole.MEDICO) {
             if (!consulta.getMedico().getUsuario().getId().equals(usuarioId)) {
                 throw new AccessDeniedException("Você só pode cancelar consultas da sua agenda.");
             }
@@ -254,7 +254,32 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         else if (usuario.getRole() == UserRole.CLINICA || usuario.getRole() == UserRole.ADMIN) {
              consulta.setStatus(StatusConsulta.CANCELADA_PELA_CLINICA);
         }
+
         consulta.setMotivoCancelamento(motivo);
+        consultaRepository.save(consulta);
+
+    }
+
+    @Override
+    public void finalizarConsulta(Long consultaId, FinalizarConsultaDTO dto, Long medicoId) throws AccessDeniedException {
+
+    Consulta consulta = consultaRepository.findById(consultaId)
+                .orElseThrow(() -> new EntityNotFoundException("Consulta não encontrada"));
+
+        if (!consulta.getMedico().getUsuario().getId().equals(medicoId)) {
+            throw new AccessDeniedException("Você não pode finalizar a consulta de outro médico.");
+        }
+
+        if (consulta.getStatus() == StatusConsulta.REALIZADA || 
+            consulta.getStatus() == StatusConsulta.CANCELADA_PELO_MEDICO ||
+            consulta.getStatus() == StatusConsulta.CANCELADA_PELO_PACIENTE) {
+            throw new IllegalStateException("Esta consulta não pode ser finalizada.");
+        }
+
+        consulta.setDiagnostico(dto.diagnostico());
+        consulta.setPrescricao(dto.prescricao());
+        consulta.setStatus(StatusConsulta.REALIZADA); 
+        
         consultaRepository.save(consulta);
     }
 
@@ -289,6 +314,8 @@ public class AgendamentoServiceImpl implements AgendamentoService {
     private boolean verificarDiaSemana(int diaBanco, java.time.DayOfWeek diaJava) {
         return diaBanco == diaJava.getValue(); 
     }
+
+
 
 
 
