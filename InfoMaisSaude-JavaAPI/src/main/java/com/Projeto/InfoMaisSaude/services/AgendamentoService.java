@@ -19,4 +19,5 @@ public interface AgendamentoService {
     List<ConsultaListagemDTO> listarConsultasPorClinica(Long clinicaId, LocalDate data);
     void cancelarConsulta(Long consultaId, String motivo, Long usuarioId) throws AccessDeniedException;
     void finalizarConsulta(Long consultaId, FinalizarConsultaDTO dto, Long medicoId) throws AccessDeniedException;
+    public void cancelarConsultaViaPaciente(Long consultaId, String motivo, String telefonePaciente) throws AccessDeniedException;
 }

@@ -113,6 +113,22 @@ public class AgendamentoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}/cancelar-paciente")
+    public ResponseEntity<Void> cancelarViaPaciente(
+            @PathVariable Long id,
+            @RequestBody CancelamentoRequestDTO dto, 
+            @RequestParam String telefone 
+    ) {
+        try {
+            agendamentoService.cancelarConsultaViaPaciente(id, dto.motivo(), telefone);
+        } catch (AccessDeniedException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+
+
     @PostMapping("/{id}/finalizar")
     @PreAuthorize("hasRole('MEDICO')")
     public ResponseEntity<Void> finalizarConsulta(

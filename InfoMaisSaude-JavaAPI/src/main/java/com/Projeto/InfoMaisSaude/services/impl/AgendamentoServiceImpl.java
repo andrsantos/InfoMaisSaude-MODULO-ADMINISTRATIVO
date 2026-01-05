@@ -150,6 +150,7 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         paciente.setNome(dto.nomePaciente());
         paciente.setIdade(dto.idade()); 
         paciente.setSexo(dto.sexo());   
+        paciente.setCpf(dto.cpf());
         pacienteRepository.save(paciente);
 
 
@@ -276,6 +277,36 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
     }
 
+    
+    @Override
+    public void cancelarConsultaViaPaciente(Long consultaId, String motivo, String telefonePaciente) throws AccessDeniedException {
+
+        Consulta consulta = consultaRepository.findById(consultaId)
+                .orElseThrow(() -> new EntityNotFoundException("Consulta não encontrada"));
+
+        String telefoneCadastrado = consulta.getPaciente().getTelefone(); 
+        
+        String foneBanco = telefoneCadastrado.replaceAll("\\D", "");
+        String foneRequest = telefonePaciente.replaceAll("\\D", "");
+
+        if (!foneBanco.equals(foneRequest)) {
+            throw new AccessDeniedException("Este número de telefone não tem permissão para cancelar esta consulta.");
+        }
+
+        if (consulta.getStatus() == StatusConsulta.REALIZADA || 
+            consulta.getStatus() == StatusConsulta.CANCELADA_PELO_PACIENTE || 
+            consulta.getStatus() == StatusConsulta.CANCELADA_PELO_MEDICO) {
+            throw new IllegalStateException("Consulta já finalizada ou cancelada.");
+        }
+
+        consulta.setStatus(StatusConsulta.CANCELADA_PELO_PACIENTE);
+        consulta.setMotivoCancelamento(motivo);
+        consultaRepository.save(consulta);
+
+    }
+
+
+
     @Override
     public void finalizarConsulta(Long consultaId, FinalizarConsultaDTO dto, Long medicoId) throws AccessDeniedException {
 
@@ -330,6 +361,7 @@ public class AgendamentoServiceImpl implements AgendamentoService {
     private boolean verificarDiaSemana(int diaBanco, java.time.DayOfWeek diaJava) {
         return diaBanco == diaJava.getValue(); 
     }
+
 
 
 

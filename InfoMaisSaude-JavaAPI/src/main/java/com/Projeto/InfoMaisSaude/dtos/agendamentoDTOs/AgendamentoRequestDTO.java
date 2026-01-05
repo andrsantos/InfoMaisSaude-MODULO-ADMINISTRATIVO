@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record AgendamentoRequestDTO(
+    @NotNull Long clinicaId,
     @NotNull Long medicoId,
     @NotNull LocalDate data,
     @NotNull LocalTime horario,
@@ -13,5 +14,6 @@ public record AgendamentoRequestDTO(
     @NotBlank String telefonePaciente, 
     @NotBlank String idade,
     @NotBlank String sexo,
+    @NotBlank String cpf,
     @NotBlank String resumoClinico
 ) {}
