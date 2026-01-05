@@ -53,12 +53,6 @@ public class MedicosServiceImpl implements MedicosService {
        if (dto.getAgenda() != null && !dto.getAgenda().isEmpty()) {
             validarConflitoDeHorarios(dto.getAgenda());
         }
-
-        Usuario novoUsuario = new Usuario();
-        novoUsuario.setLogin(dto.getLogin()); 
-        novoUsuario.setSenha(passwordEncoder.encode(dto.getSenha()));
-        novoUsuario.setRole(UserRole.MEDICO); 
-        novoUsuario = usuariosRepository.save(novoUsuario);
         
         if (!clinicaRepository.existsById(dto.getClinica_id())) {
             throw new IllegalArgumentException("Erro: este médico não está vinculado a nenhuma clínica.");
@@ -66,6 +60,16 @@ public class MedicosServiceImpl implements MedicosService {
 
         Clinica clinica = clinicaRepository.findById(dto.getClinica_id())
             .orElseThrow(() -> new EntityNotFoundException("Clínica não encontrada"));
+
+        Usuario usuarioCriador = usuariosRepository.findById(clinica.getUsuario().getId()).orElseThrow(() -> 
+        new EntityNotFoundException("Usuario criador(clinica) não encontrado"));
+
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.setLogin(dto.getLogin()); 
+        novoUsuario.setSenha(passwordEncoder.encode(dto.getSenha()));
+        novoUsuario.setRole(UserRole.MEDICO); 
+        novoUsuario.setCreatedBy(usuarioCriador);
+        novoUsuario = usuariosRepository.save(novoUsuario);
 
         Medico medico = new Medico();
         medico.setNome(dto.getNome());
@@ -164,7 +168,6 @@ public class MedicosServiceImpl implements MedicosService {
         return converterParaReadDTO(medico);
     }
 
-    // @Override
     public List<MedicoResponseReadDTO> buscarPorEspecialidade(String especialidade) {
         System.out.println("Buscando médicos com especialidade: " + especialidade);
         System.out.println("Especialidade normalizada: " + normalizarTexto(especialidade));

@@ -16,7 +16,10 @@ export const profileRedirectGuard: CanActivateFn = (route, state) : Observable<b
   }
 
   if(role === 'CLINICA'){
-    return router.createUrlTree(['/initial-page']);
+    return router.createUrlTree(['/update-clinic']);
+  }
+  if(role === 'ADMIN'){
+    return router.createUrlTree(['/initial-page-admin']);
   }
 
   return true;

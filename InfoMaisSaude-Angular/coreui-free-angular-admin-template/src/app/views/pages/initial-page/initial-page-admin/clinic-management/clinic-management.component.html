@@ -28,7 +28,6 @@
                                 <th scope="col">Funcionamento</th>
                                 <th scope="col">Site</th>
                                 <th scope="col">Ações</th>
-                                <th scope="col">Médicos</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,9 +42,6 @@
                                     <button cButton color="danger" size="sm" class="px-2" style="color:white;" (click)="openDeleteConfirmationModal(clinica.id, clinica.nome)">
                                         Excluir Clínica
                                     </button>
-                                </td>
-                                <td>
-                                    <button cButton size="sm" class="px-2" color="dark">Ver Médicos</button>
                                 </td>
                             </tr>
                             <tr *ngIf="clinicas.length === 0 && !isLoading && !errorMessage">
