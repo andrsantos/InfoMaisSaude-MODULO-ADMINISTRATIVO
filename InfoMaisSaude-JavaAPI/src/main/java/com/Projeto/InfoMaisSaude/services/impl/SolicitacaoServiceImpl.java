@@ -263,8 +263,8 @@ public class SolicitacaoServiceImpl implements SolicitacaoService {
 
     private void aplicarMudancaDeClinica(Solicitacao solicitacao) {
 
-        Clinica clinica = (Clinica) Optional.ofNullable(clinicaRepository.findByUsuarioId(solicitacao.getSolicitante().getId()))
-                .orElseThrow(() -> new EntityNotFoundException("Clínica não encontrada para este usuário"));
+        Clinica clinica = clinicaRepository.findByUsuarioId(solicitacao.getSolicitante().getId())
+        .orElseThrow(() ->  new EntityNotFoundException("Clinica não encontrada para esta solicitação."));
 
         try {
             SolicitacaoClinicaRequestDTO dto = objectMapper.readValue(

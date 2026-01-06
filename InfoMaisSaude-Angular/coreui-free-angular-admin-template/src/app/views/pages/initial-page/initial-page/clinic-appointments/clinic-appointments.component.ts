@@ -57,6 +57,7 @@ export class ClinicAppointmentsComponent implements OnInit {
 
   ngOnInit(): void {
   const idDaClinica = localStorage.getItem("idDaClinica");
+  console.log("Id da clinica", idDaClinica);
      if(idDaClinica) {
         this.filtrarNoBackend(); 
         this.carregarMedicos(idDaClinica); 

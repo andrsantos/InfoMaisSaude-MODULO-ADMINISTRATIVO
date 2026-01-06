@@ -1,5 +1,7 @@
 package com.Projeto.InfoMaisSaude.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.Projeto.InfoMaisSaude.dtos.loginDTOs.LoginRequestDTO;
 import com.Projeto.InfoMaisSaude.dtos.loginDTOs.LoginResponseDTO;
+import com.Projeto.InfoMaisSaude.entities.Clinica;
 import com.Projeto.InfoMaisSaude.entities.Usuario;
 import com.Projeto.InfoMaisSaude.enums.UserRole;
 import com.Projeto.InfoMaisSaude.repositories.ClinicaRepository;
@@ -34,8 +37,9 @@ public class AuthenticationController {
         var authentication = manager.authenticate(authToken);
         Usuario usuarioAutenticado = (Usuario) authentication.getPrincipal();
         var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
-
-        boolean possuiClinica = false;
+        Optional<Clinica> clinica = clinicaRepository.findByUsuarioId(usuarioAutenticado.getId());
+        Long clinicaId = clinica.map(Clinica::getId).orElse(null);
+        boolean possuiClinica = clinica.isPresent();
 
         if(usuarioAutenticado.getRole() == UserRole.CLINICA){
             possuiClinica = clinicaRepository.existsByUsuario(usuarioAutenticado);
@@ -44,6 +48,6 @@ public class AuthenticationController {
         Long idUsuario = usuarioAutenticado.getId();
 
 
-        return ResponseEntity.ok(new LoginResponseDTO(tokenJWT, possuiClinica, idUsuario));
+        return ResponseEntity.ok(new LoginResponseDTO(tokenJWT, possuiClinica, idUsuario, clinicaId));
     }
 }

@@ -66,19 +66,21 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
+          localStorage.clear();
           localStorage.setItem("authToken", response.token);
-          localStorage.setItem("possuiClinica", JSON.stringify(response.possuiClinicaCadastrada));
-          localStorage.setItem("usuarioId", JSON.stringify(response.idUsuario));
           const userRole = this.authService.getUserRole();
           if (userRole === "ADMIN") {
             this.router.navigate(["/initial-page-admin"]);
           } else if (userRole == 'CLINICA'){
+            if(response.possuiClinicaCadastrada && response.clinicaId){
+            localStorage.setItem("possuiClinica","true");
+            localStorage.setItem("idDaClinica", JSON.stringify(response.clinicaId));
             this.router.navigate(["/initial-page"]);
+            } else {
+            this.router.navigate(['/register-clinic']);
+            }
           } else if (userRole === "MEDICO") {
             this.router.navigate(["/initial-page-doctor"]);
-          }
-          else {
-            this.router.navigate(['/register-clinic']);
           }
         },
         error: (error) => {

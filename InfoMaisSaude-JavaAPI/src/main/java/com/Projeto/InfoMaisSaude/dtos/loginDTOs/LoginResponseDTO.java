@@ -11,6 +11,7 @@ public class LoginResponseDTO {
     private String token;
     boolean possuiClinicaCadastrada;
     Long idUsuario;
+    private Long clinicaId;
     
     
 }
