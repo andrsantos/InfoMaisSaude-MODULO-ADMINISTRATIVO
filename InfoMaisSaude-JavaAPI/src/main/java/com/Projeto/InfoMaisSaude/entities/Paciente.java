@@ -36,7 +36,7 @@ public class Paciente {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false)
     private String telefone;
 
     @Column(unique = true)

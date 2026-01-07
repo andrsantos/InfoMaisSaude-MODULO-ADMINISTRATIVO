@@ -18,6 +18,7 @@ import com.Projeto.InfoMaisSaude.dtos.agendamentoDTOs.SlotDisponivelDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaAgendadaDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.ConsultaListagemDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.FinalizarConsultaDTO;
+import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.NotificacaoCancelamentoDTO;
 import com.Projeto.InfoMaisSaude.dtos.consultaDTOs.NotificacaoPosConsultaDTO;
 import com.Projeto.InfoMaisSaude.entities.AgendaMedica;
 import com.Projeto.InfoMaisSaude.entities.Clinica;
@@ -146,18 +147,18 @@ public class AgendamentoServiceImpl implements AgendamentoService {
             throw new IllegalStateException("Desculpe, este horário acabou de ser ocupado.");
         }
 
-        Paciente paciente = pacienteRepository.findByTelefone(dto.telefonePaciente())
+        Paciente paciente = pacienteRepository.findByCpf(dto.cpf())
                 .orElseGet(() -> {
                     Paciente novo = new Paciente();
                     novo.setNome(dto.nomePaciente());
-                    novo.setTelefone(dto.telefonePaciente());
+                    novo.setCpf(dto.cpf());
                     return novo;
                 });
 
         paciente.setNome(dto.nomePaciente());
         paciente.setIdade(dto.idade()); 
         paciente.setSexo(dto.sexo());   
-        paciente.setCpf(dto.cpf());
+        paciente.setTelefone(dto.telefonePaciente());
         pacienteRepository.save(paciente);
 
 
@@ -281,8 +282,40 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
         consulta.setMotivoCancelamento(motivo);
         consultaRepository.save(consulta);
+        enviarNotificacaoCancelamento(consulta, motivo);
 
     }
+
+    private void enviarNotificacaoCancelamento(Consulta consulta, String motivo) {
+
+        try {
+
+            String dataFormatada = consulta.getDataConsulta()
+                .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM"));
+            String horaFormatada = consulta.getHorarioInicio().toString();
+            String dataHorario = dataFormatada + " às " + horaFormatada;
+
+            String telefone = consulta.getPaciente().getTelefone().replaceAll("\\D", "");
+
+            var payload = new NotificacaoCancelamentoDTO(
+                telefone,
+                consulta.getPaciente().getNome(),
+                consulta.getMedico().getNome(),
+                dataHorario,
+                motivo
+            );
+
+            String botUrl = "infomaissaude.com.br/webhook/notificar-cancelamento"; 
+            restTemplate.postForEntity(botUrl, payload, Void.class);
+            
+            System.out.println("Notificação de cancelamento enviada.");
+
+        } catch (Exception e) {
+            System.err.println("Falha ao notificar cancelamento no WhatsApp: " + e.getMessage());
+        }
+    }
+
+
 
     
     @Override

@@ -101,7 +101,7 @@ public class AgendamentoController {
         return ResponseEntity.ok(consultasPorClinica);
     }
 
-    @PostMapping("/{id}/cancelar")
+    @PostMapping("/consultas/{id}/cancelar")
     public ResponseEntity<Void> cancelarConsulta(
             @PathVariable Long id,
             @RequestBody CancelamentoRequestDTO dto,
@@ -139,7 +139,7 @@ public class AgendamentoController {
         return ResponseEntity.ok(consultas);
     }
 
-    @PostMapping("/{id}/finalizar")
+    @PostMapping("/consultas/{id}/finalizar")
     @PreAuthorize("hasRole('MEDICO')")
     public ResponseEntity<Void> finalizarConsulta(
             @PathVariable Long id,

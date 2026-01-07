@@ -10,4 +10,5 @@ import com.Projeto.InfoMaisSaude.entities.Paciente;
 @Repository
 public interface PacienteRepository extends JpaRepository<Paciente, Long> {
     Optional<Paciente> findByTelefone(String telefone);
+    Optional<Paciente> findByCpf(String cpf);
 }
