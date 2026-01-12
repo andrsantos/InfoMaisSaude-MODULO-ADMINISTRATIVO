@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import {
   AvatarComponent,
@@ -64,7 +64,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
     return this.colorModes.find(mode => mode.name === currentMode)?.icon ?? 'cilSun';
   });
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     super();
   }
 
@@ -147,6 +147,10 @@ export class DefaultHeaderComponent extends HeaderComponent {
 
   public logout(): void {
     this.authService.logout();
+  }
+
+  public myProfile(): void {
+    this.router.navigate(['/profile-redirect']);
   }
 
 }

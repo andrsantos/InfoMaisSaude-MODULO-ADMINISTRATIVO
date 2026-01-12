@@ -46,7 +46,7 @@
       <c-avatar
         shape="rounded-1"
         size="md"
-        src="./assets/images/avatars/6.jpg"
+        src="./assets/images/avatars/default-profile.png"
         status="success"
         textColor="primary"
         alt="User avatar"
@@ -61,21 +61,15 @@
       </li>
       <li></li>
       <li>
-        <a cDropdownItem routerLink="">
+        <a cDropdownItem routerLink="" (click)="myProfile()">
           <svg cIcon class="me-2" name="cilUser"></svg>
           Meu perfil
         </a>
       </li>
       <li>
-        <a cDropdownItem routerLink="">
-          <svg cIcon class="me-2" name="cilSettings"></svg>
-          Configurações
-        </a>
-      </li>
-      <li>
         <a cDropdownItem (click)="logout()" style="cursor: pointer;">
           <svg cIcon class="me-2" name="cilAccountLogout"></svg>
-          Logout
+          Sair
         </a>
       </li>
     </ul>

@@ -16,6 +16,7 @@ import {
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
 import { navItems } from './_nav';
+import { AuthService } from '../../services/auth/auth.service';
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -49,6 +50,15 @@ function isOverflown(element: HTMLElement) {
 export class DefaultLayoutComponent {
 
   public navItems = [...navItems];
+
+  
+  constructor(private authService: AuthService) {}
+  
+  public logout(): void {
+    this.authService.logout();
+  }
+
+
 
  
 }

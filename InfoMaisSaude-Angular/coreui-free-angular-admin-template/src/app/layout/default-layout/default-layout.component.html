@@ -30,9 +30,9 @@
   </ng-scrollbar>
 
   @if (!sidebar1.narrow) {
-    <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
-      <button cSidebarToggler aria-label="Toggle sidebar fold"></button>
-    </c-sidebar-footer>
+   <c-sidebar-footer class="border-top d-none d-lg-flex" style="cursor: pointer;">
+      <button (click)="logout()"aria-label="Toggle sidebar fold" style="color:white; background-color:#2a2d33; border:none;"><svg cIcon class="me-2" name="cilAccountLogout"></svg> </button>
+    </c-sidebar-footer> 
   }
 </c-sidebar>
 

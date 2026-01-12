@@ -51,6 +51,8 @@ public class AgendamentoServiceImpl implements AgendamentoService {
     private final ClinicaRepository clinicaRepository;
     private final UsuariosRepository usuarioRepository;
     private final String BOT_SERVICE_URL = "https://infomaissaude.com.br//webhook/notificar-encerramento";
+    private final String BOT_SERVICE_URL2 = "https://infomaissaude.com.br//webhook/notificar-cancelamento";
+
     private final RestTemplate restTemplate = new RestTemplate();
 
 
@@ -305,8 +307,8 @@ public class AgendamentoServiceImpl implements AgendamentoService {
                 motivo
             );
 
-            String botUrl = "infomaissaude.com.br/webhook/notificar-cancelamento"; 
-            restTemplate.postForEntity(botUrl, payload, Void.class);
+            
+            restTemplate.postForEntity(BOT_SERVICE_URL2, payload, Void.class);
             
             System.out.println("Notificação de cancelamento enviada.");
 
