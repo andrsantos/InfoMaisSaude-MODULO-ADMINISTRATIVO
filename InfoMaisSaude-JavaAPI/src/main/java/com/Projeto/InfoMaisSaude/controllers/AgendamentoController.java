@@ -62,6 +62,7 @@ public class AgendamentoController {
         }
 
         var consultas = agendamentoService.listarConsultas(idParaBuscar, dataBusca);
+        System.out.println("Consultas listadas com sucesso! ");
         return ResponseEntity.ok(consultas);
     }
 

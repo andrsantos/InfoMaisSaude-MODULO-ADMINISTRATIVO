@@ -195,7 +195,9 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         List<Medico> medicos = medicosRepository.findByClinicaIdAndEspecializacaoContainingIgnoreCase(clinicaId, termoBusca);
         
         List<SlotDisponivelDTO> slotsLivres = new ArrayList<>();
+        
         LocalDate hoje = LocalDate.now();
+        LocalTime horaAtual = LocalTime.now(); 
         
         List<StatusConsulta> statusQueOcupamHorario = List.of(
             StatusConsulta.AGENDADA,
@@ -216,7 +218,12 @@ public class AgendamentoServiceImpl implements AgendamentoService {
                     LocalTime cursor = agenda.getHorarioInicio();
                     
                     while (cursor.isBefore(agenda.getHorarioFim())) {
-           
+                        
+                        if (dataAnalise.isEqual(hoje) && cursor.isBefore(horaAtual)) {
+                            cursor = cursor.plusMinutes(30);
+                            continue;
+                        }
+
                         boolean ocupado = consultaRepository.existsByMedicoIdAndDataConsultaAndHorarioInicioAndStatusIn(
                             medico.getId(),
                             dataAnalise,
@@ -225,7 +232,6 @@ public class AgendamentoServiceImpl implements AgendamentoService {
                         );
 
                         if (!ocupado) {
- 
                             slotsLivres.add(new SlotDisponivelDTO(
                                 medico.getId(),
                                 medico.getNome(),
