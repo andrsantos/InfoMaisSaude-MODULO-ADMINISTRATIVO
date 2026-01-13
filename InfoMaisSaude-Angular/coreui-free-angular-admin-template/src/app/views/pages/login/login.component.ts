@@ -68,6 +68,7 @@ export class LoginComponent {
         next: (response) => {
           localStorage.clear();
           localStorage.setItem("authToken", response.token);
+          localStorage.setItem("usuarioId", JSON.stringify(response.idUsuario));
           const userRole = this.authService.getUserRole();
           if (userRole === "ADMIN") {
             this.router.navigate(["/initial-page-admin"]);

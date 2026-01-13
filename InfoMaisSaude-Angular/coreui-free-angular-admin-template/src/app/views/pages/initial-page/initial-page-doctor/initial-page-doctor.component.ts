@@ -53,7 +53,7 @@ export class InitialPageDoctorComponent implements OnInit{
     this.router.navigate(['medicos/solicitacoes']);
   }
   goToAppointments(): void {
-    this.router.navigate(['appointments']);
+    this.router.navigate(['/appointments']);
   }
 
 }
