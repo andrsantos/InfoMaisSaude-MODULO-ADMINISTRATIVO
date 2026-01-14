@@ -164,7 +164,7 @@ public class ClinicaServiceImpl implements ClinicaService {
     }
     List<ClinicaResumoDTO> clinicasResumo =  new ArrayList<>();
     clinicas.forEach(clinica ->  {
-    clinicasResumo.add(new ClinicaResumoDTO(clinica.getId(), clinica.getNome()));
+    clinicasResumo.add(new ClinicaResumoDTO(clinica.getId(), clinica.getNome(), clinica.getEndereco()));
     }
     );
     return clinicasResumo;
