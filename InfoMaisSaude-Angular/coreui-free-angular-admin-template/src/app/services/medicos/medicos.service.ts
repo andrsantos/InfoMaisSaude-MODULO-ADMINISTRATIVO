@@ -12,7 +12,7 @@ import { MedicoNomeReadResponse } from '../../models/medicoModels/medicoNomeRead
   providedIn: 'root'
 })
 export class MedicosService {
-  private apiUrl = 'http://localhost:8080';
+  private apiUrl = '/api';
   
   constructor(private http: HttpClient, private router: Router) {}  
 

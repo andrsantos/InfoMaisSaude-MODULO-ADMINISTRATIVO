@@ -19,7 +19,7 @@ import com.Projeto.InfoMaisSaude.repositories.ClinicaRepository;
 import com.Projeto.InfoMaisSaude.services.TokenService;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/login")
 public class AuthenticationController {
 
     @Autowired

@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class PerfilMedicoService {
   
-  private apiUrl = "http://localhost:8080";
+  private apiUrl = "/api";
 
   constructor(private http: HttpClient, 
     private router: Router,

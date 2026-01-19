@@ -10,21 +10,21 @@ import { UsuarioCreateResponse } from "../../models/usuarioModels/usuarioCreateR
   providedIn: "root",
 })
 export class UsuariosServiceService {
-  private apiUrl = "http://localhost:8080";
+  private apiUrl = "/api";
 
   constructor(private http: HttpClient, private router: Router) {}
 
   listarUsuarios(): Observable<UsuarioResponse[]> {
     return this.http.get<UsuarioResponse[]>(
-      `${this.apiUrl}/api/usuarios/listar`
+      `${this.apiUrl}/usuarios/listar`
     );
   }
   excluirUsuario(userId: number): Observable<UsuarioDeleteResponse> {
-    const url = `${this.apiUrl}/api/usuarios/deletar/${userId}`;
+    const url = `${this.apiUrl}/usuarios/deletar/${userId}`;
     return this.http.delete<UsuarioDeleteResponse>(url);
   }
   cadastrarUsuario(dadosUsuario: any): Observable<UsuarioCreateResponse> {
-    const url = `${this.apiUrl}/api/usuarios/criar`;
+    const url = `${this.apiUrl}/usuarios/criar`;
     return this.http.post<UsuarioCreateResponse>(url, dadosUsuario);
   }
 }

@@ -8,7 +8,7 @@ import { Solicitacao } from '../../models/solicitacaoModels/solicitacao.model';
 })
 export class SolicitacoesService {
 
-  private apiUrl = 'http://localhost:8080/api/solicitacoes';
+  private apiUrl = '/api/solicitacoes';
 
   constructor(private http: HttpClient) { }
 

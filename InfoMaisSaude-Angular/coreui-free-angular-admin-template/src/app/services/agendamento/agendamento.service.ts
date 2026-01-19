@@ -7,7 +7,7 @@ import { Consulta } from '../../models/consultaModels/consulta.model';
 })
 export class AgendamentoService {
 
-  private apiUrl = 'http://localhost:8080/api/agendamentos';
+  private apiUrl = '/api/agendamentos';
 
   constructor(private http: HttpClient) { }
 
