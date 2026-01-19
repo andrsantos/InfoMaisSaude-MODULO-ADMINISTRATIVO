@@ -256,7 +256,7 @@ export class UpdateClinicComponent {
             "Suas alterações foram enviadas para aprovação da administração.",
             "Solicitação Enviada"
           );
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/initial-page']);
         },
         error: (err) => {
           console.error(err);

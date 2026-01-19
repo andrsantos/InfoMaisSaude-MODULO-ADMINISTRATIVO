@@ -17,21 +17,21 @@ export class MedicosService {
   constructor(private http: HttpClient, private router: Router) {}  
 
   listarMedicos(): Observable<MedicoReadResponse[]> {
-      const url = `${this.apiUrl}/api/medicos/listar`;
+      const url = `${this.apiUrl}/medicos/listar`;
       return this.http.get<MedicoReadResponse[]>(url);
     }
   listarMedicosPorClinica(clinicaId: any): Observable<MedicoReadResponse[]> {
-      const url = `${this.apiUrl}/api/medicos/listar/por-clinica/${clinicaId}`;
+      const url = `${this.apiUrl}/medicos/listar/por-clinica/${clinicaId}`;
       return this.http.get<MedicoReadResponse[]>(url);
     }
   
   excluirMedico(medicoId: number): Observable<MedicoDeleteResponse> {
-      const url = `${this.apiUrl}/api/medicos/deletar/${medicoId}`;
+      const url = `${this.apiUrl}/medicos/deletar/${medicoId}`;
       return this.http.delete<MedicoDeleteResponse>(url);
     }
   
   cadastrarMedico(dadosMedico: any): Observable<MedicoCreateResponse> {
-      const url = `${this.apiUrl}/api/medicos/criar`;
+      const url = `${this.apiUrl}/medicos/criar`;
       return this.http.post<MedicoCreateResponse>(url, dadosMedico);
     }
   
@@ -39,17 +39,17 @@ export class MedicosService {
       medicoId: number,
       dadosMedico: any
     ): Observable<MedicoUpdateResponse> {
-      const url = `${this.apiUrl}/api/medicos/atualizar/${medicoId}`;
+      const url = `${this.apiUrl}/medicos/atualizar/${medicoId}`;
       return this.http.put<MedicoUpdateResponse>(url, dadosMedico);
     }
   
   pegarMedico(medicoId: number): Observable<MedicoReadResponse> {
-      const url = `${this.apiUrl}/api/medicos/pegar/${medicoId}`;
+      const url = `${this.apiUrl}/medicos/pegar/${medicoId}`;
       return this.http.get<MedicoReadResponse>(url);
     }
 
   pegarMedicoPorUsuarioId(usuarioId: number): Observable<MedicoReadResponse> {
-    const url = `${this.apiUrl}/api/medicos/pegarPorUsuario/${usuarioId}`;
+    const url = `${this.apiUrl}/medicos/pegarPorUsuario/${usuarioId}`;
     return this.http.get<MedicoReadResponse>(url);
   }
 
@@ -59,7 +59,7 @@ export class MedicosService {
   }
 
   pegarMedicosNome(clinicaId: any): Observable<MedicoNomeReadResponse>{
-    const url = `${this.apiUrl}/api/medicos/por-nome/${clinicaId}`;
+    const url = `${this.apiUrl}/medicos/por-nome/${clinicaId}`;
     return this.http.get<MedicoNomeReadResponse>(url);
   }
 
