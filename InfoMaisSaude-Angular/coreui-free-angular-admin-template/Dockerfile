@@ -20,7 +20,7 @@ FROM nginx:stable-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # 5. Caminho Manual e Direto (O que você confirmou que existe)
-COPY --from=build-stage /app/coreui-free-angular-admin-template/dist/coreui-free-angular-admin-template/browser /usr/share/nginx/html
+RUN ls -R /app/coreui-free-angular-admin-template/dist
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
