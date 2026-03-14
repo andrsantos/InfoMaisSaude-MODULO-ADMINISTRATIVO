@@ -1,0 +1,16 @@
+services:
+  api-saude:
+    build: ./InfoMaisSaude-JavaAPI
+    container_name: info-saude-backend
+    ports:
+      - "8080:8080"
+    restart: always
+
+  web-saude:
+    build: ./InfoMaisSaude-Angular/coreui-free-angular-admin-template
+    container_name: info-saude-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - api-saude
+    restart: always
