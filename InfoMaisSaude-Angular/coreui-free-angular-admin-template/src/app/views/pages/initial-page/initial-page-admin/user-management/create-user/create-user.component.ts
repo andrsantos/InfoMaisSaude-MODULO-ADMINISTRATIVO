@@ -19,11 +19,11 @@ import {
   ButtonDirective,
   FormSelectDirective,
 } from "@coreui/angular";
-import { UsuariosServiceService } from "src/app/services/usuarios/usuarios-service.service";
-import { UsuarioCreateResponse } from "src/app/models/usuarioModels/usuarioCreateResponse";
-import { UsuarioCreate } from "src/app/models/usuarioModels/UsuarioCreate";
-import { AuthService } from "src/app/services/auth/auth.service";
+import { UsuarioCreateResponse } from "../../../../../../models/usuarioModels/usuarioCreateResponse";
+import { UsuarioCreate } from "../../../../../../models/usuarioModels/usuarioCreate";
+import { AuthService } from "../../../../../../services/auth/auth.service";
 import { ToastrService } from "ngx-toastr";
+import { UsuariosServiceService } from "../../../../../../services/usuarios/usuarios-service.service";
 
 enum UserRole {
   ADMIN = "ADMIN",
