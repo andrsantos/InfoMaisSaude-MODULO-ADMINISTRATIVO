@@ -4,15 +4,15 @@ services:
     container_name: info-saude-db
     restart: always
     environment:
-      - POSTGRES_DB=infosaude
-      - POSTGRES_USER=usuario
-      - POSTGRES_PASSWORD=senha
+      - POSTGRES_DB=InfoMaisSaude-ModuloAdministrativo
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=andreysantos12
     ports:
       - "5433:5432" 
     volumes:
       - pgdata_saude:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U usuario -d infosaude"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d InfoMaisSaude-ModuloAdministrativo"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -27,10 +27,10 @@ services:
       db-saude:
         condition: service_healthy
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-saude:5432/infosaude
-      - SPRING_DATASOURCE_USERNAME=usuario
-      - SPRING_DATASOURCE_PASSWORD=senha
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update 
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-saude:5432/InfoMaisSaude-ModuloAdministrativo
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=andreysantos12
+      - API_SECURITY_TOKEN_SECRET=002a58fb-5209-4a03-8b06-1d5a9e489ce8
 
   web-saude:
     build: ./InfoMaisSaude-Angular/coreui-free-angular-admin-template
